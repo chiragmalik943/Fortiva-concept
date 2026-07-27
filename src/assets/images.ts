@@ -17,22 +17,22 @@
 // mask-image (see Logo.tsx) depending on where it's used.
 
 export const images = {
-  hero: '${import.meta.env.BASE_URL}/img-1.png',
+  hero: `${import.meta.env.BASE_URL}img-1.png`,
 
-  insuranceIndividual: '${import.meta.env.BASE_URL}/img-2.png',
-  insuranceCorporate: '${import.meta.env.BASE_URL}/img-3.png',
-  insuranceFamily: '${import.meta.env.BASE_URL}/img-4.png',
+  insuranceIndividual: `${import.meta.env.BASE_URL}img-2.png`,
+  insuranceCorporate: `${import.meta.env.BASE_URL}img-3.png`,
+  insuranceFamily: `${import.meta.env.BASE_URL}img-4.png`,
 
-  splitImage: '${import.meta.env.BASE_URL}/img-5.png',
-  splitImageMobile: '${import.meta.env.BASE_URL}/img-5-mobile.png',
+  splitImage: `${import.meta.env.BASE_URL}img-5.png`,
+  splitImageMobile: `${import.meta.env.BASE_URL}img-5-mobile.png`,
 
-  forStageFamily: '${import.meta.env.BASE_URL}/img-6.png',
-  forStageEmployees: '${import.meta.env.BASE_URL}/img-7.png',
-  forStageYou: '${import.meta.env.BASE_URL}/img-8.png',
+  forStageFamily: `${import.meta.env.BASE_URL}img-6.png`,
+  forStageEmployees: `${import.meta.env.BASE_URL}img-7.png`,
+  forStageYou: `${import.meta.env.BASE_URL}img-8.png`,
 
-  blogPost1: '${import.meta.env.BASE_URL}/img-9.png',
-  blogPost2: '${import.meta.env.BASE_URL}/img-10.png',
-  blogPost3: '${import.meta.env.BASE_URL}/img-11.png',
+  blogPost1: `${import.meta.env.BASE_URL}img-9.png`,
+  blogPost2: `${import.meta.env.BASE_URL}img-10.png`,
+  blogPost3: `${import.meta.env.BASE_URL}img-11.png`,
 
-  logo: '${import.meta.env.BASE_URL}/logo.svg',
+  logo: `${import.meta.env.BASE_URL}logo.svg`,
 }
