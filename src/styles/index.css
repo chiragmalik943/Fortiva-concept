@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: auto;
+}
+
+/* Lenis smooth-scroll required styles */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Familjen Grotesk', ui-sans-serif, system-ui, sans-serif;
+  background-color: #ECEAE1;
+  color: #11284B;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: #D5AC67;
+  color: #11284B;
+}
+
+:focus-visible {
+  outline: 2px solid #D5AC67;
+  outline-offset: 3px;
+}
+
+.split-char,
+.split-word {
+  will-change: transform, opacity;
+}
+
+/* "60% corner smoothing" (Figma-style convention) interpolated onto the
+   CSS corner-shape scale: round = superellipse(1), squircle = superellipse(2),
+   so 60% of the way there = superellipse(1.6). Chromium-only as of mid-2026;
+   degrades to the plain border-radius everywhere else, so it's a safe,
+   no-downside progressive enhancement. */
+.corner-smooth {
+  corner-shape: superellipse(1.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* soft ambient gradients, sampled from the reference screenshot */
+.gradient-hero {
+  background: linear-gradient(180deg, #BCCAD1 0%, #D3DCDF 30%, #E4E3DA 60%, #ECEAE1 100%);
+}
+
+.gradient-lower {
+  background: linear-gradient(
+    180deg,
+    #ECEAE1 0%,
+    #D7DEE0 28%,
+    #C7D2D6 50%,
+    #D7DEE0 72%,
+    #ECEAE1 100%
+  );
+}
