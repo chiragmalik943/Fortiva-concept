@@ -77,7 +77,7 @@ export default function ClipMaskSection() {
     maskRepeat: 'no-repeat',
     maskPosition: 'center',
     maskSize: 'calc(var(--mask-scale) * 100vw) auto',
-WebkitMaskImage: `url(${images.forMask})`,
+    WebkitMaskImage: `url(${images.forMask})`,
     WebkitMaskRepeat: 'no-repeat',
     WebkitMaskPosition: 'center',
     WebkitMaskSize: 'calc(var(--mask-scale) * 100vw) auto',
