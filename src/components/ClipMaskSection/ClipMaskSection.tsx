@@ -73,11 +73,11 @@ export default function ClipMaskSection() {
 
   const maskStyle: MaskStyle = {
     '--mask-scale': START_SCALE,
-    maskImage: 'url(/for-mask.svg)',
+    maskImage: `url(${images.forMask})`,
     maskRepeat: 'no-repeat',
     maskPosition: 'center',
     maskSize: 'calc(var(--mask-scale) * 100vw) auto',
-    WebkitMaskImage: 'url(/for-mask.svg)',
+WebkitMaskImage: `url(${images.forMask})`,
     WebkitMaskRepeat: 'no-repeat',
     WebkitMaskPosition: 'center',
     WebkitMaskSize: 'calc(var(--mask-scale) * 100vw) auto',

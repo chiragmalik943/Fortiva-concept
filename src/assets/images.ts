@@ -35,4 +35,6 @@ export const images = {
   blogPost3: `${import.meta.env.BASE_URL}img-11.png`,
 
   logo: `${import.meta.env.BASE_URL}logo.svg`,
+
+  forMask: `${import.meta.env.BASE_URL}for-mask.svg`,
 }
