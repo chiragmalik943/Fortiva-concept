@@ -12,9 +12,22 @@
 //   5. Split section (+ a dedicated img-5-mobile.png used under the sm breakpoint)
 //   6-8. FOR section stages (family, employees, you)
 //   9-11. Blog cards
+//   card-1 .. card-4. Stacked Cards section (each a `-bg` + foreground-cutout pair)
 //
 // logo.svg is a single-colour mark, tinted navy or white in CSS via
 // mask-image (see Logo.tsx) depending on where it's used.
+//
+// The Stacked Cards pairs are the one exception to "no image is reused" —
+// each card has TWO files that are meant to be the same photograph:
+//   img-card-N-bg.png  — the full scene, opaque, any aspect ratio
+//   img-card-N.png      — a transparent-background cutout of just the
+//                          subject, framed identically to its -bg pair
+// StackedCards.tsx renders both at the same size, object-cover, in the same
+// spot — the foreground is simply allowed to paint outside the card's top
+// edge while the background stays clipped, so the pair only needs normal,
+// consistently-framed photos (no special canvas size or extra headroom
+// baked into the file); the "breaking out of frame" look comes entirely
+// from the scroll-driven scale animation, not from the asset itself.
 
 export const images = {
   hero: `${import.meta.env.BASE_URL}img-1.png`,
@@ -33,6 +46,15 @@ export const images = {
   blogPost1: `${import.meta.env.BASE_URL}img-9.png`,
   blogPost2: `${import.meta.env.BASE_URL}img-10.png`,
   blogPost3: `${import.meta.env.BASE_URL}img-11.png`,
+
+  cardOneBg: `${import.meta.env.BASE_URL}img-card-1-bg.png`,
+  cardOne: `${import.meta.env.BASE_URL}img-card-1.png`,
+  cardTwoBg: `${import.meta.env.BASE_URL}img-card-2-bg.png`,
+  cardTwo: `${import.meta.env.BASE_URL}img-card-2.png`,
+  cardThreeBg: `${import.meta.env.BASE_URL}img-card-3-bg.png`,
+  cardThree: `${import.meta.env.BASE_URL}img-card-3.png`,
+  cardFourBg: `${import.meta.env.BASE_URL}img-card-4-bg.png`,
+  cardFour: `${import.meta.env.BASE_URL}img-card-4.png`,
 
   logo: `${import.meta.env.BASE_URL}logo.svg`,
 

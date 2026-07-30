@@ -86,3 +86,26 @@ body {
     #ECEAE1 100%
   );
 }
+
+/* Stacked Cards section: lets each card's foreground cutout break out above
+   the card while staying clipped — and correctly corner-rounded — on the
+   other three sides. This needs its own `round` argument because a plain
+   border-radius on the element doesn't carry over to a clip-path shape.
+   The rounded corner is always a bottom one (top is intentionally left
+   open for the overflow) and only appears once the visual sits beside the
+   content instead of above it, so it only switches on at the sm breakpoint.
+   See StackedCards.tsx. */
+.stacked-card-fg-clip {
+  --stacked-fg-radius-bl: 0px;
+  --stacked-fg-radius-br: 0px;
+  clip-path: inset(-60% 0% 0% 0% round 0px 0px var(--stacked-fg-radius-br) var(--stacked-fg-radius-bl));
+}
+
+@media (min-width: 640px) {
+  .stacked-card-fg-clip--visual-right {
+    --stacked-fg-radius-br: 2rem;
+  }
+  .stacked-card-fg-clip--visual-left {
+    --stacked-fg-radius-bl: 2rem;
+  }
+}

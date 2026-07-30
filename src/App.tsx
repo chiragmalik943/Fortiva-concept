@@ -7,6 +7,7 @@ import SplitSection from './components/SplitSection/SplitSection'
 import ClipMaskSection from './components/ClipMaskSection/ClipMaskSection'
 import FAQ from './components/FAQ/FAQ'
 import Blog from './components/Blog/Blog'
+import StackedCards from './components/StackedCards/StackedCards'
 import Footer from './components/Footer/Footer'
 import { useLenis } from './hooks/useLenis'
 
@@ -29,6 +30,7 @@ export default function App() {
 
       <div className="gradient-lower">
         <Blog />
+        <StackedCards />
         <FAQ />
       </div>
 
