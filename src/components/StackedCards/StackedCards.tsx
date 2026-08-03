@@ -64,17 +64,32 @@ const ROTATIONS = [-6, 5, -5, 6]
 // reproduces that almost exactly (overflow == scale - 1).
 const ENTER_SCALE = 1.25
 
-// NOTE: positions below are on a deliberate 0-100 "percent of scroll" scale,
+// NOTE: positions below are on a deliberate 0-100+ "percent of scroll" scale,
 // same convention as ClipMaskSection — every tween gets an explicit
 // duration in that same unit system so the whole sequence is easy to retime.
 const HOLD_START = 7 // H2 sits still and centered before anything moves
-const CARD_SPAN = 22 // each card's full entrance, start to settled
-const HOLD_END = 100 - HOLD_START - CARD_SPAN * CARDS.length // brief pause once stacked
-const TOTAL_UNITS = HOLD_START + CARD_SPAN * CARDS.length + HOLD_END // == 100, kept explicit for clarity
+const CARD_SPAN = 22 // each card's own rise, start to fully stacked
 
-// 5vh of real scroll per timeline unit — about 110vh per card, in the same
-// ballpark as ValuesStack's ~117vh per reveal.
-const SECTION_HEIGHT_VH = TOTAL_UNITS * 5
+// A card's photo holds at full ENTER_SCALE for its entire own rise, then
+// only starts easing back to scale 1 once the NEXT card begins entering —
+// finishing right as that next card lands. That hand-off is what gives the
+// overflow enough screen time to register instead of shrinking away the
+// instant the card arrives (see the scale tween down below). The last card
+// has no "next" card to borrow a window from, so TAIL_SPAN gives it that
+// same settle-in beat of its own instead of leaving it overflowed forever.
+const TAIL_SPAN = CARD_SPAN
+const HOLD_END = 5 // brief pause once the last visual has settled, before the pin releases
+const TOTAL_UNITS = HOLD_START + CARD_SPAN * CARDS.length + TAIL_SPAN + HOLD_END
+
+// A little slower than before (flat 5 previously) — combined with the
+// settle-in overlap above, each beat gets noticeably more room to breathe.
+const SCROLL_VH_PER_UNIT = 5.5
+const SECTION_HEIGHT_VH = TOTAL_UNITS * SCROLL_VH_PER_UNIT
+
+// Narrower than the site-wide `max-w-container` (1360px) on purpose — just
+// this section's cards, a bit smaller overall. Text and icon sizes inside
+// are all fixed px values (not relative units), so they're untouched by this.
+const CARD_MAX_WIDTH = 'max-w-[1180px]'
 
 // Explicit per-corner classes so a responsive override never leaves a
 // corner rounded that should be square: rounded-t-*/rounded-l-* etc. only
@@ -156,7 +171,7 @@ interface CardBodyProps {
 function CardBody({ card, reversed, bgScaleRef, fgScaleRef }: CardBodyProps) {
   const Icon = card.icon
   return (
-    <div className="relative grid grid-cols-1 shadow-card sm:grid-cols-2 sm:h-[64vh] sm:max-h-[580px] sm:min-h-[440px]">
+    <div className="relative grid grid-cols-1 shadow-card sm:grid-cols-2 sm:h-[56vh] sm:max-h-[500px] sm:min-h-[400px]">
       <div
         className={`corner-smooth relative flex flex-col justify-center gap-4 bg-cream-soft px-8 py-10 sm:px-10 sm:py-12 lg:px-14 ${
           reversed ? 'order-2 sm:order-2' : 'order-2 sm:order-1'
@@ -209,7 +224,7 @@ export default function StackedCards() {
           trigger: sectionRef.current,
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 0.7,
+          scrub: 0.85,
         },
       })
 
@@ -220,8 +235,24 @@ export default function StackedCards() {
       cards.forEach((card, i) => {
         const start = HOLD_START + i * CARD_SPAN
         tl.to(card, { y: 0, rotate: 0, duration: CARD_SPAN, ease: 'power2.out' }, start)
-        tl.to([bgLayers[i], fgLayers[i]], { scale: 1, duration: CARD_SPAN, ease: 'power2.out' }, start)
+
+        // The photo stays fully popped out through this card's own rise.
+        // It only starts easing back to scale 1 once the next card begins
+        // entering (one CARD_SPAN later than this card's own start), and
+        // lands on scale 1 exactly when that next card finishes stacking.
+        // The last card has no next card to hand off to, so it gets
+        // TAIL_SPAN — its own dedicated beat — to settle into instead.
+        const isLast = i === cards.length - 1
+        const scaleStart = HOLD_START + (i + 1) * CARD_SPAN
+        const scaleDuration = isLast ? TAIL_SPAN : CARD_SPAN
+        tl.to([bgLayers[i], fgLayers[i]], { scale: 1, duration: scaleDuration, ease: 'power2.out' }, scaleStart)
       })
+
+      // no-op spacer padding the timeline out to exactly TOTAL_UNITS (same
+      // trick ClipMaskSection uses) — without it, the timeline's real
+      // duration ends the instant the last tween above finishes, and
+      // HOLD_END is just a comment rather than an actual pause before unpin.
+      tl.to({}, { duration: HOLD_END }, TOTAL_UNITS - HOLD_END)
     }, sectionRef)
 
     return () => ctx.revert()
@@ -230,7 +261,7 @@ export default function StackedCards() {
   if (prefersReducedMotion) {
     return (
       <section className="bg-cream px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-container">
+        <div className={`mx-auto ${CARD_MAX_WIDTH}`}>
           <h2 className="mx-auto max-w-2xl text-balance text-center text-[30px] font-semibold leading-tight text-navy-800 sm:text-[38px]">
             Coverage designed around <span className="text-gold">your life</span>
           </h2>
@@ -262,7 +293,7 @@ export default function StackedCards() {
             className="pointer-events-none absolute inset-0 flex items-center justify-center px-4 sm:px-6"
             style={{ zIndex: i + 1 }}
           >
-            <div ref={(el) => (cardRefs.current[i] = el)} className="pointer-events-auto w-full max-w-container will-change-transform">
+            <div ref={(el) => (cardRefs.current[i] = el)} className={`pointer-events-auto w-full ${CARD_MAX_WIDTH} will-change-transform`}>
               <CardBody
                 card={card}
                 reversed={i % 2 === 1}

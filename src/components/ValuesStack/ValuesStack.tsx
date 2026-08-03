@@ -32,13 +32,15 @@ const values: ValueCard[] = [
   },
 ]
 
-// paper-like resting offsets for each card in the stack — rotation spread
-// across the full -10..10deg range for a more scattered, organic look
+// straightened resting offsets for each card in the stack — no rotation
+// and no horizontal drift, just an even downward step per card so the
+// one underneath always shows a slice of itself above the new arrival
+const PEEK = 24 // px each successive card sits lower than the one before it
 const rest = [
-  { x: 0, y: 0, rotate: -7 },
-  { x: 22, y: 14, rotate: 5 },
-  { x: -18, y: 26, rotate: -9 },
-  { x: 12, y: 38, rotate: 6 },
+  { x: 0, y: 0 * PEEK, rotate: 0 },
+  { x: 0, y: 1 * PEEK, rotate: 0 },
+  { x: 0, y: 2 * PEEK, rotate: 0 },
+  { x: 0, y: 3 * PEEK, rotate: 0 },
 ]
 
 // how much darker (navy overlay opacity) a card gets per card stacked on top of it

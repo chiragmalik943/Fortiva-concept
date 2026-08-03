@@ -11,7 +11,7 @@ export default function Hero() {
   const subRef = useScrollReveal<HTMLDivElement>({ y: 18, duration: 0.8, delay: 0.55, start: 'top 95%' })
 
   return (
-    <section id="home" className="relative flex flex-col items-center px-6 pb-20 pt-40 text-center sm:pt-48">
+    <section id="home" className="relative flex min-h-screen flex-col items-center justify-center px-6 py-28 text-center sm:py-32">
       <h1
         ref={headingRef}
         className="max-w-4xl text-[42px] font-semibold leading-[1.08] tracking-tight text-navy-800 opacity-0 sm:text-[56px] lg:text-[68px]"

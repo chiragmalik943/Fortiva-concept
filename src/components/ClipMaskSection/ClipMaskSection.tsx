@@ -3,9 +3,9 @@ import { gsap, prefersReducedMotion } from '../../animations/gsap'
 import { images } from '../../assets/images'
 
 const stages = [
-  { label: 'your family.', image: images.forStageFamily },
-  { label: 'your employees.', image: images.forStageEmployees },
-  { label: 'YOU.', image: images.forStageYou },
+  { label: 'Your Family', image: images.forStageFamily },
+  { label: 'Your Employees', image: images.forStageEmployees },
+  { label: 'You', image: images.forStageYou },
 ]
 
 const START_SCALE = 0.85
@@ -52,7 +52,7 @@ export default function ClipMaskSection() {
       // the screen.
       tl.to(maskLayerRef.current, { '--mask-scale': MAX_SCALE, ease: 'power2.inOut', duration: 24 }, 0)
 
-      // Stage 1 hold (24-44): "your family." sits, nothing animates.
+      // Stage 1 hold (24-44): "Your Family" sits, nothing animates.
 
       // Transition 1 (44-52): image + text change together.
       tl.to(imgRefs.current[1], { opacity: 1, duration: 8 }, 44)
