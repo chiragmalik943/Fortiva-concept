@@ -1,3 +1,7 @@
+/* Must come before the Tailwind layers so the @font-face rules are registered
+   before any utility that references the family. */
+@import './fonts.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -29,11 +33,44 @@ html.lenis body {
 }
 
 body {
-  font-family: 'Familjen Grotesk', ui-sans-serif, system-ui, sans-serif;
+  font-family: 'New Hero', ui-sans-serif, system-ui, sans-serif;
   background-color: #ECEAE1;
   color: #11284B;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+
+  /* Kills orphans (a lone word on the last line) site-wide. `text-wrap` is an
+     inherited property, so setting it here reaches every text node — including
+     the ones in plain <span>s and <button>s that a `p, li` selector would miss,
+     like the FAQ question labels and the numbered step titles.
+     Because it lands via inheritance it can never beat a direct declaration, so
+     any `text-pretty` / `text-balance` / `text-nowrap` utility still wins on the
+     element it's applied to.
+     Chrome/Edge 117+ and Safari 26+; not in Firefox, where it's simply ignored
+     and wrapping stays as it is today. Same progressive-enhancement bargain as
+     the `corner-shape` rule below. */
+  text-wrap: pretty;
+}
+
+/* Headings get `balance` rather than inheriting `pretty` from body.
+   `pretty` only rescues the LAST line; `balance` evens out every line, which is
+   what you want on a two- or three-line display heading — it stops "Enrollment
+   made / simple" as well as the ragged first line above it.
+   The catch: Chrome caps balance at 6 lines and silently falls back to normal
+   wrapping past that, so it's only safe where headings stay short. Measured at
+   390px, the tallest heading on this page is the hero H1 at 5 lines, so every
+   heading is inside the cap. If a much longer heading is ever added, give that
+   one `text-pretty` — pretty has no line limit.
+   In @layer base so the Tailwind utilities still override per element. */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
 }
 
 ::selection {
@@ -108,4 +145,213 @@ body {
   .stacked-card-fg-clip--visual-left {
     --stacked-fg-radius-bl: 2rem;
   }
+}
+
+/* ── Availability map ────────────────────────────────────────────────────────
+   Drives the two-way highlight between the state chips and the dot map in
+   AvailableStates. It lives here rather than in Tailwind utilities because
+   almost every rule is a *descendant* reaction — "when this group is active,
+   change its children" — which utilities can't express, and because the ripple
+   needs a per-dot custom property.
+
+   Everything animated is `transform` or `opacity`, so all six states can react
+   without touching layout. The global prefers-reduced-motion block earlier in this
+   file collapses every transition here to ~0ms; the one keyframe animation
+   (the idle ping) is opted in under `no-preference` instead, so it simply never
+   starts.
+
+   Colours are the artwork's own values from map.svg, not the Tailwind tokens —
+   they're within a point of `gold` and `navy-800`, and matching the file exactly
+   means the map at rest is indistinguishable from the flat original. */
+
+.fmap-state[data-status='live'] {
+  --fmap-ink: #d6ac68;
+}
+.fmap-state[data-status='coming-soon'] {
+  --fmap-ink: #14294c;
+}
+
+/* The lean-in. Scaling the <img> and the <svg> together — rather than animating
+   the viewBox, which isn't animatable — enlarges the six states in place while a
+   visitor is exploring them. The origin is the middle of the cluster, so nothing
+   slides sideways; at 1.22x the only thing that leaves the frame is the west
+   coast, and letting go restores the whole country. The numbers live in
+   mapStates.ts (MAP_FOCUS) because the tooltip has to reproduce them. */
+.fmap-stage {
+  transform: scale(1);
+  transition: transform 650ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform;
+}
+.fmap[data-focus='true'] .fmap-stage {
+  transform: scale(1.22);
+}
+
+/* The artwork's grey is #E5E5E5, which was plenty of contrast on white but
+   nearly vanishes on this section's cream card. A filter darkens it in place
+   rather than editing the file, so the asset stays a faithful copy of the
+   source and this is a one-line revert. */
+.fmap-base {
+  filter: brightness(0.92);
+}
+
+/* `fill-box` puts each dot's transform origin at its own centre, so a scaled
+   dot grows in place instead of sliding toward the map's origin. */
+.fmap-dot,
+.fmap-glow,
+.fmap-ring,
+.fmap-ping {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* The ripple: `--t` is 0 at the state's centre and 1 at its furthest dot, so
+   activating staggers outward from the middle, and releasing runs the delay
+   backwards — the outside lets go first and the shape collapses inward. */
+.fmap-dot {
+  fill: var(--fmap-ink);
+  transition: transform 380ms cubic-bezier(0.2, 0.8, 0.25, 1)
+    calc((1 - var(--t, 0)) * 60ms);
+}
+.fmap-state[data-active='true'] .fmap-dot {
+  transform: scale(1.6);
+  transition-delay: calc(var(--t, 0) * 200ms);
+}
+
+/* Soft wash inside the state's outline, and a hairline around it. Together they
+   give the highlight an edge the dots alone can't — the grid is too sparse to
+   read as a shape on its own. */
+.fmap-glow {
+  fill: var(--fmap-ink);
+  opacity: 0;
+  transform: scale(0.94);
+  transition: opacity 400ms ease, transform 500ms cubic-bezier(0.2, 0.8, 0.25, 1);
+}
+.fmap-state[data-active='true'] .fmap-glow {
+  opacity: 0.1;
+  transform: scale(1.06);
+}
+
+.fmap-ring {
+  fill: none;
+  stroke: var(--fmap-ink);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 320ms ease, transform 480ms cubic-bezier(0.2, 0.8, 0.25, 1);
+}
+.fmap-state[data-active='true'] .fmap-ring {
+  opacity: 0.45;
+  transform: scale(1.04);
+}
+
+/* Spotlight: everything that isn't the active state recedes. The grey base is
+   an <img>, so it can only be dimmed as a whole — which is exactly right, since
+   none of those states are part of the story. */
+.fmap-base,
+.fmap-state,
+.fmap-pings {
+  transition: opacity 400ms ease;
+}
+.fmap[data-focus='true'] .fmap-base {
+  opacity: 0.35;
+}
+.fmap[data-focus='true'] .fmap-state[data-active='false'] {
+  opacity: 0.28;
+}
+
+/* Invisible pointer targets sitting above every dot. `transparent` still counts
+   as painted for hit-testing, but `pointer-events: all` states the intent and
+   survives a future `fill: none`. */
+.fmap-hit {
+  fill: transparent;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+/* Idle cue on the live state: two rings breathing out of its outline, offset by
+   half a cycle. Stops as soon as the visitor engages, so it never competes with
+   whatever they're actually pointing at. */
+.fmap-ping {
+  fill: none;
+  stroke: #d6ac68;
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+  opacity: 0;
+}
+.fmap[data-focus='true'] .fmap-pings {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fmap-ping {
+    animation: fmap-ping 4s cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+  }
+  .fmap-ping--delayed {
+    animation-delay: 2s;
+  }
+}
+
+@keyframes fmap-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.28;
+  }
+  55% {
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+/* Tooltip. `left`/`top` are transitioned as well as opacity, so moving between
+   two states glides the label across the map instead of teleporting it — which
+   also makes it obvious the two states are on the same map.
+
+   `--tip-x` is how far left of its anchor the label sits: centred normally,
+   swung back over the map near an edge so it can't hang off the card. StateMap
+   picks the side; because it feeds a `transform`, switching sides interpolates
+   along with everything else instead of jumping. */
+.fmap-tip {
+  --tip-x: -50%;
+  opacity: 0;
+  transform: translate(var(--tip-x), calc(-100% - 20px)) scale(0.94);
+  transition: opacity 220ms ease, transform 320ms cubic-bezier(0.2, 0.8, 0.25, 1),
+    left 420ms cubic-bezier(0.2, 0.8, 0.25, 1),
+    top 420ms cubic-bezier(0.2, 0.8, 0.25, 1);
+}
+.fmap-tip[data-side='right'] {
+  --tip-x: -86%;
+}
+.fmap-tip[data-side='left'] {
+  --tip-x: -14%;
+}
+.fmap-tip[data-shown='true'] {
+  opacity: 1;
+  transform: translate(var(--tip-x), calc(-100% - 12px)) scale(1);
+}
+
+/* Chips — the other half of the same highlight. */
+.fchip {
+  cursor: pointer;
+  transition: transform 300ms cubic-bezier(0.2, 0.8, 0.25, 1), opacity 300ms ease,
+    box-shadow 300ms ease, background-color 300ms ease, border-color 300ms ease,
+    color 300ms ease;
+}
+.fchips[data-focus='true'] .fchip[data-active='false'] {
+  opacity: 0.4;
+}
+.fchip[data-active='true'] {
+  transform: translateY(-2px);
+}
+.fchip--live[data-active='true'] {
+  box-shadow: 0 10px 22px -10px rgba(213, 172, 103, 0.95);
+}
+.fchip--soon[data-active='true'] {
+  border-color: rgba(17, 40, 75, 0.28);
+  background-color: #fff;
+  color: rgba(17, 40, 75, 0.95);
+  box-shadow: 0 10px 22px -12px rgba(17, 40, 75, 0.45);
 }

@@ -1,0 +1,200 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   New Hero — the site's only typeface.
+   Font files live in `public/fonts/`. See README → "Fonts".
+
+   WHY public/ AND NOT src/assets/: this project's `vite.config.ts` sets
+   `base: '/Fortiva-concept/'` for GitHub Pages. Vite rewrites root-absolute
+   url()s in CSS with that base at build time, so `/fonts/x.otf` correctly
+   becomes `/Fortiva-concept/fonts/x.otf` — verified in the built CSS. It also
+   means a missing font file doesn't fail the build the way a missing
+   `src/assets` import would, which matters while the licensed files are being
+   dropped in. And it matches how every other asset in this repo is handled.
+
+   WEIGHT MAPPING. New Hero ships ten weights, CSS has nine conventional slots,
+   so UltraLight takes a non-standard 250 (perfectly legal, and it keeps the
+   foundry's own ordering: Hairline < Thin < UltraLight < Light < …).
+
+     Foundry name   CSS weight   Tailwind utility
+     ───────────────────────────────────────────────
+     Hairline       100          font-thin      / font-hairline
+     Thin           200          font-extralight
+     UltraLight     250          font-ultralight
+     Light          300          font-light
+     Regular        400          font-normal
+     Medium         500          font-medium
+     SemiBold       600          font-semibold
+     Bold           700          font-bold
+     ExtraBold      800          font-extrabold
+     Super          900          font-black     / font-super
+
+   Note the two places Tailwind's default names and the foundry's disagree:
+   `font-thin` (100) is New Hero **Hairline**, and `font-extralight` (200) is
+   New Hero **Thin**. The `font-hairline` / `font-ultralight` / `font-super`
+   aliases in tailwind.config.js exist so you can write the foundry name and
+   not have to remember that.
+
+   All twenty faces are declared, but a browser only downloads the ones a
+   weight/style combination on the page actually resolves to — declaring the
+   full range costs nothing at runtime. The page currently uses 400, 500, 600
+   and 700 upright plus 600 italic.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── 100 · Hairline ──────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-Hairline.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-HairlineItalic.otf') format('opentype');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ── 200 · Thin ──────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-Thin.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-ThinItalic.otf') format('opentype');
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ── 250 · UltraLight ────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-UltraLight.otf') format('opentype');
+  font-weight: 250;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-UltraLightItalic.otf') format('opentype');
+  font-weight: 250;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ── 300 · Light ─────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-LightItalic.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ── 400 · Regular ───────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-RegularItalic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ── 500 · Medium ────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-MediumItalic.otf') format('opentype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ── 600 · SemiBold ──────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-SemiBold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-SemiBoldItalic.otf') format('opentype');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ── 700 · Bold ──────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-BoldItalic.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ── 800 · ExtraBold ─────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-ExtraBold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-ExtraBoldItalic.otf') format('opentype');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ── 900 · Super ─────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-Super.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'New Hero';
+  src: url('/fonts/NewHero-SuperItalic.otf') format('opentype');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}

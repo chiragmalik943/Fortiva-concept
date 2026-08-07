@@ -23,19 +23,95 @@ Requires Node 18+.
 ```
 src/
 ├── components/       one folder per section, matching the brief's structure
+├── content/site.ts    nav IA + contact details + availability, in one place
 ├── hooks/             useLenis, useSplitReveal, useScrollReveal — shared animation logic
 ├── animations/        gsap.ts — single place ScrollTrigger gets registered
-├── assets/images.ts    every Unsplash URL in one place
+├── assets/images.ts    every image filename in one place
 └── styles/index.css    Tailwind + Lenis required CSS + the two ambient gradients
 ```
+
+## Where the copy comes from
+
+All page copy is from the client's `FTVA_Web Copy.odt`. The doc's own "Home"
+section only fills about a third of the page, so the sections below the hero
+carry condensed copy promoted from *About*, *Plans* and *For Members → FAQs* —
+which is what a homepage should be doing anyway. Nothing on the page is invented
+marketing copy; anything the doc doesn't supply is marked `PLACEHOLDER` or
+`TODO(client)` in the source rather than filled in.
+
+`src/content/site.ts` is the single place to fix the outstanding gaps — the six
+`[Insert …]` phone numbers and email addresses ship exactly as the copy doc
+writes them, so they're impossible to miss in review. `Footer.tsx` detects them
+and renders plain text instead of a broken `tel:`/`mailto:` link, so real values
+become live links with no further edit.
 
 ## Design tokens
 
 Pulled directly by sampling the reference screenshot rather than eyeballing:
 
 - Navy `#11284B` · Cream `#ECEAE1` · Gold/mustard `#D6AC68`
-- Font: Familjen Grotesk, loaded via Google Fonts in `index.html`
+- Font: **New Hero**, self-hosted — see "Fonts" below
 - Two soft ambient gradients (`.gradient-hero`, `.gradient-lower` in `index.css`) reproduce the mesh-like backdrop behind the hero and the FAQ/blog/footer zone; the insurance, split and FOR sections sit on their own solid navy/mustard blocks in between.
+
+## Fonts
+
+New Hero is the only typeface on the site, self-hosted — no Google Fonts, so no
+third-party connection and no render-blocking stylesheet.
+
+**The 20 `.otf` files go in `public/fonts/`**, named `NewHero-Regular.otf`,
+`NewHero-SemiBoldItalic.otf` and so on. `public/fonts/_FILENAMES.txt` lists every
+expected name and includes a one-liner that renames the foundry's spaced
+filenames (`New Hero Bold Italic.otf`) to the hyphenated convention in one pass.
+
+`npm run build` runs `scripts/check-fonts.mjs` first and **refuses to build if
+any face is missing**. That guard is load-bearing, not belt-and-braces: Vite only
+rewrites a root-absolute `url()` with the configured `base` when the target file
+exists in `public/` at build time. With the fonts present,
+`/fonts/NewHero-Regular.otf` becomes `/Fortiva-concept/fonts/NewHero-Regular.otf`.
+With one missing, Vite leaves the URL alone, the build still succeeds, and
+production quietly requests `/fonts/…` at the domain root and falls back to the
+system sans everywhere. Licensed fonts are exactly the sort of file that goes
+missing in a fresh clone or in CI, so the check makes that a loud local error
+instead. `npm run check:fonts` runs it on its own.
+
+All twenty faces are declared in `src/styles/fonts.css`; the browser only
+downloads the ones a weight/style combination on the page resolves to (currently
+five: 400, 400 italic, 500, 600, 700). Declaring the full range costs nothing at
+runtime.
+
+### Weight mapping
+
+New Hero ships ten weights and CSS has nine conventional slots, so UltraLight
+takes a non-standard `250` — legal, and it preserves the foundry's ordering.
+
+| Foundry name | CSS weight | Tailwind utility |
+|---|---|---|
+| Hairline | 100 | `font-thin` · `font-hairline` |
+| Thin | 200 | `font-extralight` |
+| UltraLight | 250 | `font-ultralight` |
+| Light | 300 | `font-light` |
+| Regular | 400 | `font-normal` |
+| Medium | 500 | `font-medium` |
+| SemiBold | 600 | `font-semibold` |
+| Bold | 700 | `font-bold` |
+| ExtraBold | 800 | `font-extrabold` |
+| Super | 900 | `font-black` · `font-super` |
+
+Two of Tailwind's default names disagree with the foundry's: `font-thin` (100) is
+New Hero **Hairline**, and `font-extralight` (200) is New Hero **Thin**. The
+`font-hairline` / `font-ultralight` / `font-super` aliases in
+`tailwind.config.js` exist so you can write the foundry name instead of
+remembering that.
+
+`fontFamily.serif` is deliberately also mapped to New Hero, so a stray
+`font-serif` can't silently fall back to a system serif.
+
+### Optional: convert to WOFF2
+
+OTF is uncompressed and roughly 3–5× the size of the equivalent WOFF2. Only five
+faces load on the homepage today so it isn't urgent, but converting is worth it
+before launch and needs no code change beyond the `format()` hint and the file
+extensions in `src/styles/fonts.css`.
 
 ## Images and the logo
 
@@ -52,6 +128,7 @@ Images are numbered by where they first appear on the page (`img-1.png` is the h
 | `img-6.png` / `img-7.png` / `img-8.png` | FOR section stages: family / employees / you |
 | `img-9.png` / `img-10.png` / `img-11.png` | Blog cards 1 / 2 / 3 |
 | `logo.svg` | Nav + footer mark |
+| `map-placeholder.svg` | Available States section — **placeholder**, swap the file |
 
 Drop files with those exact names into `/public` and they're picked up automatically — nothing 404s once they're there. Any aspect ratio works since every photo is rendered with `object-cover`.
 
@@ -63,11 +140,15 @@ Drop files with those exact names into `/public` and they're picked up automatic
 - **Split section** — full-bleed, 50/50 columns, full viewport height on `sm`+. On mobile it switches to a dedicated `img-5-mobile.png` via `<picture>` and reverses to text-first via `order` utilities (image is `order-2` / content is `order-1` below `sm`, swapped above it).
 - **Insurance card hover-expand** — the three cards share one parent that drives each card's `flexGrow` through GSAP on hover (`back.out` easing for the "spring" feel, ~1.4x growth); title/arrow micro-motion is separate CSS `group-hover`.
 - **Values stack** — a 350vh section with a `sticky` inner viewport; one scrubbed GSAP timeline brings cards 2–4 up from below in three even thirds of the scroll range, each landing at a rotated "paper" offset (spread across -9° to 6°). Each card also carries a navy overlay whose opacity is driven by the same timeline: every time a new card lands on top of it, every card underneath gets one more `+4%` opacity step, so depth in the stack reads as a subtle depth in colour too.
+- **Section order** — `StackedCards` (the four Fortiva pillars) and the Resources band swapped places versus the first build, so the pillars aren't the deepest thing on the page. It's a swap rather than sliding the pillars further up because `ValuesStack` (~430vh) and `StackedCards` (~500vh) are both pinned — adjacent, they'd be ~940vh of unbroken pinned scrolling. `SplitSection` stays between them as the breather.
 - **FOR section** — the section most worth reading closely. `F`, `O` and `R` live in a *single* SVG file (`public/for-mask.svg`) consumed as one CSS `mask-image`. The mask is applied to a layer of stacked, plain `object-cover` photos that never move or resize; only the mask's own effective size animates, via a `--mask-scale` CSS custom property (0.85 → 14) driven by GSAP and read back through `mask-size: calc(var(--mask-scale) * 100vw) auto`. That keeps the photo completely static while the "window" onto it grows until the letterforms' edges pass outside the viewport (the first 24% of the section's scroll). After that, continued scrolling crossfades the photo underneath and mask-wipes the label together, in sync, through three stops ("your family." / "your employees." / "YOU."); a `ScrollTrigger.snap` on `[0, 0.24, 0.52, 0.80]` settles the scroll to each stop instead of letting it fly past.
 - **`public/for-mask.svg` is a placeholder** — simple block shapes standing in for the real wordmark, deliberately swappable. Drop in real artwork at the same path (roughly the same `viewBox` proportions — currently `0 0 1200 400`, a 3:1 width:height ratio — will line up best) and nothing else needs to change; only the shape's silhouette/alpha matters since it's consumed purely as a mask.
+- **Orphan control is two base-layer rules, not forty utility classes** — `body` gets `text-wrap: pretty` and `h1`–`h6` get `text-wrap: balance` (`index.css`). `text-wrap` is inherited, so the `body` rule reaches text in plain `<span>`s and `<button>`s that a `p, li` selector would miss — the FAQ question labels and the numbered step titles, for instance. Because it arrives by inheritance it can never beat a direct declaration, so a `text-pretty` / `text-balance` / `text-nowrap` utility still wins on the element it's on. Headings take `balance` instead because `pretty` only rescues the *last* line, whereas `balance` evens out all of them — the difference between fixing "Enrollment made / simple" and also tidying the ragged line above it. The catch is that Chrome caps `balance` at 6 lines and silently reverts past that; measured at 390px the tallest heading here is the hero H1 at 5 lines, so all of them are inside the cap. A much longer heading added later should get `text-pretty`, which has no line limit. Measured effect: orphaned last lines went from 7 → 0 at 1440px and 17 → 1 at 390px. Chrome/Edge 117+ and Safari 26+; Firefox ignores both and simply wraps as before.
 - **Squircles, not pills** — buttons and their icon badges use fixed-radius corners rather than `rounded-full`: 20px/14px at the hero's 56px button size, 12px/10px everywhere else, 24px on the floating nav. Layered on top is a `.corner-smooth` class (`index.css`) using the new CSS `corner-shape: superellipse(1.6)` — "60%" on Figma's smoothing convention, interpolated onto the spec's own round(1)→squircle(2) scale — applied to buttons, the nav, and every card. It's Chromium-only as of mid-2026 and degrades gracefully to the plain border-radius elsewhere, so it's a no-downside enhancement rather than something everyone will see today.
-- **Values copy** — only the "Integrity" card's body text is legible in the reference screenshot; the other three (Client Focus, Risk Resilience, Expertise) are written to match its tone, since that content isn't visible in the source image.
-- **Placeholder content kept as-is** — the repeated "A clear scope and a shared understanding of what needs to change" bullets and the "TAG" blog labels are reproduced exactly as they appear in the reference, since they read as intentional placeholder copy in the source design.
+- **Values stack now holds five cards** — Fortiva's five real brand values, replacing the four placeholders that were written to match the reference screenshot's tone. Everything about the section's geometry and pacing is now derived from `values.length` (offset table, timeline loops, section height, stack height), so a sixth value needs no code change. `PER_TRANSITION_VH = 83` reproduces the approved four-card pacing exactly: that build was 350vh with a 100vh sticky viewport, so (350 − 100) / 3 ≈ 83vh per card.
+- **Navbar dropdowns hide via opacity, not `visibility`** — deliberately. `visibility` is a discrete property, so under `transition-all` its flip lands *halfway* through the transition; for ~100ms after opening, a panel was still `visibility: hidden` and silently refused focus, which broke ArrowDown-into-panel. Panels now transition only `opacity` and `transform`, and hide with `opacity-0 + pointer-events-none + aria-hidden`, which also lets them animate on the way out.
+- **Resources band, not a blog grid** — the copy doc supplies no article titles, so the three cards are Videos / Plan details / Blog, each of which does have written copy and a button in the doc. `components/Blog/Blog.tsx` is intentionally left in the repo, unimported, ready for when real articles exist.
+- **Stay connected form has no submit target** — `submitLead()` in `StayConnected.tsx` validates, shows the success state and logs the payload. It does not send anything anywhere. Point it at the CRM or form endpoint and nothing else needs to change.
 - Respects `prefers-reduced-motion`: every scroll-driven animation is replaced with a static, fully-visible end state instead of being skipped outright.
 
 ## If something needs adjusting

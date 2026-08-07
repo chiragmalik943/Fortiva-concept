@@ -7,8 +7,13 @@ interface ButtonProps {
   icon?: 'arrow' | 'arrowUpRight' | 'plus' | 'none'
   /** 'lg' is the 56px hero size; everywhere else uses the default. */
   size?: 'default' | 'lg'
+  /** When set, renders an <a> instead of a <button> — same styling either way. */
+  href?: string
+  /** Only meaningful alongside `href`. */
+  target?: string
+  type?: 'button' | 'submit'
   className?: string
-  onClick?: MouseEventHandler<HTMLButtonElement>
+  onClick?: MouseEventHandler<HTMLElement>
 }
 
 const iconMap = { arrow: ArrowRight, arrowUpRight: ArrowUpRight, plus: Plus }
@@ -38,6 +43,9 @@ export default function Button({
   variant = 'light',
   icon = 'none',
   size = 'default',
+  href,
+  target,
+  type = 'button',
   className = '',
   onClick,
 }: ButtonProps) {
@@ -64,13 +72,12 @@ export default function Button({
   const buttonRadius = isLg ? 'rounded-[20px]' : 'rounded-[16px]'
   const badgeRadius = 'rounded-[8px]'
 
-  return (
-    <button
-      onClick={onClick}
-      className={`group corner-smooth inline-flex items-center gap-3 ${buttonRadius} ${textSize} font-semibold transition-all duration-300 ease-out hover:scale-[1.03] active:scale-[0.98] ${paddingClasses} ${hoverPaddingSwap} ${
-        isPrimary ? 'hover:flex-row-reverse hover:bg-navy-800 hover:text-white' : ''
-      } ${baseColors[variant]} ${className}`}
-    >
+  const classes = `group corner-smooth inline-flex items-center gap-3 ${buttonRadius} ${textSize} font-semibold transition-all duration-300 ease-out hover:scale-[1.03] active:scale-[0.98] ${paddingClasses} ${hoverPaddingSwap} ${
+    isPrimary ? 'hover:flex-row-reverse hover:bg-navy-800 hover:text-white' : ''
+  } ${baseColors[variant]} ${className}`
+
+  const inner = (
+    <>
       <span>{children}</span>
       {Icon && isBadged && (
         <span
@@ -90,6 +97,20 @@ export default function Button({
           className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
         />
       )}
+    </>
+  )
+
+  if (href) {
+    return (
+      <a href={href} target={target} className={classes} onClick={onClick}>
+        {inner}
+      </a>
+    )
+  }
+
+  return (
+    <button type={type} onClick={onClick} className={classes}>
+      {inner}
     </button>
   )
 }

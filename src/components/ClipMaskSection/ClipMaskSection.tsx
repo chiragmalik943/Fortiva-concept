@@ -2,10 +2,14 @@ import { useEffect, useRef } from 'react'
 import { gsap, prefersReducedMotion } from '../../animations/gsap'
 import { images } from '../../assets/images'
 
+// The three stages align to the Plans sub-nav (Individuals & Families /
+// Employers) and to the three audience cards further down the page. The
+// existing photography already matches, so this is a text-only change — the
+// 380vh timeline, the snap points and the mask logic are all untouched.
 const stages = [
-  { label: 'Your Family', image: images.forStageFamily },
-  { label: 'Your Employees', image: images.forStageEmployees },
-  { label: 'You', image: images.forStageYou },
+  { label: 'your family.', image: images.forStageFamily },
+  { label: 'your business.', image: images.forStageEmployees },
+  { label: 'YOU.', image: images.forStageYou },
 ]
 
 const START_SCALE = 0.85
@@ -96,7 +100,7 @@ export default function ClipMaskSection() {
               key={stage.label}
               ref={(el) => (imgRefs.current[i] = el)}
               src={stage.image}
-              alt={i === 0 ? 'For your family, your employees, and you' : ''}
+              alt={i === 0 ? 'For your family, your business, and you' : ''}
               aria-hidden={i === 0 ? undefined : true}
               className="absolute inset-0 h-full w-full object-cover"
               style={{ opacity: i === 0 ? 1 : 0 }}
@@ -121,7 +125,7 @@ export default function ClipMaskSection() {
           </div>
         </div>
 
-        <h2 className="sr-only">For your family. For your employees. For you.</h2>
+        <h2 className="sr-only">For your family. For your business. For you.</h2>
       </div>
     </section>
   )

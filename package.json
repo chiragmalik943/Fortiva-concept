@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/check-fonts.mjs",
     "build": "tsc -b && vite build",
+    "check:fonts": "node scripts/check-fonts.mjs",
     "preview": "vite preview",
     "lint": "tsc --noEmit",
     "predeploy": "npm run build",

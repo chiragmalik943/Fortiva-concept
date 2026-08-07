@@ -2,27 +2,32 @@ import { useEffect, useRef } from 'react'
 import { gsap, prefersReducedMotion } from '../../animations/gsap'
 import { images } from '../../assets/images'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
+import { REACH_PHONE } from '../../content/site'
+import Button from '../Button'
 
+// The enrollment journey, assembled from "Enrollment made simple" (Plans),
+// member FAQ #3 and the Member Portal page. Replaces a generic four-step
+// advisory process that had no basis in the copy at all.
 const steps = [
   {
     n: '01',
-    title: 'Understand your needs',
-    body: "We start with you—not a policy.",
+    title: 'Explore plans',
+    body: 'Compare multi-tiered options online, with clear pricing and defined benefits upfront.',
   },
   {
     n: '02',
-    title: 'Compare your options',
-    body: 'We help you make sense of coverage, benefits, and costs.',
+    title: 'Choose your coverage',
+    body: 'Add supplemental protection like critical illness or accident coverage where you need it.',
   },
   {
     n: '03',
-    title: 'Choose with confidence',
-    body: 'Clear guidance helps you decide what works for you.',
+    title: 'Enroll your way',
+    body: `Online in minutes, or with licensed, human-led guidance from REACH at ${REACH_PHONE}.`,
   },
   {
     n: '04',
-    title: 'Stay supported',
-    body: "As life changes, we're here to help your coverage change with it.",
+    title: 'Manage it all in one place',
+    body: 'Claims, digital ID cards and support, in the member portal and the Fortiva app.',
   },
 ]
 
@@ -54,8 +59,9 @@ export default function SplitSection() {
     <section className="bg-cream">
       {/* full-bleed, edge to edge, full viewport height; 50/50 columns,
           reversed on mobile (text first, then image) with a dedicated
-          mobile image */}
-      <div className="grid sm:h-screen sm:grid-cols-2">
+          mobile image. min-h rather than h so the added CTA can't clip the
+          list on a short viewport. */}
+      <div className="grid sm:min-h-screen sm:grid-cols-2">
         <div ref={imageRef} className="relative order-2 min-h-[360px] sm:order-1 sm:min-h-0">
           <picture>
             <source media="(max-width: 639px)" srcSet={images.splitImageMobile} />
@@ -69,11 +75,10 @@ export default function SplitSection() {
 
         <div className="order-1 flex flex-col justify-center bg-navy-800 px-10 py-14 sm:order-2 sm:px-16">
           <h2 className="max-w-sm text-[28px] font-semibold leading-tight text-white sm:text-[34px]">
-            Building a future with{' '}
-            <span className="text-gold">simple &amp; fair health Insurance</span>
+            Enrollment made <span className="text-gold">simple</span>
           </h2>
 
-          <ul ref={listRef} className="mt-10 flex flex-col">
+          <ul ref={listRef} className="mt-8 flex flex-col">
             {steps.map((step) => (
               <li
                 key={step.n}
@@ -88,6 +93,12 @@ export default function SplitSection() {
               </li>
             ))}
           </ul>
+
+          <div className="mt-8">
+            <Button variant="gold" icon="arrow" href="/contact">
+              Get a Quote
+            </Button>
+          </div>
         </div>
       </div>
     </section>

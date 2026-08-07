@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { UserCheck, MapPin, ClipboardCheck, Headphones, type LucideIcon } from 'lucide-react'
+import { Layers, Eye, Headphones, Sparkles, type LucideIcon } from 'lucide-react'
 import { gsap, prefersReducedMotion } from '../../animations/gsap'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
 import { images } from '../../assets/images'
@@ -14,40 +14,45 @@ interface CardConfig {
   fg: string
 }
 
+// Fortiva's four differentiators, straight from the copy doc's "H2: Fortiva"
+// block on the Home page. The doc gives each as a single bullet; the card body
+// slot takes two to three lines comfortably, so each bullet is paired with one
+// supporting sentence drawn from elsewhere in the same doc (Plans → Individuals
+// & Families, and Plans → Employers).
 const CARDS: CardConfig[] = [
   {
-    id: 'personalized',
-    kicker: 'PERSONALIZED PLANS',
-    title: 'Coverage built around you',
-    body: 'A short conversation about your health, budget and goals is all it takes to find a plan that actually fits — not a generic, one-size-fits-all policy.',
-    icon: UserCheck,
+    id: 'affordable',
+    kicker: 'AFFORDABLE, FLEXIBLE PLANS',
+    title: 'Multi-tiered coverage designed for real budgets',
+    body: 'Flexible options that fit what you can actually spend, without sacrificing quality care — and the room to add supplemental protection where you need it.',
+    icon: Layers,
     bg: images.cardOneBg,
     fg: images.cardOne,
   },
   {
-    id: 'network',
-    kicker: 'NATIONWIDE NETWORK',
-    title: 'Care wherever life takes you',
-    body: 'Access thousands of trusted providers across the country, so a new city or a new job never means starting your coverage over.',
-    icon: MapPin,
+    id: 'transparent',
+    kicker: 'TRANSPARENT PRICING',
+    title: 'No surprises. Just health insurance you can trust',
+    body: 'No hidden fees and no fine print working against you. Clear, upfront plan details so you know what is covered before care is ever needed.',
+    icon: Eye,
     bg: images.cardTwoBg,
     fg: images.cardTwo,
   },
   {
-    id: 'claims',
-    kicker: 'SIMPLE CLAIMS',
-    title: 'Claims without the headache',
-    body: 'Submit, track and resolve claims in minutes through a process built to be transparent from the very first step.',
-    icon: ClipboardCheck,
+    id: 'human',
+    kicker: 'HUMAN-FIRST EXPERIENCE',
+    title: 'Empathetic support, and tech that simplifies every step',
+    body: 'Real people giving real answers, backed by tools that take the friction out of enrollment, claims and everything after.',
+    icon: Headphones,
     bg: images.cardThreeBg,
     fg: images.cardThree,
   },
   {
-    id: 'support',
-    kicker: 'ALWAYS-ON SUPPORT',
-    title: 'Support that stays with you',
-    body: 'Real advisors are a call away whenever your circumstances change, so your plan keeps up with your life.',
-    icon: Headphones,
+    id: 'innovation',
+    kicker: 'INNOVATION THAT WORKS FOR YOU',
+    title: 'Agentic AI for easy enrollment and proactive care',
+    body: 'Technology pointed at the parts of insurance nobody enjoys — frictionless administration for members and employers alike.',
+    icon: Sparkles,
     bg: images.cardFourBg,
     fg: images.cardFour,
   },
@@ -263,7 +268,7 @@ export default function StackedCards() {
       <section className="bg-cream px-6 py-24 sm:py-28">
         <div className={`mx-auto ${CARD_MAX_WIDTH}`}>
           <h2 className="mx-auto max-w-2xl text-balance text-center text-[30px] font-semibold leading-tight text-navy-800 sm:text-[38px]">
-            Coverage designed around <span className="text-gold">your life</span>
+            <span className="text-gold-dark">FOR</span> a better health insurance experience
           </h2>
           <div className="mt-14 flex flex-col gap-10">
             {CARDS.map((card, i) => (
@@ -283,7 +288,7 @@ export default function StackedCards() {
             ref={headingRef}
             className="max-w-2xl text-balance text-center text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
           >
-            Coverage designed around <span className="text-gold">your life</span>
+            <span className="text-gold-dark">FOR</span> a better health insurance experience
           </h2>
         </div>
 

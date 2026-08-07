@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 420" width="600" height="420" role="img" aria-label="Placeholder map of Fortiva's current and upcoming coverage states">
+  <!--
+    PLACEHOLDER — swap this one file for the real map artwork.
+
+    Referenced only from src/assets/images.ts (`availabilityMap`), same
+    convention as every other image in this project, so replacing it needs no
+    code change. Any viewBox works; the component renders it with
+    object-contain. A stylised abstraction rather than accurate state outlines,
+    which are easy to get subtly wrong at this size.
+
+    Gold = live. Muted navy = coming soon.
+  -->
+  <defs>
+    <style>
+      .tile { stroke: #11284B; stroke-opacity: 0.08; stroke-width: 1.5; }
+      .live { fill: #D5AC67; }
+      .soon { fill: #11284B; fill-opacity: 0.07; }
+      .lbl { font-family: 'New Hero', ui-sans-serif, system-ui, sans-serif; font-size: 22px; font-weight: 600; text-anchor: middle; }
+      .lbl-live { fill: #11284B; }
+      .lbl-soon { fill: #11284B; fill-opacity: 0.45; }
+    </style>
+  </defs>
+
+  <!-- upper band: TN, NC -->
+  <rect class="tile soon" x="42"  y="58"  width="252" height="74" rx="16"/>
+  <text class="lbl lbl-soon" x="168" y="103">TN</text>
+
+  <rect class="tile live" x="306" y="58"  width="252" height="74" rx="16"/>
+  <text class="lbl lbl-live" x="432" y="103">NC</text>
+
+  <!-- middle band: AL, GA, SC -->
+  <rect class="tile soon" x="42"  y="146" width="118" height="130" rx="16"/>
+  <text class="lbl lbl-soon" x="101" y="218">AL</text>
+
+  <rect class="tile soon" x="172" y="146" width="130" height="130" rx="16"/>
+  <text class="lbl lbl-soon" x="237" y="218">GA</text>
+
+  <rect class="tile soon" x="314" y="146" width="244" height="96" rx="16"/>
+  <text class="lbl lbl-soon" x="436" y="201">SC</text>
+
+  <!-- lower band: FL -->
+  <rect class="tile soon" x="172" y="290" width="386" height="74" rx="16"/>
+  <text class="lbl lbl-soon" x="365" y="335">FL</text>
+</svg>

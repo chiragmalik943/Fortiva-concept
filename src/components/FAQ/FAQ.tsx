@@ -2,24 +2,27 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Plus } from 'lucide-react'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
+import { REACH_PHONE } from '../../content/site'
 import Button from '../Button'
 
+// Four of the eight member FAQs in the copy doc, verbatim. The remaining four
+// live on For Members → FAQs, which the button below links to.
 const faqs = [
   {
-    q: 'What coverage should I look for?',
-    a: 'It depends on your stage of life and budget — we walk through your options together and match you with a plan that covers what matters most without paying for what doesn\u2019t.',
+    q: 'What is Fortiva and what makes it different?',
+    a: 'Fortiva is a North Carolina-based health insurance company committed to disrupting the traditional market by delivering affordable, value-based coverage that puts people — not premiums — first. Our plans are designed to be flexible, transparent and powered by technology for a simpler, more personalized experience.',
   },
   {
-    q: 'Could you help me plan for Retirement Healthcare?',
-    a: 'Yes. Our advisors help you bridge the gap between your current plan and Medicare, so there are no surprises when you retire.',
+    q: 'What types of plans does Fortiva offer?',
+    a: 'We provide multi-tiered health insurance options, including limited medical and short-term medical plans, along with supplemental coverage like Critical Illness and Accidental Death & Dismemberment. These plans are tailored for individuals, families and small businesses seeking affordable alternatives to traditional Affordable Care Act plans.',
   },
   {
-    q: 'How do I choose the right health plan?',
-    a: 'We start with a short conversation about your health needs, providers and budget, then compare plans side by side so the trade-offs are obvious.',
+    q: 'How do I enroll in a Fortiva plan?',
+    a: `Getting started with Fortiva is simple and technology-driven. Members can explore plans, compare options and enroll through the Fortiva website. For additional support, REACH, Fortiva's trusted enrollment support partner, offers licensed, human-led guidance by phone at ${REACH_PHONE} to help individuals navigate their options and enroll with confidence.`,
   },
   {
-    q: 'Can I keep my current doctor?',
-    a: 'In most cases, yes. We\u2019ll check your provider network before you switch, so continuity of care is never a surprise.',
+    q: 'How does Fortiva keep costs affordable?',
+    a: 'We focus on underserved markets and leverage technology to streamline operations, reduce overhead and deliver transparent pricing. Our plans are designed to fit real-life budgets without compromising quality care.',
   },
 ]
 
@@ -34,7 +37,7 @@ export default function FAQ() {
           ref={headingRef}
           className="text-balance text-center text-[28px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[36px]"
         >
-          Common questions on health coverage and benefits
+          Common questions
         </h2>
 
         <div className="mt-14 flex flex-col">
@@ -79,7 +82,9 @@ export default function FAQ() {
         </div>
 
         <div className="mt-10 flex justify-center">
-          <Button variant="ghost">All FAQ&apos;s</Button>
+          <Button variant="ghost" href="/members/faqs">
+            All FAQ&apos;s
+          </Button>
         </div>
       </div>
     </section>

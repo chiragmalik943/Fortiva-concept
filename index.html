@@ -7,12 +7,19 @@
     <title>Fortiva — Health Insurance Made Simple</title>
     <meta name="description" content="Powered by innovation. Guided by humanity. Health, life and wellness insurance built around clarity, choice and confidence." />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&display=swap"
-      rel="stylesheet"
-    />
+    <!-- New Hero is self-hosted from public/fonts — no Google Fonts, so no
+         third-party connection and no render-blocking stylesheet.
+
+         Only the three faces used above the fold are preloaded: Regular (body),
+         Medium (nav) and SemiBold (headings). Bold and every italic are below
+         the fold and load normally. Vite rewrites these with the configured
+         base at build time, same as the CSS url()s.
+
+         `crossorigin` is required on font preloads even same-origin — without
+         it the browser fetches the file twice. -->
+    <link rel="preload" href="/fonts/NewHero-Regular.otf" as="font" type="font/otf" crossorigin />
+    <link rel="preload" href="/fonts/NewHero-Medium.otf" as="font" type="font/otf" crossorigin />
+    <link rel="preload" href="/fonts/NewHero-SemiBold.otf" as="font" type="font/otf" crossorigin />
   </head>
   <body>
     <div id="root"></div>

@@ -59,4 +59,15 @@ export const images = {
   logo: `${import.meta.env.BASE_URL}logo.svg`,
 
   forMask: `${import.meta.env.BASE_URL}for-mask.svg`,
+
+  // The Available States dot map, in two halves. This one is the static grey
+  // grid for the 44 states Fortiva doesn't name — a single <path>, drawn as a
+  // plain <img> so half a megabyte of path data stays out of the JS bundle and
+  // caches like any other image. The six interactive states are NOT here: their
+  // dots are inlined in components/AvailableStates/mapStates.ts so React can
+  // address each one. Both halves share the artwork's 736 x 542 viewBox, which
+  // is what keeps the <img> and the <svg> overlay in register at any width.
+  // Generated from public/map.svg, which stays in the repo as the source of
+  // truth — see mapStates.ts if the artwork is ever redrawn.
+  availabilityMapBase: `${import.meta.env.BASE_URL}map-base.svg`,
 }

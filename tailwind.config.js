@@ -28,7 +28,19 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['"Familjen Grotesk"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        // New Hero is the only typeface on the site. `serif` is overridden too
+        // so a stray `font-serif` can't silently fall back to a system serif.
+        sans: ['"New Hero"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        serif: ['"New Hero"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
+      fontWeight: {
+        // Foundry-named aliases for the three weights whose Tailwind default
+        // name doesn't match New Hero's own. See src/styles/fonts.css for the
+        // full mapping — the trap is that `font-thin` (100) is New Hero
+        // *Hairline*, and `font-extralight` (200) is New Hero *Thin*.
+        hairline: '100',
+        ultralight: '250',
+        super: '900',
       },
       borderRadius: {
         xl2: '1.75rem',

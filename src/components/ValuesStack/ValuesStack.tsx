@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Users, Heart, ShieldCheck, Award, type LucideIcon } from 'lucide-react'
+import { Heart, Zap, ShieldCheck, KeyRound, Lightbulb, type LucideIcon } from 'lucide-react'
 import { gsap, prefersReducedMotion } from '../../animations/gsap'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
 
@@ -9,39 +9,56 @@ interface ValueCard {
   icon: LucideIcon
 }
 
+// Fortiva's five brand values, verbatim from the copy doc's About page and
+// repeated near-identically on Careers. The four that were here before
+// (Integrity / Client Focus / Risk Resilience / Expertise) were placeholders
+// written to match the reference screenshot's tone.
 const values: ValueCard[] = [
   {
-    title: 'Integrity',
-    body: 'We uphold the highest ethical standards in every interaction, ensuring transparency and trust.',
-    icon: Users,
-  },
-  {
-    title: 'Client Focus',
-    body: 'Every plan starts with listening. We shape coverage around your life, not the other way around.',
+    title: 'Member-first',
+    body: 'Every decision starts and ends with the member in mind.',
     icon: Heart,
   },
   {
-    title: 'Risk Resilience',
-    body: "We plan for what's ahead so you're protected through every stage of life's uncertainty.",
+    title: 'Disrupt to improve',
+    body: 'Challenge the status quo to create better outcomes for those we serve.',
+    icon: Zap,
+  },
+  {
+    title: 'Lead with integrity',
+    body: 'Operate with transparency, honesty and accountability in every interaction.',
     icon: ShieldCheck,
   },
   {
-    title: 'Expertise',
-    body: 'Decades of combined experience mean straightforward advice you can actually rely on.',
-    icon: Award,
+    title: 'Empowerment',
+    body: 'Give members control and confidence through clarity and choice.',
+    icon: KeyRound,
+  },
+  {
+    title: 'Innovation',
+    body: 'Harness technology and bold thinking to transform health coverage.',
+    icon: Lightbulb,
   },
 ]
 
-// straightened resting offsets for each card in the stack — no rotation
-// and no horizontal drift, just an even downward step per card so the
-// one underneath always shows a slice of itself above the new arrival
-const PEEK = 24 // px each successive card sits lower than the one before it
-const rest = [
-  { x: 0, y: 0 * PEEK, rotate: 0 },
-  { x: 0, y: 1 * PEEK, rotate: 0 },
-  { x: 0, y: 2 * PEEK, rotate: 0 },
-  { x: 0, y: 3 * PEEK, rotate: 0 },
-]
+// px each successive card sits lower than the one before it, so the card
+// underneath always shows a slice of itself above the new arrival
+const PEEK = 24
+
+// Everything below is DERIVED from values.length rather than hard-coded, so the
+// list above is the only thing to edit if a sixth value ever arrives — the
+// original version had a fixed 4-entry offset table and two `i < 4` loops, which
+// is what made going from four values to five a code change at all.
+const rest = values.map((_, i) => ({ x: 0, y: i * PEEK, rotate: 0 }))
+
+// Scroll distance each card's rise gets. 83vh reproduces the approved 4-card
+// pacing exactly: that build was 350vh tall with a 100vh sticky viewport, so
+// (350 - 100) / 3 transitions ≈ 83vh per card.
+const PER_TRANSITION_VH = 83
+const SECTION_HEIGHT_VH = 100 + PER_TRANSITION_VH * (values.length - 1)
+
+// Tallest card is ~250px; the stack adds one PEEK step per extra card on top.
+const STACK_HEIGHT_PX = 250 + PEEK * (values.length - 1)
 
 // how much darker (navy overlay opacity) a card gets per card stacked on top of it
 const DARK_STEP = 0.04
@@ -57,8 +74,8 @@ export default function ValuesStack() {
       cardRefs.current.forEach((el, i) => {
         if (!el) return
         gsap.set(el, { x: rest[i].x, y: rest[i].y, rotate: rest[i].rotate, opacity: 1 })
-        // settled state: card i has (3 - i) cards above it
-        gsap.set(overlayRefs.current[i], { opacity: (3 - i) * DARK_STEP })
+        // settled state: card i has (last - i) cards above it
+        gsap.set(overlayRefs.current[i], { opacity: (values.length - 1 - i) * DARK_STEP })
       })
       return
     }
@@ -67,8 +84,8 @@ export default function ValuesStack() {
       // card 0 sits in place from the start, no darkening yet
       gsap.set(cardRefs.current[0], { x: rest[0].x, y: rest[0].y, rotate: rest[0].rotate })
       gsap.set(overlayRefs.current[0], { opacity: 0 })
-      // cards 1-3 start below the viewport, flat, undarkened
-      for (let i = 1; i < 4; i++) {
+      // every other card starts below the viewport, flat, undarkened
+      for (let i = 1; i < values.length; i++) {
         gsap.set(cardRefs.current[i], { x: rest[i].x, y: '70vh', rotate: 0 })
         gsap.set(overlayRefs.current[i], { opacity: 0 })
       }
@@ -82,7 +99,7 @@ export default function ValuesStack() {
         },
       })
 
-      for (let i = 1; i < 4; i++) {
+      for (let i = 1; i < values.length; i++) {
         const segmentStart = i - 1
 
         // reveal card i
@@ -109,7 +126,7 @@ export default function ValuesStack() {
   }, [])
 
   return (
-    <section ref={outerRef} className="relative bg-cream" style={{ height: '350vh' }}>
+    <section ref={outerRef} className="relative bg-cream" style={{ height: `${SECTION_HEIGHT_VH}vh` }}>
       <div className="sticky top-0 flex h-screen flex-col items-center justify-center overflow-hidden px-6">
         <div className="mb-16 text-center">
           <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
@@ -119,13 +136,14 @@ export default function ValuesStack() {
             ref={headingRef}
             className="mt-5 text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
           >
-            Delivering Clarity,
-            <br />
-            Choice and Confidence
+            Powered by values
           </h2>
         </div>
 
-        <div className="relative h-[300px] w-full max-w-[600px]">
+        <div
+          className="relative w-full max-w-[600px]"
+          style={{ height: `${STACK_HEIGHT_PX}px` }}
+        >
           {values.map((value, i) => {
             const Icon = value.icon
             return (
@@ -138,7 +156,13 @@ export default function ValuesStack() {
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gold">
                   <Icon size={20} className="text-navy-800" strokeWidth={1.75} />
                 </div>
-                <h3 className="mt-5 font-serif text-2xl italic text-navy-800">{value.title}</h3>
+                {/* Was `font-serif italic` — a system-serif italic used as a
+                    deliberate contrast against Familjen Grotesk. Now that the
+                    whole site is New Hero, this is New Hero's own italic. It
+                    keeps the italic accent but loses the serif contrast; add
+                    back a real serif family in tailwind.config.js if that
+                    contrast turns out to be wanted. */}
+                <h3 className="mt-5 text-2xl italic text-navy-800">{value.title}</h3>
                 <p className="mt-3 max-w-sm text-[14.5px] leading-relaxed text-navy-800/55">
                   {value.body}
                 </p>
