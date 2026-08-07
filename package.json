@@ -5,10 +5,12 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "predev": "node scripts/build-map.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/check-fonts.mjs",
+    "prebuild": "node scripts/check-fonts.mjs && node scripts/build-map.mjs",
     "build": "tsc -b && vite build",
     "check:fonts": "node scripts/check-fonts.mjs",
+    "map": "node scripts/build-map.mjs",
     "preview": "vite preview",
     "lint": "tsc --noEmit",
     "predeploy": "npm run build",

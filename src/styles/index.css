@@ -160,42 +160,15 @@ body {
    (the idle ping) is opted in under `no-preference` instead, so it simply never
    starts.
 
-   ── The three tiers ──────────────────────────────────────────────────────
-   Visual weight has to track importance, and the artwork's original palette had
-   it backwards: the five coming-soon states were the darkest thing on the map
-   while the one state you can actually buy in was gold — the lowest-contrast
-   colour in the system (about 1.8:1 on cream, against navy's 12:1). So the ramp
-   is now one navy scale, darkest first:
-
-     live          #11284b   navy-800, solid            12:1
-     coming soon   #6e7a8a   navy at 58% over cream    3.6:1
-     rest          #11284b   at 11%, baked into        1.3:1
-                             public/map-base.svg
-
-   The steps are deliberately uneven. Tier 1 has to win outright, tier 3 has to
-   sit far enough back to read as context rather than content, and tier 2 needs
-   air on both sides — a first pass at 45%/16% put it close enough to the base
-   that the five coming-soon states dissolved into the other forty-four.
-
-   They're flattened to solid hex rather than alpha so the dimming below can own
-   `opacity` outright without the two compounding.
-
-   Gold doesn't disappear — it changes job. It's now the interaction colour: the
-   ring on whatever you're pointing at, and the idle ping on the live state. It
-   reads as "attention here" instead of carrying a status it couldn't support,
-   and it still ties the map back to the gold North Carolina chip. */
-
-.fmap-state[data-status='live'] {
-  --fmap-ink: #11284b;
-  --fmap-ink-active: #0b1b34;
-}
-.fmap-state[data-status='coming-soon'] {
-  --fmap-ink: #6e7a8a;
-  /* Activating also walks a coming-soon state up the ramp — navy-400 is clearly
-     darker than its resting steel but still clearly lighter than a live state,
-     so the highlight never impersonates "available now". */
-  --fmap-ink-active: #3a5178;
-}
+   ── No colour here ───────────────────────────────────────────────────────
+   Not one hex in this block. Every fill on the map comes from public/map.svg
+   and arrives as `--fmap-ink`, set inline on each state group from MAP_FILLS in
+   mapStates.ts; the dots, the highlight ring, the glow and the idle ping all
+   read that one variable. So recolouring the artwork recolours the interaction
+   with it, and there is nowhere for a stale value to hide — which was the point
+   of routing it this way rather than duplicating the palette into CSS.
+   scripts/build-map.mjs re-derives MAP_FILLS from the SVG on every dev start
+   and build. */
 
 /* The lean-in. Scaling the <img> and the <svg> together — rather than animating
    the viewBox, which isn't animatable — enlarges the six states in place while a
@@ -231,11 +204,14 @@ body {
 .fmap-dot {
   fill: var(--fmap-ink);
   transition: transform 380ms cubic-bezier(0.2, 0.8, 0.25, 1)
-      calc((1 - var(--t, 0)) * 60ms),
-    fill 300ms ease;
+    calc((1 - var(--t, 0)) * 60ms);
 }
+/* Activating changes size, not colour. An earlier version darkened the active
+   state a step as well, which meant inventing a fourth and fifth value the
+   artwork never authorised — and on a map whose three colours already carry
+   meaning, a highlight that shifts hue reads as a change of status. Scale, ring,
+   glow and the surrounding dimming do the work instead. */
 .fmap-state[data-active='true'] .fmap-dot {
-  fill: var(--fmap-ink-active);
   transform: scale(1.6);
   transition-delay: calc(var(--t, 0) * 200ms);
 }
@@ -254,12 +230,11 @@ body {
   transform: scale(1.08);
 }
 
-/* Gold, not the state's own ink: the ring means "this is the one you're pointing
-   at", which is the same thing everywhere, and gold is the one hue on the map
-   that isn't already spoken for by a status. */
+/* Drawn in the state's own ink, one step outside its dots, so it defines the
+   shape the dots are too sparse to describe on their own. */
 .fmap-ring {
   fill: none;
-  stroke: #d5ac67;
+  stroke: var(--fmap-ink);
   stroke-width: 1.3;
   stroke-linejoin: round;
   opacity: 0;
@@ -300,7 +275,7 @@ body {
    whatever they're actually pointing at. */
 .fmap-ping {
   fill: none;
-  stroke: #d5ac67;
+  stroke: var(--fmap-ink);
   stroke-width: 1.6;
   stroke-linejoin: round;
   opacity: 0;
@@ -359,15 +334,13 @@ body {
   transform: translate(var(--tip-x), calc(-100% - 12px)) scale(1);
 }
 
-/* The dot on each coming-soon chip is the map's middle tier at actual colour, so
-   the list reads as a legend as well as a control. The live chip doesn't need one
-   — it's the only gold thing in the section. */
+/* Each chip is tinted from MAP_FILLS, inline, so the list doubles as the map's
+   legend and can't fall out of step with it. The live chip takes its state's fill
+   as a solid background; the coming-soon chips carry theirs as a swatch. */
 .fchip-swatch {
-  background-color: #6e7a8a;
-  transition: background-color 300ms ease, transform 300ms ease;
+  transition: transform 300ms ease;
 }
 .fchip[data-active='true'] .fchip-swatch {
-  background-color: #3a5178;
   transform: scale(1.25);
 }
 
@@ -383,13 +356,10 @@ body {
 }
 .fchip[data-active='true'] {
   transform: translateY(-2px);
-}
-.fchip--live[data-active='true'] {
-  box-shadow: 0 10px 22px -10px rgba(213, 172, 103, 0.95);
+  box-shadow: 0 10px 22px -12px rgba(17, 40, 75, 0.45);
 }
 .fchip--soon[data-active='true'] {
   border-color: rgba(17, 40, 75, 0.28);
   background-color: #fff;
   color: rgba(17, 40, 75, 0.95);
-  box-shadow: 0 10px 22px -12px rgba(17, 40, 75, 0.45);
 }

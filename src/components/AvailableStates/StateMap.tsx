@@ -1,7 +1,7 @@
 import { CSSProperties, PointerEvent, useCallback } from 'react'
 import { images } from '../../assets/images'
 import { AvailabilityState } from '../../content/site'
-import { MAP_FOCUS, MAP_VIEWBOX, mapStates } from './mapStates'
+import { MAP_FILLS, MAP_FOCUS, MAP_VIEWBOX, mapStates } from './mapStates'
 
 interface StateMapProps {
   /** Content record per state code, so the map never invents its own copy. */
@@ -124,6 +124,10 @@ export default function StateMap({
                   className="fmap-state"
                   data-status={meta.status}
                   data-active={active === shape.code ? 'true' : 'false'}
+                  /* The one place a map colour enters the DOM. Everything that
+                     paints this state — dots, ring, glow — inherits it from here,
+                     so map.svg stays the only source of colour. */
+                  style={{ '--fmap-ink': MAP_FILLS[shape.code] } as CSSProperties}
                 >
                   <path className="fmap-glow" d={shape.hit} />
                   <path className="fmap-ring" d={shape.hit} />
@@ -143,7 +147,10 @@ export default function StateMap({
                 offset rings breathing out of its outline. Stops the moment the
                 visitor starts exploring, and never starts under reduced motion. */}
             {live && (
-              <g className="fmap-pings">
+              <g
+                className="fmap-pings"
+                style={{ '--fmap-ink': MAP_FILLS[live.code] } as CSSProperties}
+              >
                 <path className="fmap-ping" d={live.hit} />
                 <path className="fmap-ping fmap-ping--delayed" d={live.hit} />
               </g>
@@ -180,11 +187,11 @@ export default function StateMap({
         data-side={pos?.side ?? 'center'}
         style={{ left: pos?.left ?? '50%', top: pos?.top ?? '50%' }}
       >
-        <div className="corner-smooth flex items-center gap-2 rounded-[12px] bg-navy-800 px-3 py-2 shadow-card">
-          <span
-            className="h-1.5 w-1.5 shrink-0 rounded-full"
-            style={{ backgroundColor: tipState?.status === 'live' ? '#D6AC68' : '#BCCAD1' }}
-          />
+        {/* No status swatch in here. It used to carry the tier colour, which now
+            comes from the artwork — and one of those colours is the navy this
+            label sits on, so the dot would sometimes be invisible. The status
+            word says it unambiguously at any palette. */}
+        <div className="corner-smooth flex items-center gap-2.5 rounded-[12px] bg-navy-800 px-3.5 py-2 shadow-card">
           <span className="whitespace-nowrap text-[13px] font-semibold leading-none text-cream-soft">
             {tipState?.name}
           </span>

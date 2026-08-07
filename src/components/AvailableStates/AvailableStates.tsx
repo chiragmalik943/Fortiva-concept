@@ -1,16 +1,38 @@
 import { PointerEvent, useState } from 'react'
 import { Check } from 'lucide-react'
 import { availabilityStates } from '../../content/site'
+import { MAP_FILLS } from './mapStates'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
 import StateMap from './StateMap'
+
+/**
+ * Text colour for a chip whose background is a hex out of map.svg. The live
+ * chip's fill isn't ours to choose, so its label can't be a fixed colour —
+ * navy-800 lettering on a navy-800 chip is the failure this exists to avoid.
+ *
+ * sRGB relative luminance, WCAG's formula. The threshold is where navy-800 and
+ * cream-soft trade places as the higher-contrast choice against the background,
+ * not a guess: solving (L+0.05)² = (0.0226+0.05)(0.887+0.05) puts it at 0.211.
+ */
+function readableOn(hex: string) {
+  const channel = (i: number) => {
+    const c = parseInt(hex.slice(1 + i * 2, 3 + i * 2), 16) / 255
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)
+  }
+  const luminance =
+    0.2126 * channel(0) + 0.7152 * channel(1) + 0.0722 * channel(2)
+  return luminance > 0.211 ? '#11284B' : '#F3F5EE'
+}
 
 // Copy doc, "Available States — Footer". Worth a homepage slot because it's a
 // qualification signal as much as a trust one: a visitor needs to know within
 // seconds whether Fortiva serves them at all, and nothing else on the page says.
 //
 // The chips and the map are two views of one list (`availabilityStates`) and
-// one piece of state (`active`), so pointing at either side lights up both.
+// one piece of state (`active`), so pointing at either side lights up both. They
+// share a palette too: both take their colour from MAP_FILLS, i.e. from
+// public/map.svg, so the chips read as the map's legend and can't drift from it.
 export default function AvailableStates() {
   const headingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
   const bodyRef = useScrollReveal<HTMLDivElement>({ y: 24, delay: 0.1 })
@@ -101,7 +123,11 @@ export default function AvailableStates() {
                   <li key={state.code}>
                     <button
                       {...chipProps(state.code)}
-                      className="fchip fchip--live corner-smooth flex items-center gap-2 rounded-[12px] bg-gold px-4 py-2 text-[14px] font-semibold text-navy-800"
+                      className="fchip corner-smooth flex items-center gap-2 rounded-[12px] px-4 py-2 text-[14px] font-semibold"
+                      style={{
+                        backgroundColor: MAP_FILLS[state.code],
+                        color: readableOn(MAP_FILLS[state.code]),
+                      }}
                     >
                       <Check size={15} strokeWidth={2.5} />
                       {state.name}
@@ -120,7 +146,10 @@ export default function AvailableStates() {
                       {...chipProps(state.code)}
                       className="fchip fchip--soon corner-smooth flex items-center gap-1.5 rounded-[12px] border border-navy-800/10 bg-cream-soft px-4 py-2 text-[14px] font-medium text-navy-800/65"
                     >
-                      <span className="fchip-swatch h-[6px] w-[6px] shrink-0 rounded-full" />
+                      <span
+                        className="fchip-swatch h-[6px] w-[6px] shrink-0 rounded-full"
+                        style={{ backgroundColor: MAP_FILLS[state.code] }}
+                      />
                       {state.name}
                     </button>
                   </li>
