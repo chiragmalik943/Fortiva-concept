@@ -16,8 +16,11 @@
 // Both halves share the 736 x 542 viewBox of the original file, so the <img> and
 // the <svg> overlay stay in register at any width.
 //
-// Every `d` string below is copied verbatim from map.svg — at rest the map is
-// the artwork, unmodified. Regenerating: see the note at the bottom.
+// Every `d` string below is copied verbatim from map.svg, so the geometry is the
+// artwork exactly. The colours are not: the file's flat gold/navy/grey has been
+// re-tiered into one navy ramp so visual weight tracks availability — see the
+// three-tier note above the `.fmap-state` rules in styles/index.css.
+// Regenerating: see the note at the bottom.
 
 export interface MapDot {
   /** Path data, verbatim from map.svg, in the shared 736 x 542 viewBox. */
@@ -51,15 +54,23 @@ export interface MapStateShape {
 export const MAP_VIEWBOX = { width: 736, height: 542 } as const
 
 /**
- * The lean-in. While any state is active the whole map scales up a little about
- * a point in the middle of the six-state cluster, which enlarges the region
- * being explored without ever moving it — at 1.22x the only thing that leaves
- * the frame is the far west coast, and letting go restores the full country.
+ * The lean-in. While any state is active the whole map scales up about a point in
+ * the middle of the six-state cluster, which enlarges the region being explored
+ * without ever moving it.
+ *
+ * 1.05 is not a taste call — it's the ceiling. The map floats with no container
+ * to clip against, so any scale that pushes a dot past the viewBox would need a
+ * hard edge or a mask to hide it. The artwork's own margin is ~4.6% (dots start
+ * at x=34 of 736, y=26 of 542), and scaling about this off-centre origin spends
+ * that margin fastest on the west coast: at 1.05 the far-left dot lands at x=7,
+ * still inside. Anything more and the map starts cutting itself off. The size the
+ * region really needed came from dropping the card and widening the column
+ * instead, which is permanent rather than only true on hover.
  *
  * StateMap applies this as a CSS transform to the <img> and <svg> together, and
  * reuses the same numbers to keep the (unscaled) tooltip pinned to its state.
  */
-export const MAP_FOCUS = { x: 570, y: 330, scale: 1.22 } as const
+export const MAP_FOCUS = { x: 570, y: 330, scale: 1.05 } as const
 
 /**
  * Paint order is largest-first, so smaller states end up on top of the stack

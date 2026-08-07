@@ -68,7 +68,12 @@ export default function AvailableStates() {
 
   return (
     <section className="bg-cream px-6 py-24 sm:py-28">
-      <div className="mx-auto grid max-w-container items-center gap-14 lg:grid-cols-2 lg:gap-20">
+      {/* The map gets the larger share of the row. It used to sit in a padded
+          card at exactly half the width, which left the six states Fortiva
+          actually names about 137px across — the section's whole subject, at
+          thumbnail size. Dropping the card and shifting the split gives it ~22%
+          more room, permanently, rather than only while someone is hovering. */}
+      <div className="mx-auto grid max-w-container items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div>
           <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
             AVAILABILITY
@@ -113,8 +118,9 @@ export default function AvailableStates() {
                   <li key={state.code}>
                     <button
                       {...chipProps(state.code)}
-                      className="fchip fchip--soon corner-smooth rounded-[12px] border border-navy-800/10 bg-cream-soft px-4 py-2 text-[14px] font-medium text-navy-800/65"
+                      className="fchip fchip--soon corner-smooth flex items-center gap-1.5 rounded-[12px] border border-navy-800/10 bg-cream-soft px-4 py-2 text-[14px] font-medium text-navy-800/65"
                     >
+                      <span className="fchip-swatch h-[6px] w-[6px] shrink-0 rounded-full" />
                       {state.name}
                     </button>
                   </li>
@@ -125,17 +131,15 @@ export default function AvailableStates() {
         </div>
 
         <div ref={mapRef} className="opacity-0">
-          <div className="corner-smooth rounded-card bg-cream-soft p-6 shadow-card sm:p-8">
-            <StateMap
-              states={availabilityStates}
-              active={active}
-              onShow={show}
-              onHide={hide}
-              onToggle={toggle}
-              resting={resting}
-            />
-          </div>
-          <p className="mt-4 text-center text-[12.5px] text-navy-800/40 lg:text-left">
+          <StateMap
+            states={availabilityStates}
+            active={active}
+            onShow={show}
+            onHide={hide}
+            onToggle={toggle}
+            resting={resting}
+          />
+          <p className="mt-2 text-center text-[12.5px] text-navy-800/40">
             <span className="hidden sm:inline">Hover</span>
             <span className="sm:hidden">Tap</span> a state or a name to see its status.
           </p>

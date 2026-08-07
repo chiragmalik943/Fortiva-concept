@@ -88,10 +88,11 @@ export default function StateMap({
       data-focus={active ? 'true' : 'false'}
       onPointerLeave={onHide}
     >
-      <div
-        className="fmap-frame relative overflow-hidden rounded-[14px]"
-        style={{ aspectRatio: `${VB_W} / ${VB_H}` }}
-      >
+      {/* No overflow clip: the map floats on the section background with no
+          container, so there is no edge that could justify cutting a dot off.
+          MAP_FOCUS.scale is capped at the largest value that keeps every dot
+          inside the viewBox, which is what makes that safe. */}
+      <div className="relative" style={{ aspectRatio: `${VB_W} / ${VB_H}` }}>
         <div
           className="fmap-stage absolute inset-0"
           style={{
