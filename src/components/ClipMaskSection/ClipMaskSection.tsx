@@ -7,8 +7,8 @@ import { images } from '../../assets/images'
 // existing photography already matches, so this is a text-only change — the
 // 380vh timeline, the snap points and the mask logic are all untouched.
 const stages = [
-  { label: 'your family.', image: images.forStageFamily },
-  { label: 'your business.', image: images.forStageEmployees },
+  { label: 'Your Family.', image: images.forStageFamily },
+  { label: 'Your Business.', image: images.forStageEmployees },
   { label: 'YOU.', image: images.forStageYou },
 ]
 
