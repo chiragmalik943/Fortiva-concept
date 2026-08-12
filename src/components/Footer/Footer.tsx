@@ -1,6 +1,7 @@
 import { Twitter, Linkedin, Facebook, Instagram, ArrowUpRight } from 'lucide-react'
 import Logo from '../Logo'
 import Button from '../Button'
+import { Link } from '../../router/router'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
 import {
@@ -44,7 +45,9 @@ export default function Footer() {
   return (
     <footer id="footer" className="bg-navy-800 px-4 pb-8 pt-20 sm:px-6 sm:pt-28">
       <div className="mx-auto max-w-container">
-        <Logo variant="light" />
+        <Link href="/" aria-label="Fortiva home" className="inline-block">
+          <Logo variant="light" />
+        </Link>
 
         {/* ── closing CTA ─────────────────────────────────────────────── */}
         <div className="mt-10 max-w-xl">
@@ -64,12 +67,12 @@ export default function Footer() {
             <Button variant="light" icon="arrow" href="/contact">
               Get a Quote
             </Button>
-            <a
+            <Link
               href="/careers"
               className="text-[15px] font-semibold text-white/75 underline underline-offset-4 transition-colors hover:text-white"
             >
               Join the Movement
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -109,7 +112,7 @@ export default function Footer() {
               <ul className="mt-5 flex flex-col gap-2.5">
                 {audience.actions.map((action) => (
                   <li key={action.label}>
-                    <a
+                    <Link
                       href={action.href}
                       className="group inline-flex items-center gap-1.5 text-[14px] font-semibold text-gold transition-colors hover:text-gold-light"
                     >
@@ -119,7 +122,7 @@ export default function Footer() {
                         strokeWidth={2.25}
                         className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                       />
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -133,9 +136,9 @@ export default function Footer() {
           className="mt-16 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 border-y border-white/10 py-7 text-[14.5px] font-medium text-white/75 lg:justify-between"
         >
           {footerNav.map((link) => (
-            <a key={link.label} href={link.href} className="transition-colors hover:text-white">
+            <Link key={link.label} href={link.href} className="transition-colors hover:text-white">
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -144,12 +147,12 @@ export default function Footer() {
           <div className="flex flex-col items-center gap-2 sm:items-start">
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] text-white/50">
               <span>© 2026 Fortiva, LLC. All Rights Reserved</span>
-              <a href="/terms" className="hover:text-white">
+              <Link href="/terms" className="hover:text-white">
                 Terms &amp; Conditions
-              </a>
-              <a href="/privacy" className="hover:text-white">
+              </Link>
+              <Link href="/privacy" className="hover:text-white">
                 Privacy Policy
-              </a>
+              </Link>
             </div>
             <p className="text-center text-[13px] text-white/40 sm:text-left">
               {companyLocation} &middot; {claimsPartnerNote}

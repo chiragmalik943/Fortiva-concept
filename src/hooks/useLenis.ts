@@ -28,6 +28,18 @@ export function unlockPageScroll() {
 }
 
 /**
+ * Jump to the top with no smoothing — for route changes, where easing the
+ * scroll would drag the visitor back up through the page they just left.
+ *
+ * Lenis owns the scroll position while it's running, so `window.scrollTo` on
+ * its own gets overwritten on the instance's next frame; it has to be told.
+ */
+export function scrollPageToTop() {
+  if (instance) instance.scrollTo(0, { immediate: true })
+  else window.scrollTo(0, 0)
+}
+
+/**
  * Boots a single Lenis instance for the whole app and syncs it with
  * GSAP's ticker + ScrollTrigger so every scroll-driven animation stays
  * perfectly in step with the smoothed scroll position.

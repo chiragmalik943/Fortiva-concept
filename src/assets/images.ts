@@ -32,6 +32,17 @@
 export const images = {
   hero: `${import.meta.env.BASE_URL}img-1.png`,
 
+  // Hero backdrop — a soft, near-flat arc pattern in the brand's mist blue.
+  // Deliberately low-contrast: it sits behind the H1 at full bleed and fades
+  // out into `.gradient-hero` before the section ends (see Hero.tsx), so it
+  // reads as the top of the page's gradient rather than as a photograph.
+  heroBg: `${import.meta.env.BASE_URL}hero-bg.png`,
+
+  // The Fortiva glyph on its own (no wordmark), used as the mark above the
+  // hero headline. Single-colour, so it's tinted through mask-image the same
+  // way logo.svg is.
+  icon: `${import.meta.env.BASE_URL}ftva-icn.svg`,
+
   insuranceIndividual: `${import.meta.env.BASE_URL}img-2.png`,
   insuranceCorporate: `${import.meta.env.BASE_URL}img-3.png`,
   insuranceFamily: `${import.meta.env.BASE_URL}img-4.png`,

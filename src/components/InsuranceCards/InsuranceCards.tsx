@@ -3,6 +3,7 @@ import { ArrowRight, User, Building2, HeartHandshake } from 'lucide-react'
 import { gsap, prefersReducedMotion } from '../../animations/gsap'
 import { images } from '../../assets/images'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
+import { Link } from '../../router/router'
 
 // The three audiences the copy doc actually sells to: Individuals and Families
 // (Plans sub-nav) plus Employers.
@@ -72,7 +73,7 @@ export default function InsuranceCards() {
           {cards.map((card, i) => {
             const Icon = card.icon
             return (
-              <a
+              <Link
                 key={card.title}
                 href={card.href}
                 ref={(el) => (cardRefs.current[i] = el)}
@@ -113,7 +114,7 @@ export default function InsuranceCards() {
                     </span>
                   </div>
                 </div>
-              </a>
+              </Link>
             )
           })}
         </div>

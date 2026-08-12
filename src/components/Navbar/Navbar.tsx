@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronDown, Menu, X } from 'lucide-react'
 import Logo from '../Logo'
 import Button from '../Button'
+import { Link, useRoute } from '../../router/router'
 import { navigation } from '../../content/site'
 import { lockPageScroll, unlockPageScroll } from '../../hooks/useLenis'
 
@@ -19,6 +20,7 @@ export default function Navbar() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileExpanded, setMobileExpanded] = useState<number | null>(null)
+  const route = useRoute()
 
   const headerRef = useRef<HTMLElement>(null)
   const triggerRefs = useRef<(HTMLButtonElement | null)[]>([])
@@ -84,6 +86,13 @@ export default function Navbar() {
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [mobileOpen, openIndex])
+
+  /* ── a route change dismisses whatever was open ───────────────────────── */
+  useEffect(() => {
+    setOpenIndex(null)
+    setMobileOpen(false)
+    setMobileExpanded(null)
+  }, [route])
 
   /* ── leaving mobile widths tidies up after itself ─────────────────────── */
   useEffect(() => {
@@ -187,15 +196,19 @@ export default function Navbar() {
       onMouseLeave={scheduleClose}
     >
       <div className="w-full max-w-container">
+        {/* The pill grew with the logo: a 180px-wide mark is ~45px tall, so
+            py-2.5 would have left it almost touching the pill's edges. py-3
+            restores the optical breathing room, and the radius steps up with
+            the height so the corner curvature reads the same as before. */}
         <nav
           aria-label="Main"
-          className={`relative flex items-center justify-between rounded-[24px] corner-smooth px-4 py-2.5 transition-all duration-500 sm:px-5 ${
+          className={`relative flex items-center justify-between gap-3 rounded-[28px] corner-smooth px-4 py-3 transition-all duration-500 sm:px-5 ${
             solid ? 'bg-cream-soft/70 shadow-soft backdrop-blur-[28px]' : 'bg-transparent'
           }`}
         >
-          <a href="/" aria-label="Fortiva home" className="shrink-0">
+          <Link href="/" aria-label="Fortiva home" className="shrink-0">
             <Logo />
-          </a>
+          </Link>
 
           {/* ── desktop links ─────────────────────────────────────────── */}
           <ul className="hidden items-center gap-7 text-[14.5px] font-medium text-navy-800/90 lg:flex xl:gap-9">
@@ -233,12 +246,15 @@ export default function Navbar() {
                       />
                     </button>
                   ) : (
-                    <a
+                    <Link
                       href={item.href}
-                      className="flex items-center gap-1 py-1 transition-colors hover:text-navy-800"
+                      aria-current={route === item.href ? 'page' : undefined}
+                      className={`flex items-center gap-1 py-1 transition-colors hover:text-navy-800 ${
+                        route === item.href ? 'text-navy-800 underline underline-offset-[6px] decoration-gold decoration-2' : ''
+                      }`}
                     >
                       {item.label}
-                    </a>
+                    </Link>
                   )}
 
                   {hasChildren && (
@@ -267,14 +283,14 @@ export default function Navbar() {
                       <ul className={twoColumn ? 'grid grid-cols-2 gap-1' : 'flex flex-col gap-1'}>
                         {item.children!.map((child) => (
                           <li key={child.label}>
-                            <a
+                            <Link
                               href={child.href}
                               tabIndex={isOpen ? 0 : -1}
                               onClick={() => setOpenIndex(null)}
                               className="block rounded-[12px] corner-smooth px-3.5 py-2.5 text-[14px] text-navy-800/75 transition-colors hover:bg-navy-800 hover:text-cream-soft"
                             >
                               {child.label}
-                            </a>
+                            </Link>
                           </li>
                         ))}
                       </ul>
@@ -287,11 +303,14 @@ export default function Navbar() {
 
           {/* ── right-hand controls ───────────────────────────────────── */}
           <div className="flex shrink-0 items-center gap-2">
+            {/* Hidden below 480px rather than the old 420px: the 180px logo
+                eats the width this used to sit in. Nothing is lost — the same
+                CTA is pinned to the bottom of the mobile drawer. */}
             <Button
               variant="gold"
               icon="arrow"
               href="/contact"
-              className="!py-1.5 !text-[14px] max-[420px]:!hidden"
+              className="!py-1.5 !text-[14px] max-[479px]:!hidden"
             >
               Get a Quote
             </Button>
@@ -352,14 +371,14 @@ export default function Navbar() {
                         <ul className="overflow-hidden">
                           {item.children!.map((child) => (
                             <li key={child.label}>
-                              <a
+                              <Link
                                 href={child.href}
                                 tabIndex={mobileOpen && isExpanded ? 0 : -1}
                                 onClick={() => setMobileOpen(false)}
                                 className="block rounded-[12px] corner-smooth px-3 py-3 pl-6 text-[14.5px] text-navy-800/70 transition-colors hover:bg-navy-800/5"
                               >
                                 {child.label}
-                              </a>
+                              </Link>
                             </li>
                           ))}
                           <li aria-hidden="true" className="h-2" />
@@ -367,14 +386,15 @@ export default function Navbar() {
                       </div>
                     </>
                   ) : (
-                    <a
+                    <Link
                       href={item.href}
                       tabIndex={mobileOpen ? 0 : -1}
+                      aria-current={route === item.href ? 'page' : undefined}
                       onClick={() => setMobileOpen(false)}
                       className="block px-3 py-4 text-[15.5px] font-medium text-navy-800"
                     >
                       {item.label}
-                    </a>
+                    </Link>
                   )}
                 </li>
               )

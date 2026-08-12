@@ -52,6 +52,12 @@ export default {
       boxShadow: {
         soft: '0 20px 60px -20px rgba(17, 40, 75, 0.25)',
         card: '0 24px 48px -24px rgba(17, 40, 75, 0.35)',
+        // Half the weight of `card`, and lifted further off the surface (a
+        // wider blur against a smaller spread). Used by StackedCards, whose
+        // cards now sit on gold rather than cream — a navy shadow at 0.35
+        // reads as a grey smudge against a saturated background, where the
+        // same shadow on cream just read as depth.
+        'card-soft': '0 18px 44px -26px rgba(17, 40, 75, 0.18)',
       },
     },
   },

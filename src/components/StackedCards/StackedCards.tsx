@@ -176,7 +176,7 @@ interface CardBodyProps {
 function CardBody({ card, reversed, bgScaleRef, fgScaleRef }: CardBodyProps) {
   const Icon = card.icon
   return (
-    <div className="relative grid grid-cols-1 shadow-card sm:grid-cols-2 sm:h-[56vh] sm:max-h-[500px] sm:min-h-[400px]">
+    <div className="relative grid grid-cols-1 shadow-card-soft sm:grid-cols-2 sm:h-[56vh] sm:max-h-[500px] sm:min-h-[400px]">
       <div
         className={`corner-smooth relative flex flex-col justify-center gap-4 bg-cream-soft px-8 py-10 sm:px-10 sm:py-12 lg:px-14 ${
           reversed ? 'order-2 sm:order-2' : 'order-2 sm:order-1'
@@ -265,10 +265,10 @@ export default function StackedCards() {
 
   if (prefersReducedMotion) {
     return (
-      <section className="bg-cream px-6 py-24 sm:py-28">
+      <section className="bg-gold px-6 py-24 sm:py-28">
         <div className={`mx-auto ${CARD_MAX_WIDTH}`}>
-          <h2 className="mx-auto max-w-2xl text-balance text-center text-[30px] font-semibold leading-tight text-navy-800 sm:text-[38px]">
-            <span className="text-gold-dark">FOR</span> a better health insurance experience
+          <h2 className="mx-auto max-w-2xl text-balance text-center text-[30px] font-semibold leading-tight text-navy-800/65 sm:text-[38px]">
+            <span className="text-navy-900">FOR</span> a better health insurance experience
           </h2>
           <div className="mt-14 flex flex-col gap-10">
             {CARDS.map((card, i) => (
@@ -281,14 +281,14 @@ export default function StackedCards() {
   }
 
   return (
-    <section ref={sectionRef} className="relative bg-cream" style={{ height: `${SECTION_HEIGHT_VH}vh` }}>
+    <section ref={sectionRef} className="relative bg-gold" style={{ height: `${SECTION_HEIGHT_VH}vh` }}>
       <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden px-4 sm:px-6">
         <div ref={headingWrapRef} className="absolute inset-0 z-0 flex items-center justify-center px-6">
           <h2
             ref={headingRef}
-            className="max-w-2xl text-balance text-center text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
+            className="max-w-2xl text-balance text-center text-[30px] font-semibold leading-tight text-navy-800/65 opacity-0 sm:text-[38px]"
           >
-            <span className="text-gold-dark">FOR</span> a better health insurance experience
+            <span className="text-navy-900">FOR</span> a better health insurance experience
           </h2>
         </div>
 

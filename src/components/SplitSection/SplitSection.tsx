@@ -56,7 +56,13 @@ export default function SplitSection() {
   }, [])
 
   return (
-    <section className="bg-cream">
+    // Navy, not cream. The right-hand column was already navy — the wrapper's
+    // cream only ever showed as a sliver above/below the photograph on short
+    // viewports, which made the band read as two unrelated halves. Navy behind
+    // both makes the photo sit IN the section rather than on top of it, and
+    // gives the page a dark beat between the gold stacked cards above and the
+    // gradient band below.
+    <section className="bg-navy-800">
       {/* full-bleed, edge to edge, full viewport height; 50/50 columns,
           reversed on mobile (text first, then image) with a dedicated
           mobile image. min-h rather than h so the added CTA can't clip the

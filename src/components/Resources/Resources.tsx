@@ -2,6 +2,7 @@ import { images } from '../../assets/images'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
 import Button from '../Button'
+import { Link } from '../../router/router'
 
 // Ships as Resources rather than Blog because the copy doc supplies no article
 // titles — but it does supply written copy and a button for each of these three.
@@ -40,7 +41,7 @@ function ResourceCard({ item, delay }: { item: (typeof resources)[number]; delay
 
   return (
     <div ref={ref}>
-      <a href={item.href} className="group block">
+      <Link href={item.href} className="group block">
         <div className="corner-smooth relative aspect-[4/3] overflow-hidden rounded-card">
           <img
             src={item.image}
@@ -69,7 +70,7 @@ function ResourceCard({ item, delay }: { item: (typeof resources)[number]; delay
           {item.title}
         </h3>
         <p className="mt-2 max-w-sm text-[14.5px] leading-relaxed text-navy-800/60">{item.body}</p>
-      </a>
+      </Link>
     </div>
   )
 }

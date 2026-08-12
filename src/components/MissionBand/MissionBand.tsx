@@ -35,7 +35,11 @@ export default function MissionBand() {
   const futureBodyRef = useScrollReveal<HTMLParagraphElement>({ y: 24, delay: 0.15 })
 
   return (
-    <section className="bg-cream px-6 py-24 sm:py-32">
+    // White rather than cream: the band sits directly under the FOR mask's
+    // release, and a clean white plate is what separates it from the cream
+    // gradient above and the cards below. It's now the only pure-white surface
+    // on the page, which is what gives the mission statement its weight.
+    <section className="bg-white px-6 py-24 sm:py-32">
       {/* Equal columns, unequal treatment — that's the whole idea. The columns
           can match because the balance is being done by type size, not by width;
           an uneven split on top of it just opened a void down the middle.

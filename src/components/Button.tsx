@@ -1,5 +1,6 @@
 import { ReactNode, MouseEventHandler } from 'react'
 import { ArrowRight, ArrowUpRight, Plus } from 'lucide-react'
+import { Link, isInternalHref } from '../router/router'
 
 interface ButtonProps {
   children: ReactNode
@@ -101,6 +102,16 @@ export default function Button({
   )
 
   if (href) {
+    // Site-relative hrefs go through the router (which also applies the
+    // deploy's base path); anything with a scheme — mailto:, tel:, an external
+    // site — stays a plain anchor.
+    if (isInternalHref(href)) {
+      return (
+        <Link href={href} target={target} className={classes} onClick={onClick}>
+          {inner}
+        </Link>
+      )
+    }
     return (
       <a href={href} target={target} className={classes} onClick={onClick}>
         {inner}
