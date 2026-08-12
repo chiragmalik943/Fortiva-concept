@@ -5,7 +5,7 @@ import Button from '../Button'
 
 export default function Hero() {
   // The headline is two lines with two different weights: the problem statement
-  // in medium, the promise in bold. They live in separate <span>s rather than
+  // in regular, the promise in bold. They live in separate <span>s rather than
   // one string with an inline <strong>, because SplitType rewrites the DOM of
   // whatever it's handed — a nested <strong> would survive the split but its
   // words would land in the same stagger as the light line, so the two halves
@@ -82,7 +82,7 @@ export default function Hero() {
           src={images.icon}
           alt=""
           aria-hidden="true"
-          className="mb-7 block h-14 w-auto opacity-0 sm:mb-8 sm:h-[64px]"
+          className="mb-7 block h-20 w-auto opacity-0 sm:mb-8 sm:h-[104px]"
         />
 
         {/* max-w-6xl, not the old max-w-4xl: at the lg size the promise line
@@ -92,13 +92,13 @@ export default function Hero() {
         <h1 className="max-w-6xl">
           <span
             ref={lineOneRef}
-            className="block text-[40px] font-medium leading-[1.08] tracking-tight text-navy-800/80 opacity-0 sm:text-[54px] lg:text-[66px]"
+            className="block text-[40px] font-normal leading-[1.4] tracking-tight text-navy-800/80 opacity-0 sm:text-[54px] lg:text-[66px]"
           >
             Health insurance is broken.
           </span>
           <span
             ref={lineTwoRef}
-            className="block text-[40px] font-bold leading-[1.08] tracking-tight text-navy-800 opacity-0 sm:text-[54px] lg:text-[66px]"
+            className="block text-[40px] font-bold leading-[1.4] tracking-tight text-navy-800 opacity-0 sm:text-[54px] lg:text-[66px]"
           >
             We&rsquo;re building something better.
           </span>
@@ -112,14 +112,14 @@ export default function Hero() {
             reads as a tagline rather than a first paragraph. */}
         <p
           ref={taglineRef}
-          className="mt-5 text-[19px] font-medium tracking-tight text-navy-800/55 opacity-0 sm:text-[22px]"
+          className="mt-5 text-[19px] font-normal tracking-tight text-navy-800 opacity-0 sm:text-[22px]"
         >
           Powered by Innovation. Guided by Humanity.
         </p>
 
         <div
           ref={subRef}
-          className="mt-6 max-w-3xl text-[15.5px] leading-relaxed text-navy-800/60 opacity-0 sm:text-[17px]"
+          className="mt-6 max-w-3xl text-[15.5px] leading-relaxed text-navy-800 opacity-0 sm:text-[17px]"
         >
           <p>
             Welcome to Fortiva, where health coverage works for real life. We&rsquo;re here to

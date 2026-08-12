@@ -6,7 +6,7 @@ import { images } from '../../assets/images'
 interface PageHeroProps {
   /** Small caps label above the mark — usually the page's own nav label. */
   eyebrow?: string
-  /** Set in medium; the setup half of the headline. */
+  /** Set in regular; the setup half of the headline. */
   titleTop: ReactNode
   /** Set in bold; the payoff half. Rendered on its own line. */
   titleBottom: ReactNode
@@ -57,7 +57,7 @@ export default function PageHero({ eyebrow, titleTop, titleBottom, lede, actions
             src={images.icon}
             alt=""
             aria-hidden="true"
-            className="block h-12 w-auto sm:h-[56px]"
+            className="block h-16 w-auto sm:h-[84px]"
           />
           {eyebrow && (
             <span className="mt-5 inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
@@ -69,13 +69,13 @@ export default function PageHero({ eyebrow, titleTop, titleBottom, lede, actions
         <h1 className="mt-6 max-w-4xl sm:mt-7">
           <span
             ref={lineOneRef}
-            className="block text-[36px] font-medium leading-[1.08] tracking-tight text-navy-800/80 opacity-0 sm:text-[48px] lg:text-[58px]"
+            className="block text-[36px] font-normal leading-[1.4] tracking-tight text-navy-800/80 opacity-0 sm:text-[48px] lg:text-[58px]"
           >
             {titleTop}
           </span>
           <span
             ref={lineTwoRef}
-            className="block text-[36px] font-bold leading-[1.08] tracking-tight text-navy-800 opacity-0 sm:text-[48px] lg:text-[58px]"
+            className="block text-[36px] font-bold leading-[1.4] tracking-tight text-navy-800 opacity-0 sm:text-[48px] lg:text-[58px]"
           >
             {titleBottom}
           </span>
@@ -84,7 +84,7 @@ export default function PageHero({ eyebrow, titleTop, titleBottom, lede, actions
         {(lede || actions) && (
           <div ref={ledeRef} className="opacity-0">
             {lede && (
-              <p className="mx-auto mt-7 max-w-3xl text-[15.5px] leading-relaxed text-navy-800/60 sm:text-[17px]">
+              <p className="mx-auto mt-7 max-w-3xl text-[15.5px] leading-relaxed text-navy-800 sm:text-[17px]">
                 {lede}
               </p>
             )}
