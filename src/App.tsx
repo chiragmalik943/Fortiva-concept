@@ -3,13 +3,15 @@ import Navbar from './components/Navbar/Navbar'
 import Footer from './components/Footer/Footer'
 import Home from './pages/Home'
 import About from './pages/About'
+import PlansIndividuals from './pages/PlansIndividuals'
+import PlansEmployers from './pages/PlansEmployers'
 import ComingSoon from './pages/ComingSoon'
 import { Router, useRoute } from './router/router'
 import { ScrollTrigger } from './animations/gsap'
 import { useLenis, scrollPageToTop } from './hooks/useLenis'
 
 /**
- * Route table. Only the two built pages are listed; everything else in the IA
+ * Route table. Only the built pages are listed; everything else in the IA
  * falls through to ComingSoon, which is deliberate — the nav and footer link
  * the whole of content/site.ts, and a route that isn't here yet should land
  * somewhere honest rather than 404.
@@ -17,6 +19,8 @@ import { useLenis, scrollPageToTop } from './hooks/useLenis'
 const routes: Record<string, () => JSX.Element> = {
   '/': Home,
   '/about': About,
+  '/plans/individuals-and-families': PlansIndividuals,
+  '/plans/employers': PlansEmployers,
 }
 
 function Site() {

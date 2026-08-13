@@ -21,7 +21,7 @@ const resources = [
   {
     image: images.blogPost2,
     label: 'Plan details',
-    title: 'Access plan details anytime',
+    title: 'Plan details anytime',
     body: 'Coverage limits, benefits and deductibles, all in one place and available whenever you need them.',
     cta: 'Learn more',
     href: '/plans',
@@ -80,7 +80,7 @@ export default function Resources() {
   const introRef = useScrollReveal<HTMLParagraphElement>({ y: 20, delay: 0.1 })
 
   return (
-    <section className="px-6 py-24 sm:py-28">
+    <section className="bg-white px-6 py-24 sm:py-28">
       <div className="mx-auto max-w-container">
         <h2
           ref={headingRef}

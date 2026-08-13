@@ -57,7 +57,7 @@ export default function About() {
         }
         actions={
           <>
-            <Button variant="light" icon="arrow" size="lg" href="/plans">
+            <Button variant="gold" icon="arrow" size="lg" href="/plans">
               Explore Plans
             </Button>
             <Button variant="ghost" size="lg" href="/careers">

@@ -43,8 +43,9 @@ export default function Home() {
       <StackedCards />
       <SplitSection />
 
+      <Resources />
+
       <div className="gradient-lower">
-        <Resources />
         <FAQ />
       </div>
 

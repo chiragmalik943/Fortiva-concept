@@ -130,7 +130,7 @@ export default function Hero() {
         </div>
 
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-          <Button variant="light" icon="arrow" size="lg" href="/plans">
+          <Button variant="gold" icon="arrow" size="lg" href="/plans">
             Explore Plans
           </Button>
           <Button variant="ghost" size="lg" href="/contact">

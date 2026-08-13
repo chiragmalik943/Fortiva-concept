@@ -14,8 +14,8 @@
 //   9-11. Blog cards
 //   card-1 .. card-4. Stacked Cards section (each a `-bg` + foreground-cutout pair)
 //
-// logo.svg is a single-colour mark, tinted navy or white in CSS via
-// mask-image (see Logo.tsx) depending on where it's used.
+// The logo ships as TWO files — logo-color.svg for light surfaces, logo.svg
+// for dark ones — each rendered in its own colours. See the entries below.
 //
 // The Stacked Cards pairs are the one exception to "no image is reused" —
 // each card has TWO files that are meant to be the same photograph:
@@ -67,7 +67,18 @@ export const images = {
   cardFourBg: `${import.meta.env.BASE_URL}img-card-4-bg.png`,
   cardFour: `${import.meta.env.BASE_URL}img-card-4.png`,
 
+  // TWO logo files, not one tinted two ways.
+  //
+  // logo.svg is white artwork (fill="white"), for dark surfaces — the footer.
+  // logo-color.svg is the full four-colour mark (#0074A6 / #46545A / #D5AC67 /
+  // #12284B), for light surfaces — the top nav.
+  //
+  // The pair replaces a single-file mask-tint: masking throws away an SVG's
+  // own fills by definition, so a multi-colour mark cannot survive it. See
+  // Logo.tsx. Note the two files have DIFFERENT viewBoxes (221x55 against
+  // 730.2x171.41), which is fine because Logo sizes by width with h-auto.
   logo: `${import.meta.env.BASE_URL}logo.svg`,
+  logoColor: `${import.meta.env.BASE_URL}logo-color.svg`,
 
   forMask: `${import.meta.env.BASE_URL}for-mask.svg`,
 

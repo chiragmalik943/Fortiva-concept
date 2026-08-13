@@ -27,7 +27,7 @@ const steps = [
   {
     n: '04',
     title: 'Manage it all in one place',
-    body: 'Claims, digital ID cards and support, in the member portal and the Fortiva app.',
+    body: 'Claims, digital ID cards and support, in the Member Portal and Fortiva app.',
   },
 ]
 

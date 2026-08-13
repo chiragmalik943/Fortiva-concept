@@ -23,7 +23,7 @@ const CARDS: CardConfig[] = [
   {
     id: 'affordable',
     kicker: 'AFFORDABLE, FLEXIBLE PLANS',
-    title: 'Multi-tiered coverage designed for real budgets',
+    title: 'Multi-tiered coverage designed for real budgets.',
     body: 'Flexible options that fit what you can actually spend, without sacrificing quality care — and the room to add supplemental protection where you need it.',
     icon: Layers,
     bg: images.cardOneBg,
@@ -32,7 +32,7 @@ const CARDS: CardConfig[] = [
   {
     id: 'transparent',
     kicker: 'TRANSPARENT PRICING',
-    title: 'No surprises. Just health insurance you can trust',
+    title: 'No surprises. Just health insurance you can trust.',
     body: 'No hidden fees and no fine print working against you. Clear, upfront plan details so you know what is covered before care is ever needed.',
     icon: Eye,
     bg: images.cardTwoBg,
@@ -41,7 +41,7 @@ const CARDS: CardConfig[] = [
   {
     id: 'human',
     kicker: 'HUMAN-FIRST EXPERIENCE',
-    title: 'Empathetic support, and tech that simplifies every step',
+    title: 'Empathetic support and tech that simplifies every step.',
     body: 'Real people giving real answers, backed by tools that take the friction out of enrollment, claims and everything after.',
     icon: Headphones,
     bg: images.cardThreeBg,
@@ -50,7 +50,7 @@ const CARDS: CardConfig[] = [
   {
     id: 'innovation',
     kicker: 'INNOVATION THAT WORKS FOR YOU',
-    title: 'Agentic AI for easy enrollment and proactive care',
+    title: 'Easy enrollment and proactive care.',
     body: 'Technology pointed at the parts of insurance nobody enjoys — frictionless administration for members and employers alike.',
     icon: Sparkles,
     bg: images.cardFourBg,
@@ -267,8 +267,8 @@ export default function StackedCards() {
     return (
       <section className="bg-gold px-6 py-24 sm:py-28">
         <div className={`mx-auto ${CARD_MAX_WIDTH}`}>
-          <h2 className="mx-auto max-w-2xl text-balance text-center text-[30px] font-semibold leading-tight text-navy-800/65 sm:text-[38px]">
-            <span className="text-navy-900">FOR</span> a better health insurance experience
+          <h2 className="mx-auto max-w-2xl text-balance text-center text-[30px] font-semibold leading-tight text-navy-900 sm:text-[38px]">
+            <span className="text-white">FOR</span> a better health insurance experience
           </h2>
           <div className="mt-14 flex flex-col gap-10">
             {CARDS.map((card, i) => (
@@ -286,9 +286,9 @@ export default function StackedCards() {
         <div ref={headingWrapRef} className="absolute inset-0 z-0 flex items-center justify-center px-6">
           <h2
             ref={headingRef}
-            className="max-w-2xl text-balance text-center text-[30px] font-semibold leading-tight text-navy-800/65 opacity-0 sm:text-[38px]"
+            className="max-w-2xl text-balance text-center text-[30px] font-semibold leading-tight text-navy-900 opacity-0 sm:text-[38px]"
           >
-            <span className="text-navy-900">FOR</span> a better health insurance experience
+            <span className="text-white">FOR</span> a better health insurance experience
           </h2>
         </div>
 
