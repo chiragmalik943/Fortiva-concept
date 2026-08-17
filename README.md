@@ -23,12 +23,56 @@ Requires Node 18+.
 ```
 src/
 ├── components/       one folder per section, matching the brief's structure
+├── config/pages.ts     which routes are live — the single source of truth
 ├── content/site.ts    nav IA + contact details + availability, in one place
 ├── hooks/             useLenis, useSplitReveal, useScrollReveal — shared animation logic
 ├── animations/        gsap.ts — single place ScrollTrigger gets registered
 ├── assets/images.ts    every image filename in one place
 └── styles/index.css    Tailwind + Lenis required CSS + the two ambient gradients
 ```
+
+## Switching pages on and off
+
+`src/config/pages.ts` is the single source of truth for which routes this
+deployment serves. Every route in the IA is listed there with an `enabled` flag,
+and `App.tsx` builds its route table from that list at module load — a page is
+reachable if and only if the config says so. Nothing else gets a vote.
+
+```ts
+plansEmployers: { enabled: true,  route: '/plans/employers' },
+careers:        { enabled: false, route: '/careers' },
+```
+
+Taking a page down, or putting it back up, is that one word. No component,
+import or route table is touched and the page's own file stays where it is, so
+the round trip is symmetrical.
+
+What `enabled: false` does:
+
+- The page component is never mounted. The visitor gets `ComingSoon` instead —
+  which page a disabled route falls back to is `disabledFallback` at the top of
+  the config, and flipping it to `'not-found'` makes a switched-off route
+  indistinguishable from a 404.
+- **Direct URL access is covered.** GitHub Pages serves the same bundle for a
+  deep link as for an in-site click (`scripts/spa-fallback.mjs`), and that bundle
+  resolves every route through the config, so there is no path into a disabled
+  page's component — typing the URL, following an old link and clicking through
+  the nav all land in the same place.
+- **Links stay visible.** The nav and footer keep linking switched-off pages, by
+  design: the IA stays whole and the link lands on the fallback. To hide them
+  instead, filter `navigation` and `footerNav` in `content/site.ts` through
+  `isRouteEnabled` from the config — that helper is already exported for it, and
+  those two lists plus a handful of hard-coded CTA hrefs are where every internal
+  link in the site comes from.
+
+A URL the config has never heard of is a different case, and gets
+`pages/NotFound.tsx` — a real 404 rather than a "coming soon" that promises a
+page nobody is building. On the Pages deploy those arrive under an HTTP 404
+status too, since `404.html` is what served them.
+
+The `enabled: true` set currently matches, exactly, the pages that have a
+component in `src/pages`. Routes that are switched on but not built yet fall back
+to `ComingSoon` the same way they always did, so enabling a route early is safe.
 
 ## Where the copy comes from
 
@@ -279,4 +323,5 @@ closes on gold: light → gold → navy is now the site's closing signature.
 
 - Swap any photo by editing its URL in `src/assets/images.ts`.
 - Section order/composition lives in `src/App.tsx`.
+- Which pages are live is `src/config/pages.ts` — one `enabled` flag per route, nothing else to touch. See "Switching pages on and off".
 - The FOR section's pacing (how much of the scroll goes to the mask reveal vs. the text cycling) is controlled by the position numbers in `ClipMaskSection.tsx`'s `useEffect` — they're on a 0–100 scale representing percent of that section's scroll range.

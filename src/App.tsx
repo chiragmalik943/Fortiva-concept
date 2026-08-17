@@ -13,37 +13,74 @@ import MembersFaqs from './pages/MembersFaqs'
 import MembersApp from './pages/MembersApp'
 import MembersPortal from './pages/MembersPortal'
 import ComingSoon from './pages/ComingSoon'
+import NotFound from './pages/NotFound'
 import { Router, useRoute } from './router/router'
+import { pages, disabledFallback, type PageConfig, type PageKey } from './config/pages'
 import { ScrollTrigger } from './animations/gsap'
 import { useLenis, scrollPageTo, scrollPageToTop } from './hooks/useLenis'
 
 /**
- * Route table. Only the built pages are listed; everything else in the IA
- * falls through to ComingSoon, which is deliberate — the nav and footer link
- * the whole of content/site.ts, and a route that isn't here yet should land
- * somewhere honest rather than 404.
+ * Which built page serves each key in config/pages.ts.
+ *
+ * This map answers "what renders it", never "is it live" — that lives in the
+ * config and nowhere else. Keys are `PageKey`s, so it cannot name a page the
+ * config doesn't declare: a typo is a build error rather than a route that
+ * silently never matches.
+ *
+ * `Partial` on purpose. A route may be switched on before its page exists —
+ * several routes in the IA still have no page — and those land on the fallback
+ * below, exactly as they did before this config existed.
+ *
+ * Every component stays imported whether its route is enabled or not: switching
+ * a page off is a config edit, never a deletion, so switching it back on needs
+ * nothing here.
  */
-const routes: Record<string, () => JSX.Element> = {
-  '/': Home,
-  '/about': About,
-  '/plans/individuals-and-families': PlansIndividuals,
-  '/plans/employers': PlansEmployers,
+const pageComponents: Partial<Record<PageKey, () => JSX.Element>> = {
+  home: Home,
+  about: About,
+  plansIndividuals: PlansIndividuals,
+  plansEmployers: PlansEmployers,
 
   // For Members — the whole section, including /members itself. The nav renders
   // that one as a dropdown trigger rather than a link, but the footer links it
   // and so does anyone who trims the URL, so it gets a real index page.
-  '/members': MembersHub,
-  '/members/find-a-doctor': MembersFindDoctor,
-  '/members/virtual-care': MembersVirtualCare,
-  '/members/resources': MembersResources,
-  '/members/faqs': MembersFaqs,
-  '/members/app': MembersApp,
-  '/members/portal': MembersPortal,
+  members: MembersHub,
+  membersFindDoctor: MembersFindDoctor,
+  membersVirtualCare: MembersVirtualCare,
+  membersResources: MembersResources,
+  membersFaqs: MembersFaqs,
+  membersApp: MembersApp,
+  membersPortal: MembersPortal,
+}
+
+/**
+ * Route table, derived from the config once at module load rather than on every
+ * navigation.
+ *
+ * `routes` holds only the live pages. `knownRoutes` holds every route the config
+ * declares, on or off — which is what separates "a page that exists but isn't
+ * switched on" from "a URL that was never a page at all", and lets the two get
+ * different answers below.
+ */
+const routes: Record<string, () => JSX.Element> = {}
+const knownRoutes = new Set<string>()
+
+for (const [key, page] of Object.entries(pages) as [PageKey, PageConfig][]) {
+  knownRoutes.add(page.route)
+  const Page = pageComponents[key]
+  if (page.enabled && Page) routes[page.route] = Page
 }
 
 function Site() {
   const route = useRoute()
   const Page = routes[route]
+
+  /* A route with no live page falls back rather than rendering an empty shell:
+     a route the config knows — switched off, or switched on but not built yet —
+     gets whichever page `disabledFallback` names, while anything the config
+     has never heard of is a 404. The config is the complete list of pages that
+     exist, so a URL outside it is a typo or a stale link, not a promise. */
+  const Fallback = disabledFallback === 'coming-soon' && knownRoutes.has(route) ? ComingSoon : NotFound
 
   useLenis()
 
@@ -92,7 +129,7 @@ function Site() {
   return (
     <div className="relative">
       <Navbar />
-      {Page ? <Page /> : <ComingSoon path={route} />}
+      {Page ? <Page /> : <Fallback path={route} />}
       <Footer />
     </div>
   )
