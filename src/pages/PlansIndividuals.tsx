@@ -1,6 +1,6 @@
 import { Wallet, Eye, SlidersHorizontal, Sparkles, Headphones } from 'lucide-react'
 import PageHero from '../components/PageHero/PageHero'
-import FeatureGrid, { type Feature } from '../components/FeatureGrid/FeatureGrid'
+import FeatureReveal, { type Feature } from '../components/FeatureReveal/FeatureReveal'
 import Button from '../components/Button'
 import { images } from '../assets/images'
 import { useScrollReveal } from '../hooks/useScrollReveal'
@@ -13,12 +13,12 @@ import { useSplitReveal } from '../hooks/useSplitReveal'
  * section, unabridged and in its own order:
  *
  *   H1 + intro        → PageHero
- *   FOR individuals   → the five-card grid (white)
+ *   FOR individuals   → FeatureReveal, the scroll-in card band (white)
  *   FOR families      → the split band (navy + photograph)
  *   Our promise       → the closing plate
  *
  * The doc writes each "FOR individuals" item as a bolded phrase plus a
- * sentence, which is exactly FeatureGrid's shape — the split below is on the
+ * sentence, which is exactly FeatureReveal's shape — the split below is on the
  * doc's own line breaks, so no wording was changed to fit the cards. Icons are
  * the one addition; the doc names none.
  */
@@ -93,14 +93,30 @@ export default function PlansIndividuals() {
         }
       />
 
-      <FeatureGrid
+      {/* ── FOR individuals ───────────────────────────────────────────────
+          The doc's five-item list, in FeatureReveal rather than a plain grid:
+          the copy on the left is all that's on screen when you arrive, and the
+          five cards rise into their slots one at a time as you scroll past.
+          See FeatureReveal.tsx for why the section isn't pinned. */}
+      <FeatureReveal
         eyebrow="FOR INDIVIDUALS"
         heading={
           <>
             Coverage built around <span className="text-gold-dark">one person</span>
           </>
         }
+        intro={
+          <>
+            Whichever tier you choose, these five things come with it &mdash; and none of them
+            are the kind of detail you find out about later.
+          </>
+        }
         features={individualFeatures}
+        action={
+          <Button variant="gold" icon="arrow" href="/contact">
+            Get a Quote
+          </Button>
+        }
       />
 
       {/* ── FOR families ──────────────────────────────────────────────────

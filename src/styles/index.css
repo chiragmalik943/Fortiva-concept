@@ -124,6 +124,39 @@ body {
   );
 }
 
+/* ── The FAQ → Availability band ─────────────────────────────────────────────
+   ONE gradient, authored as two halves so its cool peak lands exactly on the
+   seam between the two sections.
+
+   Why not a single wrapper with a mid-stop at 50%: the two sections are never
+   the same height (the FAQ grows and shrinks as answers open), so a 50% stop
+   would put the peak somewhere inside whichever section happens to be taller
+   and move it every time someone opens an accordion. Splitting the ramp gives
+   each section a gradient that runs its own full height, which pins the
+   turnaround to the boundary no matter what either one measures.
+
+   And it is deliberately almost invisible. `--band-tint` is cream nudged a few
+   percent toward the brand's mist blue — about a 4% lightness step, so the band
+   reads as a change of temperature rather than as a coloured stripe. The older
+   `.gradient-lower` above travelled all the way to #C7D2D6 and back inside a
+   single section, which is what made it look compressed. That one stays as-is
+   because Plans → Employers uses it for a single self-contained section, where
+   a full there-and-back ramp is the right shape. */
+:root {
+  --band-cream: #ECEAE1;
+  --band-tint: #E3E9EC;
+}
+
+/* cream → tint. Goes on the FIRST section of the band. */
+.gradient-band-in {
+  background: linear-gradient(180deg, var(--band-cream) 0%, var(--band-tint) 100%);
+}
+
+/* tint → cream. Goes on the LAST section of the band. */
+.gradient-band-out {
+  background: linear-gradient(180deg, var(--band-tint) 0%, var(--band-cream) 100%);
+}
+
 /* Stacked Cards section: lets each card's foreground cutout break out above
    the card while staying clipped — and correctly corner-rounded — on the
    other three sides. This needs its own `round` argument because a plain
@@ -144,6 +177,20 @@ body {
   }
   .stacked-card-fg-clip--visual-left {
     --stacked-fg-radius-bl: 2rem;
+  }
+}
+
+/* Panel swap inside the PortalShowcase window. Remounting the panel replays it,
+   which is the point — see that component. The global prefers-reduced-motion
+   block above collapses it to 0.01ms, so it simply doesn't play. */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 

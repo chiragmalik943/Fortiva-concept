@@ -15,6 +15,8 @@ interface ButtonProps {
   type?: 'button' | 'submit'
   className?: string
   onClick?: MouseEventHandler<HTMLElement>
+  /** Native tooltip. Used by ActionButton to explain a not-yet-live link. */
+  title?: string
 }
 
 const iconMap = { arrow: ArrowRight, arrowUpRight: ArrowUpRight, plus: Plus }
@@ -49,6 +51,7 @@ export default function Button({
   type = 'button',
   className = '',
   onClick,
+  title,
 }: ButtonProps) {
   const Icon = icon !== 'none' ? iconMap[icon] : null
   const isPrimary = PRIMARY_VARIANTS.includes(variant)
@@ -107,20 +110,20 @@ export default function Button({
     // site — stays a plain anchor.
     if (isInternalHref(href)) {
       return (
-        <Link href={href} target={target} className={classes} onClick={onClick}>
+        <Link href={href} target={target} title={title} className={classes} onClick={onClick}>
           {inner}
         </Link>
       )
     }
     return (
-      <a href={href} target={target} className={classes} onClick={onClick}>
+      <a href={href} target={target} title={title} className={classes} onClick={onClick}>
         {inner}
       </a>
     )
   }
 
   return (
-    <button type={type} onClick={onClick} className={classes}>
+    <button type={type} title={title} onClick={onClick} className={classes}>
       {inner}
     </button>
   )

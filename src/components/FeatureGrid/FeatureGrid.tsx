@@ -1,13 +1,9 @@
 import { ReactNode } from 'react'
-import { type LucideIcon } from 'lucide-react'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
+import { type Feature } from '../featureTypes'
 
-export interface Feature {
-  title: string
-  body: string
-  icon: LucideIcon
-}
+export type { Feature }
 
 interface FeatureGridProps {
   eyebrow?: string
@@ -29,6 +25,13 @@ interface FeatureGridProps {
  * homepage's central argument. These are supporting detail — a plain grid
  * reads faster and doesn't ask the visitor to scroll through an animation to
  * find out what's in it.
+ *
+ * ── This or FeatureReveal? ──────────────────────────────────────────────────
+ * FeatureReveal renders the same `Feature[]`, but as a split band whose cards
+ * fly in as you scroll. Use that one where the list IS the section — the two
+ * Plans pages, where five benefits are the whole argument. Use this one for a
+ * supporting list on a page that already has a set-piece of its own, so a page
+ * never asks a visitor to sit through two scroll animations to read two lists.
  */
 export default function FeatureGrid({
   eyebrow,

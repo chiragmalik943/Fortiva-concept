@@ -151,6 +151,130 @@ Drop files with those exact names into `/public` and they're picked up automatic
 - **Stay connected form has no submit target** — `submitLead()` in `StayConnected.tsx` validates, shows the success state and logs the payload. It does not send anything anywhere. Point it at the CRM or form endpoint and nothing else needs to change.
 - Respects `prefers-reduced-motion`: every scroll-driven animation is replaced with a static, fully-visible end state instead of being skipped outright.
 
+## For Members — the six pages
+
+All six pages under For Members are built, plus `/members` itself as the section
+index (the nav renders that one as a dropdown trigger, but the footer links it
+directly, so it needed a real page rather than the ComingSoon fallback). Copy is
+`FTVA_Web Copy.odt`'s "For Members" section, complete and unabridged — including
+the three-paragraph answer to "How do I enroll", which the homepage FAQ band
+shortens to its first paragraph.
+
+| Route | Page | Set-piece |
+|---|---|---|
+| `/members` | Section index | six derived cards |
+| `/members/find-a-doctor` | Find a Doctor | search entry band + `ScrollSpyList` |
+| `/members/virtual-care` | Virtual Care | `StepFlow` + `StatBand` |
+| `/members/resources` | Resources | `LinkHub` |
+| `/members/faqs` | FAQs | `FaqExplorer` |
+| `/members/app` | Download the App | `PhoneShowcase` |
+| `/members/portal` | Member Portal | `PortalShowcase` |
+
+Seven new components came with them, each the section it's named after:
+`FeatureReveal`, `ScrollSpyList`, `StepFlow`, `StatBand`, `LinkHub`,
+`FaqExplorer`, `PhoneShowcase`, `PortalShowcase` and `CtaBand`. Each carries its
+own reasoning in a docblock; the decisions worth knowing before editing them are
+below.
+
+### No photographs on any of them
+
+Six pages arrived with no new image assets, and the table above in "Images and
+the logo" records that no image on this site is reused anywhere. Quietly
+repurposing the hero or insurance-card photos across six pages would have broken
+that on the first page and made the claim untrue everywhere. So these pages are
+built from type, tinted surfaces, the Fortiva mark and purpose-drawn interface
+mockups — which is a coherent look rather than a compromise, and leaves an obvious
+slot for real photography when it exists.
+
+### The interface mockups contain no invented member data
+
+`PhoneShowcase` and `PortalShowcase` both draw abstract screens: blocks, bars,
+pins and a stand-in for a scannable code. Not one contains a balance, a claim
+number, a deductible or a name. A mockup showing "$1,240 remaining" or "Claim
+#48213 — approved" would be inventing member data on the two pages whose whole
+subject is what those screens show you, and a reviewer would then have to work
+out which parts were product decisions and which were filler. Each screen
+communicates its *shape* — a summary, a map, a bar chart, an ID card, a
+conversation, a table, a form — and asserts nothing about its contents.
+
+### Five destinations the doc never gives a URL for
+
+`externalTargets` in `content/site.ts` holds the provider directory, MyLiveDoc,
+the portal sign-in and the two app-store listings. All five ship as `'#'` rather
+than as a plausible-looking guess. `components/ActionButton.tsx` reads
+`isPlaceholderHref` and, while the href is still `'#'`, swallows the click,
+marks the control as unavailable and explains why in a `title`. Drop real URLs
+into `content/site.ts` and every one of those behaviours switches off by itself —
+the buttons start opening in a new tab and no component needs editing.
+
+### The two genuine copy gaps
+
+- **"Tips for talking to your doctor"** — the doc has the heading and nothing
+  under it. Rather than ship a visible hole or put Fortiva-voiced advice in the
+  client's mouth, that section carries six questions any patient can ask any
+  clinician and three things to bring. Nothing in it asserts anything about
+  Fortiva, its plans or its network, and none of it is medical advice, so it can
+  be replaced wholesale. Marked `PLACEHOLDER — TODO(client)` in the source.
+- **The video library** — the doc asks for a video section and supplies the intro
+  line, but no titles, URLs, thumbnails or durations. Three cards with invented
+  titles would read as a real library that 404s, so it's one player frame and an
+  empty thumbnail strip that says plainly it isn't populated.
+
+One line was **added** rather than reproduced: an emergency carve-out on the
+Virtual Care page ("Not for emergencies…"). A telehealth page without one is the
+single omission worth flagging instead of copying; it's unbranded, and marked
+`ADDED — TODO(client)` for legal to word properly.
+
+### FAQ copy has one home now
+
+`memberFaqs` in `content/site.ts` holds all eight questions, and
+`HOMEPAGE_FAQ_INDEXES` says which four the homepage band shows. `FAQ.tsx` used to
+hold its own hard-coded duplicate of four answers, so an edit on the FAQs page
+silently disagreed with the homepage.
+
+## Plans pages: the five-card sections
+
+Both Plans pages' five-benefit lists moved from `FeatureGrid` (a plain grid) to
+`FeatureReveal`: copy holds the left column, and the five cards fly up from below
+the fold into a staggered two-column layout, one after another, as you scroll
+past. `FeatureGrid` is still in use — Virtual Care's key benefits — and the rule
+for choosing is in its docblock: `FeatureReveal` where the list *is* the section,
+`FeatureGrid` for a supporting list on a page that already has a set-piece.
+
+The section is deliberately **not pinned**. A tall section with a sticky 100vh
+viewport (the `ValuesStack` shape) was tried and abandoned: heading, lead, button
+and five two-column cards measure ~830px, so on any laptop under ~900px tall the
+bottom card clipped, and pinning also costs ~110vh of extra scrolling on two pages
+that already run long. Instead the cards animate against a **fixed 60vh scroll
+window** (`top 78%` → `top 18%`), which is independent of both the section's height
+and the viewport's — every card is in place after 60vh of scrolling whatever the
+copy measures. Below `lg` each card gets its own trigger and rises 48px as it
+enters, because one shared 60vh window on a ~1200px-tall stacked column would
+place cards that are still far below the fold.
+
+## The homepage's lower band
+
+`.gradient-band-in` and `.gradient-band-out` (in `index.css`) are one gradient
+authored as two halves — cream at the top of the FAQ, the faintest cool tint
+exactly on the FAQ/Availability seam, cream again by the end of Availability. Two
+classes rather than one wrapper because the two sections are never the same height
+(the FAQ grows and shrinks as answers open), so a single mid-stop at 50% would put
+the turnaround inside whichever section happened to be taller and move it every
+time someone opened an accordion. The tint is cream nudged ~3% toward the brand's
+mist blue: measured down the band it runs 236,234,225 → 228,233,236 → 236,234,225.
+`AvailableStates` dropped its own `bg-cream` to sit in it. `.gradient-lower` is
+unchanged and still used by Plans → Employers, where a full there-and-back ramp
+inside one self-contained section is the right shape.
+
+The contact form (`StayConnected`) moved off navy onto **gold**. It was the
+footer's exact colour, and the footer opens with a closing CTA of its own, so the
+two read as one dark slab and the form lost its status as a separate ask. The
+contrast doesn't resolve the obvious way: white on gold measures 2.1:1, under the
+3:1 that even display type needs, so the emphasis inverts — the accent word takes
+full navy and the rest of the line is held at 70%, with body copy at 80% for
+4.7:1. Same rule in `CtaBand`'s gold tone, and it's why every For Members page
+closes on gold: light → gold → navy is now the site's closing signature.
+
 ## If something needs adjusting
 
 - Swap any photo by editing its URL in `src/assets/images.ts`.

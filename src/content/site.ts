@@ -191,3 +191,195 @@ export const referralSources = [
   'Print Ad',
   'Other',
 ]
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   For Members
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * The eight member FAQs, verbatim from the copy doc's "FAQs — Sub Navigation".
+ *
+ * They live here rather than in a component because TWO places render them: the
+ * homepage FAQ band shows four, and For Members → FAQs shows all eight. Before
+ * this, the homepage held its own hard-coded copy of four answers, which meant a
+ * client edit to an answer had to be made twice or it would silently disagree
+ * with itself.
+ *
+ * `a` is an array because answer 3 is genuinely three paragraphs in the doc; the
+ * homepage compresses it, the FAQs page doesn't.
+ */
+export interface MemberFaq {
+  q: string
+  a: string[]
+  action?: { label: string; href: string }
+}
+
+export const memberFaqs: MemberFaq[] = [
+  {
+    q: 'What is Fortiva and what makes it different?',
+    a: [
+      'Fortiva is a North Carolina-based health insurance company committed to disrupting the traditional market by delivering affordable, value-based coverage that puts people — not premiums — first. Our plans are designed to be flexible, transparent and powered by technology for a simpler, more personalized experience.',
+    ],
+  },
+  {
+    q: 'What types of plans does Fortiva offer?',
+    a: [
+      'We provide multi-tiered health insurance options, including limited medical and short-term medical plans, along with supplemental coverage like Critical Illness and Accidental Death & Dismemberment. These plans are tailored for individuals, families and small businesses seeking affordable alternatives to traditional Affordable Care Act plans.',
+    ],
+    action: { label: 'See all plans', href: '/plans' },
+  },
+  {
+    q: 'How do I enroll in a Fortiva plan?',
+    a: [
+      'Getting started with Fortiva is simple and technology-driven. Members can explore plans, compare options and enroll through the Fortiva website.',
+      `For additional support, REACH, Fortiva's trusted enrollment support partner, offers licensed, human-led guidance by phone at ${REACH_PHONE} to help individuals navigate their options and enroll with confidence.`,
+      "Fortiva's digital tools and member-first support team are available to provide guidance at every step.",
+    ],
+    action: { label: 'Learn more', href: '/plans' },
+  },
+  {
+    q: 'Does Fortiva cover preventive care?',
+    a: [
+      'Yes. Our value-based approach prioritizes preventive care and proactive health management to help you stay healthy and avoid costly surprises.',
+    ],
+  },
+  {
+    q: 'How does Fortiva keep costs affordable?',
+    a: [
+      'We focus on underserved markets and leverage technology to streamline operations, reduce overhead and deliver transparent pricing. Our plans are designed to fit real-life budgets without compromising quality care.',
+    ],
+  },
+  {
+    q: 'Who is Detego Health and how does it work with Fortiva?',
+    a: [
+      'Detego Health is a trusted partner that provides advanced technology solutions for compliance and claims administration. By working with Detego Health, Fortiva ensures a seamless, secure and efficient experience for members — from enrollment to claims processing — while maintaining transparency and regulatory compliance.',
+    ],
+  },
+  {
+    q: 'Can I manage my plan online?',
+    a: [
+      'Absolutely. Our member portal allows you to view your coverage, track claims and access helpful resources anytime, anywhere.',
+    ],
+    action: { label: 'Access your portal', href: '/members/portal' },
+  },
+  {
+    q: 'What if I have questions or need help?',
+    a: [
+      'Our member-first support team is available to assist you with plan details, claims and any questions you may have. We’re here to make health insurance simple and stress-free.',
+    ],
+    action: { label: 'Contact us', href: '/contact' },
+  },
+]
+
+/** Which four the homepage band shows — 1, 2, 3 and 5 of the eight. */
+export const HOMEPAGE_FAQ_INDEXES = [0, 1, 2, 4]
+
+/**
+ * "Expert resources" on For Members → Resources. Every URL below is one the copy
+ * doc supplies verbatim; none has been substituted or shortened, and all of them
+ * point off-site, which is why each card announces its host — a visitor should
+ * know they are leaving Fortiva before they click, not after.
+ */
+export interface ExpertResource {
+  title: string
+  body: string
+  cta: string
+  href: string
+  /** Shown on the card, so leaving the site is never a surprise. */
+  host: string
+}
+
+export interface ExpertResourceGroup {
+  heading: string
+  items: ExpertResource[]
+}
+
+export const expertResources: ExpertResourceGroup[] = [
+  {
+    heading: 'Health risk and wellness calculators',
+    items: [
+      {
+        title: 'Body Mass Index calculator',
+        body: 'Quickly calculate your Body Mass Index and understand your weight category.',
+        cta: 'Calculate',
+        href: 'https://diabetes.org/bmi-calculator',
+        host: 'diabetes.org',
+      },
+      {
+        title: 'Heart disease risk assessment',
+        body: 'Estimate your risk for heart disease and get personalized tips.',
+        cta: 'Calculate',
+        href: 'https://professional.heart.org/en/guidelines-and-statements/prevent-calculator',
+        host: 'professional.heart.org',
+      },
+      {
+        title: 'Diabetes risk assessment',
+        body: 'Find out if you’re at risk for type 2 diabetes in just 60 seconds.',
+        cta: 'Calculate',
+        href: 'https://diabetes.org/diabetes-risk-test',
+        host: 'diabetes.org',
+      },
+    ],
+  },
+  {
+    heading: 'Mental health and well-being',
+    items: [
+      {
+        title: 'Mental health screening',
+        body: 'Free, confidential screening tools for anxiety, depression and more.',
+        cta: 'Learn more',
+        href: 'https://screening.mhanational.org/screening-tools/',
+        host: 'screening.mhanational.org',
+      },
+      {
+        title: 'Stress management tips',
+        body: 'Learn practical ways to manage stress and improve resilience.',
+        cta: 'Learn more',
+        href: 'https://www.nimh.nih.gov/health/publications/so-stressed-out-fact-sheet',
+        host: 'nimh.nih.gov',
+      },
+    ],
+  },
+  {
+    heading: 'Nutrition and lifestyle',
+    items: [
+      {
+        title: 'MyPlate Plan',
+        body: 'Get a personalized nutrition plan based on your age, sex, height, weight and activity level.',
+        cta: 'Get started',
+        href: 'https://www.myplate.gov/myplate-plan',
+        host: 'myplate.gov',
+      },
+      {
+        title: 'Smoking cessation',
+        body: 'Create a personalized quit plan, get text support and access tools to help you stop smoking for good.',
+        cta: 'Get started',
+        href: 'https://smokefree.gov/build-your-quit-plan',
+        host: 'smokefree.gov',
+      },
+    ],
+  },
+]
+
+/**
+ * Destinations the copy doc names but never gives a URL for.
+ *
+ * Each of these is a button the doc explicitly asks for — "Find a Doctor",
+ * "Schedule an appointment", "Access your Member Portal", "Download now" — on a
+ * system that doesn't exist in this repo. They ship as '#' rather than being
+ * pointed at a plausible-looking guess, and `isPlaceholderHref` below lets a
+ * component render the button in a visibly unfinished state instead of shipping
+ * a link that silently goes nowhere.
+ *
+ * TODO(client): replace all five and the placeholder styling disappears on its
+ * own — no component needs editing.
+ */
+export const externalTargets = {
+  providerDirectory: '#', // PLACEHOLDER — provider search
+  myLiveDoc: '#', // PLACEHOLDER — telehealth scheduling
+  memberPortal: '#', // PLACEHOLDER — portal sign-in
+  appStore: '#', // PLACEHOLDER — Apple App Store listing
+  playStore: '#', // PLACEHOLDER — Google Play listing
+}
+
+export const isPlaceholderHref = (href: string) => href === '#'

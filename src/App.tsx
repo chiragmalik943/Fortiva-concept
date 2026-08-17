@@ -5,10 +5,17 @@ import Home from './pages/Home'
 import About from './pages/About'
 import PlansIndividuals from './pages/PlansIndividuals'
 import PlansEmployers from './pages/PlansEmployers'
+import MembersHub from './pages/MembersHub'
+import MembersFindDoctor from './pages/MembersFindDoctor'
+import MembersVirtualCare from './pages/MembersVirtualCare'
+import MembersResources from './pages/MembersResources'
+import MembersFaqs from './pages/MembersFaqs'
+import MembersApp from './pages/MembersApp'
+import MembersPortal from './pages/MembersPortal'
 import ComingSoon from './pages/ComingSoon'
 import { Router, useRoute } from './router/router'
 import { ScrollTrigger } from './animations/gsap'
-import { useLenis, scrollPageToTop } from './hooks/useLenis'
+import { useLenis, scrollPageTo, scrollPageToTop } from './hooks/useLenis'
 
 /**
  * Route table. Only the built pages are listed; everything else in the IA
@@ -21,6 +28,17 @@ const routes: Record<string, () => JSX.Element> = {
   '/about': About,
   '/plans/individuals-and-families': PlansIndividuals,
   '/plans/employers': PlansEmployers,
+
+  // For Members — the whole section, including /members itself. The nav renders
+  // that one as a dropdown trigger rather than a link, but the footer links it
+  // and so does anyone who trims the URL, so it gets a real index page.
+  '/members': MembersHub,
+  '/members/find-a-doctor': MembersFindDoctor,
+  '/members/virtual-care': MembersVirtualCare,
+  '/members/resources': MembersResources,
+  '/members/faqs': MembersFaqs,
+  '/members/app': MembersApp,
+  '/members/portal': MembersPortal,
 }
 
 function Site() {
@@ -46,9 +64,29 @@ function Site() {
         on screen. Without it, a pinned section can start or release hundreds
         of pixels off. */
   useEffect(() => {
-    scrollPageToTop()
-    const frame = requestAnimationFrame(() => ScrollTrigger.refresh())
-    return () => cancelAnimationFrame(frame)
+    // A cross-page link can carry a fragment — the homepage's resources card
+    // points at /members/resources#videos, and the footer at
+    // /providers/portal#submit-a-claim. `useRoute` deliberately excludes the
+    // hash (it isn't part of route identity), so it's read off the location
+    // here. Lenis owns the scroll position, so the browser's own fragment jump
+    // gets overwritten on the next frame and the scroll has to go through
+    // Lenis; see scrollPageTo.
+    const hash = window.location.hash
+    if (!hash) scrollPageToTop()
+
+    let inner = 0
+    const outer = requestAnimationFrame(() => {
+      ScrollTrigger.refresh()
+      // Refreshing can change the document's height (pinned sections
+      // re-measure), so a fragment target is only worth measuring on the frame
+      // after that has settled.
+      if (hash) inner = requestAnimationFrame(() => scrollPageTo(hash))
+    })
+
+    return () => {
+      cancelAnimationFrame(outer)
+      cancelAnimationFrame(inner)
+    }
   }, [route])
 
   return (

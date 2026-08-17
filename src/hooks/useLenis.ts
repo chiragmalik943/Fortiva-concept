@@ -40,6 +40,27 @@ export function scrollPageToTop() {
 }
 
 /**
+ * Smooth-scroll to an in-page target.
+ *
+ * A plain `href="#id"` cannot be used for this while Lenis is running: the
+ * browser sets the real scroll position, Lenis overwrites it from its own
+ * animated value on the next frame, and the page springs back. Lenis has to be
+ * asked. The default offset clears the fixed nav pill, which is ~96px tall
+ * including its top margin, so a jumped-to heading isn't hidden underneath it.
+ *
+ * Falls back to `scrollIntoView` when Lenis isn't running, which is the
+ * reduced-motion case — where `scroll-behavior: auto` makes it an instant jump.
+ */
+export function scrollPageTo(target: string | HTMLElement, offset = -96) {
+  if (instance) {
+    instance.scrollTo(target, { offset, duration: 0.9 })
+    return
+  }
+  const el = typeof target === 'string' ? document.querySelector(target) : target
+  el?.scrollIntoView({ block: 'start' })
+}
+
+/**
  * Boots a single Lenis instance for the whole app and syncs it with
  * GSAP's ticker + ScrollTrigger so every scroll-driven animation stays
  * perfectly in step with the smoothed scroll position.

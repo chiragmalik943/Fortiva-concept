@@ -45,11 +45,23 @@ export default function Home() {
 
       <Resources />
 
-      <div className="gradient-lower">
+      {/* ── the cool band ───────────────────────────────────────────────
+          One gradient across two sections: cream at the top of the FAQ,
+          faintest blue exactly on the FAQ/Availability seam, cream again by
+          the end of Availability. Two classes rather than one wrapper so the
+          turnaround is pinned to the boundary instead of to 50% of a height
+          that changes every time an FAQ answer opens. See index.css.
+
+          AvailableStates dropped its own `bg-cream` for this — it was opaque,
+          so it would have painted over the half of the gradient it is meant
+          to be sitting in. */}
+      <div className="gradient-band-in">
         <FAQ />
       </div>
+      <div className="gradient-band-out">
+        <AvailableStates />
+      </div>
 
-      <AvailableStates />
       <StayConnected />
     </>
   )

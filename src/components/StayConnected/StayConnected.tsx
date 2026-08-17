@@ -88,19 +88,35 @@ export default function StayConnected() {
     setValues(EMPTY)
   }
 
+  /* ── Gold, not navy ────────────────────────────────────────────────────────
+     This band used to be navy-800, which is also the footer's colour — with the
+     footer's own closing CTA directly underneath it, the two read as one
+     enormous dark block and the form lost its status as a separate ask. Gold is
+     the brand's third surface and already carries a section on the homepage
+     (StackedCards), so it separates the form from the footer without
+     introducing a colour the page hasn't earned.
+     The knock-on is contrast, and it does not resolve the obvious way: white
+     type on gold measures 2.1:1, which fails even the 3:1 that display sizes
+     need, so "Fortiva" cannot simply become white. Gold's luminance is 0.443 and
+     navy-800's is 0.023, so the emphasis inverts instead — the accent word takes
+     FULL navy and the rest of the line is held back to 70%. Body copy sits at
+     80% for 4.7:1. The card's shadow also steps down to
+     `card-soft` — a navy shadow at 0.35 opacity reads as a grey smudge against
+     a saturated background, which is the same reason StackedCards' cards use
+     the lighter one. See tailwind.config.js. */
   return (
-    <section id="stay-connected" className="bg-navy-800 px-6 py-24 sm:py-28">
+    <section id="stay-connected" className="bg-gold px-6 py-24 sm:py-28">
       <div className="mx-auto grid max-w-container items-center gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
           <h2
             ref={headingRef}
-            className="max-w-md text-[30px] font-semibold leading-tight text-white opacity-0 sm:text-[38px]"
+            className="max-w-md text-[30px] font-semibold leading-tight text-navy-800/70 opacity-0 sm:text-[38px]"
           >
-            Stay connected with <span className="text-gold">Fortiva</span>
+            Stay connected with <span className="text-navy-800">Fortiva</span>
           </h2>
           <p
             ref={bodyRef}
-            className="mt-6 max-w-md text-[15.5px] leading-relaxed text-white/60 opacity-0"
+            className="mt-6 max-w-md text-[15.5px] leading-relaxed text-navy-800/80 opacity-0"
           >
             Be the first to hear as Fortiva expands across the southeast, and get plan
             updates and member resources as they land.
@@ -108,7 +124,7 @@ export default function StayConnected() {
         </div>
 
         <div ref={cardRef} className="opacity-0">
-          <div className="corner-smooth rounded-card bg-cream-soft p-7 shadow-card sm:p-9">
+          <div className="corner-smooth rounded-card bg-cream-soft p-7 shadow-card-soft sm:p-9">
             {submitted ? (
               <div role="status" aria-live="polite" className="flex flex-col items-start gap-4 py-6">
                 <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold">

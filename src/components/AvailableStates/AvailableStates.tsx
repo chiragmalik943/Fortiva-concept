@@ -88,8 +88,12 @@ export default function AvailableStates() {
     onClick: () => toggle(code),
   })
 
+  /* No background of its own. On the homepage this sits in the second half of
+     the FAQ → Availability gradient band (see Home.tsx) and an opaque cream
+     would paint straight over it; anywhere else it inherits the body's cream,
+     which is the colour it used to set for itself anyway. */
   return (
-    <section className="bg-cream px-6 py-24 sm:py-28">
+    <section className="px-6 py-24 sm:py-28">
       {/* The map gets the larger share of the row. It used to sit in a padded
           card at exactly half the width, which left the six states Fortiva
           actually names about 137px across — the section's whole subject, at

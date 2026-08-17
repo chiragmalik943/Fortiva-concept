@@ -2,29 +2,16 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Plus } from 'lucide-react'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
-import { REACH_PHONE } from '../../content/site'
+import { HOMEPAGE_FAQ_INDEXES, memberFaqs } from '../../content/site'
 import Button from '../Button'
 
-// Four of the eight member FAQs in the copy doc, verbatim. The remaining four
-// live on For Members → FAQs, which the button below links to.
-const faqs = [
-  {
-    q: 'What is Fortiva and what makes it different?',
-    a: 'Fortiva is a North Carolina-based health insurance company committed to disrupting the traditional market by delivering affordable, value-based coverage that puts people — not premiums — first. Our plans are designed to be flexible, transparent and powered by technology for a simpler, more personalized experience.',
-  },
-  {
-    q: 'What types of plans does Fortiva offer?',
-    a: 'We provide multi-tiered health insurance options, including limited medical and short-term medical plans, along with supplemental coverage like Critical Illness and Accidental Death & Dismemberment. These plans are tailored for individuals, families and small businesses seeking affordable alternatives to traditional Affordable Care Act plans.',
-  },
-  {
-    q: 'How do I enroll in a Fortiva plan?',
-    a: `Getting started with Fortiva is simple and technology-driven. Members can explore plans, compare options and enroll through the Fortiva website. For additional support, REACH, Fortiva's trusted enrollment support partner, offers licensed, human-led guidance by phone at ${REACH_PHONE} to help individuals navigate their options and enroll with confidence.`,
-  },
-  {
-    q: 'How does Fortiva keep costs affordable?',
-    a: 'We focus on underserved markets and leverage technology to streamline operations, reduce overhead and deliver transparent pricing. Our plans are designed to fit real-life budgets without compromising quality care.',
-  },
-]
+/**
+ * Four of the eight member FAQs. Which four is a list of indexes in
+ * content/site.ts, and the copy itself now comes from there too — this file used
+ * to hold its own hard-coded duplicate of four answers, which meant an edit on
+ * the For Members → FAQs page silently disagreed with the homepage.
+ */
+const faqs = HOMEPAGE_FAQ_INDEXES.map((i) => memberFaqs[i])
 
 export default function FAQ() {
   const [open, setOpen] = useState<number | null>(0)
@@ -70,8 +57,12 @@ export default function FAQ() {
                       transition={{ duration: 0.4, ease: [0.65, 0, 0.35, 1] }}
                       className="overflow-hidden"
                     >
+                      {/* Only the first paragraph of a multi-paragraph answer —
+                          answer 3 runs to three in the doc, which is more than
+                          this band should carry. The full text is on For
+                          Members → FAQs, which the button below links to. */}
                       <p className="max-w-xl pb-6 text-[14.5px] leading-relaxed text-navy-800/60">
-                        {item.a}
+                        {item.a[0]}
                       </p>
                     </motion.div>
                   )}
