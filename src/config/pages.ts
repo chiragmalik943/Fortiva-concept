@@ -70,8 +70,8 @@ export const pages = {
 
   /* For Members — complete, including the section index. */
   members: { enabled: true, route: '/members' },
-  membersFindDoctor: { enabled: false, route: '/members/find-a-doctor' },
-  membersVirtualCare: { enabled: false, route: '/members/virtual-care' },
+  membersFindDoctor: { enabled: true, route: '/members/find-a-doctor' },
+  membersVirtualCare: { enabled: true, route: '/members/virtual-care' },
   membersResources: { enabled: false, route: '/members/resources' },
   membersFaqs: { enabled: false, route: '/members/faqs' },
   membersApp: { enabled: false, route: '/members/app' },
