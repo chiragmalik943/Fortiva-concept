@@ -197,31 +197,88 @@ export const referralSources = [
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /**
- * The eight member FAQs, verbatim from the copy doc's "FAQs — Sub Navigation".
+ * The member FAQs.
  *
  * They live here rather than in a component because TWO places render them: the
- * homepage FAQ band shows four, and For Members → FAQs shows all eight. Before
- * this, the homepage held its own hard-coded copy of four answers, which meant a
- * client edit to an answer had to be made twice or it would silently disagree
- * with itself.
+ * homepage FAQ band shows four, and For Members → FAQs shows all of them,
+ * grouped by category. Before this, the homepage held its own hard-coded copy of
+ * four answers, which meant a client edit to an answer had to be made twice or it
+ * would silently disagree with itself.
  *
- * `a` is an array because answer 3 is genuinely three paragraphs in the doc; the
- * homepage compresses it, the FAQs page doesn't.
+ * `a` is an array because the enrolment answer is genuinely three paragraphs in
+ * the doc; the homepage compresses it, the FAQs page doesn't.
+ *
+ * ── Two sources, kept apart on purpose ──────────────────────────────────────
+ * `docFaqs` is the copy doc's "FAQs — Sub Navigation", verbatim and unabridged.
+ * `fillerFaqs` is lorem ipsum, added so the four categories carry ten questions
+ * each and the grouping, rail and scroll-spy can be judged at real length. The
+ * two arrays are concatenated rather than interleaved, so deleting the filler is
+ * a one-line change and no client sentence can be lost with it. Within each
+ * category the doc's questions therefore always come first.
+ *
+ * ── Why `id` ────────────────────────────────────────────────────────────────
+ * The homepage used to pick its four by array index, which quietly meant
+ * "whatever is 1st, 2nd, 3rd and 5th". Adding thirty-two questions and sorting
+ * them into groups makes that a trap, so the selection is by id now — reordering
+ * or deleting anything can no longer change which four the homepage shows, and a
+ * removed id fails loudly instead of silently promoting its neighbour.
  */
+export type FaqCategoryId = 'plans' | 'enrolling' | 'costs' | 'using'
+
+export interface FaqCategory {
+  id: FaqCategoryId
+  /** Rail label and group heading. */
+  label: string
+  /** One line under the group heading. */
+  blurb: string
+}
+
+/** Rail order and group order both come from this array — there is one source. */
+export const faqCategories: FaqCategory[] = [
+  {
+    id: 'plans',
+    label: 'Plans & coverage',
+    blurb: 'What Fortiva is, what the tiers include and what is covered.',
+  },
+  {
+    id: 'enrolling',
+    label: 'Enrolling & eligibility',
+    blurb: 'Signing up, who qualifies, and when you can join or switch.',
+  },
+  {
+    id: 'costs',
+    label: 'Costs & claims',
+    blurb: 'Premiums, what you pay at the point of care, and how claims are handled.',
+  },
+  {
+    id: 'using',
+    label: 'Using your plan',
+    blurb: 'The portal, virtual care, finding a provider and reaching a person.',
+  },
+]
+
 export interface MemberFaq {
+  /** Stable key. Referenced by HOMEPAGE_FAQ_IDS — do not renumber. */
+  id: string
+  category: FaqCategoryId
   q: string
   a: string[]
   action?: { label: string; href: string }
 }
 
-export const memberFaqs: MemberFaq[] = [
+/** The copy doc's own eight, verbatim. */
+const docFaqs: MemberFaq[] = [
   {
+    id: 'what-is-fortiva',
+    category: 'plans',
     q: 'What is Fortiva and what makes it different?',
     a: [
       'Fortiva is a North Carolina-based health insurance company committed to disrupting the traditional market by delivering affordable, value-based coverage that puts people — not premiums — first. Our plans are designed to be flexible, transparent and powered by technology for a simpler, more personalized experience.',
     ],
   },
   {
+    id: 'plan-types',
+    category: 'plans',
     q: 'What types of plans does Fortiva offer?',
     a: [
       'We provide multi-tiered health insurance options, including limited medical and short-term medical plans, along with supplemental coverage like Critical Illness and Accidental Death & Dismemberment. These plans are tailored for individuals, families and small businesses seeking affordable alternatives to traditional Affordable Care Act plans.',
@@ -229,6 +286,8 @@ export const memberFaqs: MemberFaq[] = [
     action: { label: 'See all plans', href: '/plans' },
   },
   {
+    id: 'how-to-enroll',
+    category: 'enrolling',
     q: 'How do I enroll in a Fortiva plan?',
     a: [
       'Getting started with Fortiva is simple and technology-driven. Members can explore plans, compare options and enroll through the Fortiva website.',
@@ -238,24 +297,32 @@ export const memberFaqs: MemberFaq[] = [
     action: { label: 'Learn more', href: '/plans' },
   },
   {
+    id: 'preventive-care',
+    category: 'plans',
     q: 'Does Fortiva cover preventive care?',
     a: [
       'Yes. Our value-based approach prioritizes preventive care and proactive health management to help you stay healthy and avoid costly surprises.',
     ],
   },
   {
+    id: 'affordability',
+    category: 'costs',
     q: 'How does Fortiva keep costs affordable?',
     a: [
       'We focus on underserved markets and leverage technology to streamline operations, reduce overhead and deliver transparent pricing. Our plans are designed to fit real-life budgets without compromising quality care.',
     ],
   },
   {
+    id: 'detego-health',
+    category: 'costs',
     q: 'Who is Detego Health and how does it work with Fortiva?',
     a: [
       'Detego Health is a trusted partner that provides advanced technology solutions for compliance and claims administration. By working with Detego Health, Fortiva ensures a seamless, secure and efficient experience for members — from enrollment to claims processing — while maintaining transparency and regulatory compliance.',
     ],
   },
   {
+    id: 'manage-online',
+    category: 'using',
     q: 'Can I manage my plan online?',
     a: [
       'Absolutely. Our member portal allows you to view your coverage, track claims and access helpful resources anytime, anywhere.',
@@ -263,6 +330,8 @@ export const memberFaqs: MemberFaq[] = [
     action: { label: 'Access your portal', href: '/members/portal' },
   },
   {
+    id: 'need-help',
+    category: 'using',
     q: 'What if I have questions or need help?',
     a: [
       'Our member-first support team is available to assist you with plan details, claims and any questions you may have. We’re here to make health insurance simple and stress-free.',
@@ -271,8 +340,86 @@ export const memberFaqs: MemberFaq[] = [
   },
 ]
 
-/** Which four the homepage band shows — 1, 2, 3 and 5 of the eight. */
-export const HOMEPAGE_FAQ_INDEXES = [0, 1, 2, 4]
+/**
+ * PLACEHOLDER — TODO(client). Everything below this line is lorem ipsum: thirty-
+ * two filler questions, eight to nine per category, so each of the four groups
+ * on For Members → FAQs holds ten. It exists to prove the grouping, the category
+ * rail and the scroll-spy at the length the real list will be, and it is written
+ * in Latin precisely so nobody can mistake it for approved copy or ship it by
+ * accident.
+ *
+ * To remove it: delete this block and drop `...fillerFaqs` from `memberFaqs`
+ * below. Nothing else references it.
+ *
+ * Answers are drawn from LOREM_PARAS by position — every third question gets two
+ * paragraphs rather than one, so the accordion is exercised at both heights.
+ */
+const LOREM_PARAS = [
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+  'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+  'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
+  'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.',
+  'Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.',
+  'Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.',
+  'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.',
+  'Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.',
+]
+
+const LOREM_QUESTIONS: [FaqCategoryId, string][] = [
+  ['plans', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit?'],
+  ['plans', 'Quis nostrud exercitation ullamco laboris nisi ut aliquip?'],
+  ['plans', 'Excepteur sint occaecat cupidatat non proident sunt in culpa?'],
+  ['plans', 'Totam rem aperiam eaque ipsa quae ab illo inventore veritatis?'],
+  ['plans', 'Nemo enim ipsam voluptatem quia voluptas sit aspernatur?'],
+  ['plans', 'Ut enim ad minima veniam quis nostrum exercitationem?'],
+  ['plans', 'Quia consequuntur magni dolores eos qui ratione sequi nesciunt?'],
+
+  ['enrolling', 'Sed do eiusmod tempor incididunt ut labore et dolore magna?'],
+  ['enrolling', 'Duis aute irure dolor in reprehenderit in voluptate velit?'],
+  ['enrolling', 'Sunt in culpa qui officia deserunt mollit anim id est laborum?'],
+  ['enrolling', 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem?'],
+  ['enrolling', 'Quasi architecto beatae vitae dicta sunt explicabo?'],
+  ['enrolling', 'Neque porro quisquam est qui dolorem ipsum quia dolor?'],
+  ['enrolling', 'Adipisci velit sed quia non numquam eius modi tempora?'],
+  ['enrolling', 'Quaerat voluptatem ut aliquid ex ea commodi consequatur?'],
+  ['enrolling', 'Vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?'],
+
+  ['costs', 'Consectetur adipiscing elit sed do eiusmod tempor incididunt?'],
+  ['costs', 'Ut labore et dolore magnam aliquam quaerat voluptatem?'],
+  ['costs', 'Nisi ut aliquid ex ea commodi consequatur quis autem vel?'],
+  ['costs', 'Eum iure reprehenderit qui in ea voluptate velit esse quam?'],
+  ['costs', 'Nihil molestiae consequatur vel illum qui dolorem eum fugiat?'],
+  ['costs', 'At vero eos et accusamus et iusto odio dignissimos ducimus?'],
+  ['costs', 'Blanditiis praesentium voluptatum deleniti atque corrupti?'],
+  ['costs', 'Quos dolores et quas molestias excepturi sint occaecati?'],
+
+  ['using', 'Cupiditate non provident similique sunt in culpa qui officia?'],
+  ['using', 'Deserunt mollitia animi id est laborum et dolorum fuga?'],
+  ['using', 'Et harum quidem rerum facilis est et expedita distinctio?'],
+  ['using', 'Nam libero tempore cum soluta nobis est eligendi optio?'],
+  ['using', 'Cumque nihil impedit quo minus id quod maxime placeat?'],
+  ['using', 'Omnis voluptas assumenda est omnis dolor repellendus?'],
+  ['using', 'Temporibus autem quibusdam et aut officiis debitis aut rerum?'],
+  ['using', 'Itaque earum rerum hic tenetur a sapiente delectus?'],
+]
+
+const fillerFaqs: MemberFaq[] = LOREM_QUESTIONS.map(([category, q], i) => ({
+  id: `lorem-${String(i + 1).padStart(2, '0')}`,
+  category,
+  q,
+  a:
+    i % 3 === 0
+      ? [LOREM_PARAS[i % LOREM_PARAS.length], LOREM_PARAS[(i + 3) % LOREM_PARAS.length]]
+      : [LOREM_PARAS[i % LOREM_PARAS.length]],
+}))
+
+export const memberFaqs: MemberFaq[] = [...docFaqs, ...fillerFaqs]
+
+/**
+ * Which four the homepage band shows, by id rather than by position. Every id
+ * here is one of the doc's own eight — the homepage never shows filler.
+ */
+export const HOMEPAGE_FAQ_IDS = ['what-is-fortiva', 'plan-types', 'how-to-enroll', 'affordability']
 
 /**
  * "Expert resources" on For Members → Resources. Every URL below is one the copy

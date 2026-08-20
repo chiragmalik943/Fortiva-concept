@@ -40,24 +40,61 @@ export function scrollPageToTop() {
 }
 
 /**
+ * How much clearance a jumped-to element gets at the top of the viewport. The
+ * fixed nav pill is ~96px tall including its top margin, so anything less hides
+ * the heading you just navigated to underneath it.
+ *
+ * Exported because a scroll-spy has to know it: "which section am I reading" is
+ * measured against a line further down the viewport, and that line has to sit
+ * BELOW where a jump lands, or a section you just jumped to reads as not-yet-
+ * reached. Two numbers that must agree, so there is only one of them.
+ */
+export const NAV_OFFSET = 96
+
+/**
  * Smooth-scroll to an in-page target.
  *
  * A plain `href="#id"` cannot be used for this while Lenis is running: the
  * browser sets the real scroll position, Lenis overwrites it from its own
  * animated value on the next frame, and the page springs back. Lenis has to be
- * asked. The default offset clears the fixed nav pill, which is ~96px tall
- * including its top margin, so a jumped-to heading isn't hidden underneath it.
+ * asked.
  *
- * Falls back to `scrollIntoView` when Lenis isn't running, which is the
- * reduced-motion case — where `scroll-behavior: auto` makes it an instant jump.
+ * ── Why this resolves the element itself instead of handing Lenis a selector ──
+ * It used to call `instance.scrollTo(target, { offset: -96 })` and let Lenis find
+ * the element. Two things went wrong with that, both of them silently.
+ *
+ * 1. DOUBLE OFFSET. Lenis honours the target's own `scroll-margin-top`, and every
+ *    jump target on this site carries `scroll-mt-32` (128px) so that native anchor
+ *    jumps and find-in-page clear the nav too. Lenis subtracted that 128 and then
+ *    subtracted our 96 on top, landing every heading 224px down the viewport
+ *    instead of 96 — far enough that a scroll-spy reading the upper third of the
+ *    screen still reported the PREVIOUS section as current.
+ * 2. STALE TARGET. Resolving a selector to a scroll position inside Lenis measured
+ *    something other than the element's live document offset: a jump from the top
+ *    of the FAQs page to the fourth group stopped ~1080px short, and clicking the
+ *    same link a second time (from the new position) went to the right place. A
+ *    navigation that only works on the second attempt is worse than one that
+ *    doesn't work at all.
+ *
+ * Computing `getBoundingClientRect().top + scrollY - NAV_OFFSET` here is immune to
+ * both: it is the element's true position at the moment of the click, in absolute
+ * document coordinates, with the clearance applied exactly once. Lenis is then
+ * only asked to animate to a number, which is the one thing it cannot
+ * misinterpret. `scroll-mt-32` stays in the markup for the native paths — this
+ * function simply no longer depends on it.
+ *
+ * Falls back to an instant `window.scrollTo` when Lenis isn't running, which is
+ * the reduced-motion case — and lands on the same pixel, where the old
+ * `scrollIntoView` fallback landed 32px lower than the smooth path.
  */
-export function scrollPageTo(target: string | HTMLElement, offset = -96) {
-  if (instance) {
-    instance.scrollTo(target, { offset, duration: 0.9 })
-    return
-  }
-  const el = typeof target === 'string' ? document.querySelector(target) : target
-  el?.scrollIntoView({ block: 'start' })
+export function scrollPageTo(target: string | HTMLElement, offset = NAV_OFFSET) {
+  const el = typeof target === 'string' ? document.querySelector<HTMLElement>(target) : target
+  if (!el) return
+
+  const y = Math.max(0, el.getBoundingClientRect().top + window.scrollY - offset)
+
+  if (instance) instance.scrollTo(y, { duration: 0.9 })
+  else window.scrollTo(0, y)
 }
 
 /**

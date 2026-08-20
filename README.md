@@ -210,7 +210,7 @@ shortens to its first paragraph.
 | `/members/find-a-doctor` | Find a Doctor | search entry band + `ScrollSpyList` |
 | `/members/virtual-care` | Virtual Care | `StepFlow` + `StatBand` |
 | `/members/resources` | Resources | `LinkHub` |
-| `/members/faqs` | FAQs | `FaqExplorer` |
+| `/members/faqs` | FAQs | `FaqExplorer` (40 questions, 4 categories) |
 | `/members/app` | Download the App | `PhoneShowcase` |
 | `/members/portal` | Member Portal | `PortalShowcase` |
 
@@ -279,10 +279,17 @@ single omission worth flagging instead of copying; it's unbranded, and marked
 
 ### FAQ copy has one home now
 
-`memberFaqs` in `content/site.ts` holds all eight questions, and
-`HOMEPAGE_FAQ_INDEXES` says which four the homepage band shows. `FAQ.tsx` used to
-hold its own hard-coded duplicate of four answers, so an edit on the FAQs page
-silently disagreed with the homepage.
+`memberFaqs` in `content/site.ts` holds every question and `faqCategories` holds
+the four groups; `HOMEPAGE_FAQ_IDS` says which four the homepage band shows.
+`FAQ.tsx` used to hold its own hard-coded duplicate of four answers, so an edit on
+the FAQs page silently disagreed with the homepage.
+
+The homepage's selection is **by id, not by index**. It used to be
+`HOMEPAGE_FAQ_INDEXES = [0, 1, 2, 4]`, which quietly meant "whatever is 1st, 2nd,
+3rd and 5th" — fine at eight questions in a fixed order, a trap once there are
+forty sorted into groups. By id, reordering or deleting anything can no longer
+change which four the homepage shows, and a removed id drops out of the band
+instead of promoting its neighbour.
 
 ## The five-card sections
 
@@ -323,6 +330,92 @@ and the viewport's — every card is in place after 60vh of scrolling whatever t
 copy measures. Below `lg` each card gets its own trigger and rises 48px as it
 enters, because one shared 60vh window on a ~1200px-tall stacked column would
 place cards that are still far below the fold.
+
+## The FAQ page: forty questions, four categories
+
+`components/FaqExplorer` — For Members → FAQs. Forty questions grouped under
+**Plans & coverage**, **Enrolling & eligibility**, **Costs & claims** and **Using
+your plan**, ten each, with a sticky category rail beside them.
+
+**Eight of the forty are the client's.** The other thirty-two are lorem ipsum,
+sitting in a `fillerFaqs` block in `content/site.ts` marked
+`PLACEHOLDER — TODO(client)`. They are deliberately in Latin so nobody can mistake
+them for approved copy, and `memberFaqs` is `[...docFaqs, ...fillerFaqs]` so
+deleting the filler is one line and no client sentence can go with it. Within each
+category the doc's own questions therefore always come first.
+
+**The rail lists categories, not questions.** It used to list every question,
+which works at eight and collapses at forty: a forty-item rail is taller than the
+viewport, so it scrolls independently of the answers it indexes and "on this page"
+stops being a map and becomes a second copy of the list. Four categories fit any
+screen, hold still, and say what kind of question the page answers before you read
+one. Clicking scrolls to the group rather than filtering to it, so the rest of the
+list stays reachable by scrolling past — it's a table of contents, not a tab bar.
+Numbering is per group (01–10 under each heading), because "07" reading as the
+seventh question about costs is more use than a global 01–40 that opens the fourth
+group at "31".
+
+**In-page jumps now land where they say they do — and that was a sitewide bug.**
+`scrollPageTo` used to hand Lenis a selector and an offset: `instance.scrollTo('#faq-costs',
+{ offset: -96 })`. Two things went wrong silently. Lenis honours the target's own
+`scroll-margin-top`, and every jump target here carries `scroll-mt-32` (128px) for
+native anchor jumps, so it subtracted 128 *and then* our 96 — landing every heading
+**224px** down the viewport instead of 96. And resolving the selector internally
+measured a stale position: a jump from the top of the FAQs page to the fourth group
+stopped ~1080px short, and clicking the same item again (from the new position) went
+to the right place. `scrollPageTo` now resolves the element itself and animates to an
+absolute `getBoundingClientRect().top + scrollY - NAV_OFFSET`, so the clearance is
+applied exactly once and Lenis only ever gets a number. `NAV_OFFSET` is exported,
+because the spy has to measure against it. This also fixed the LinkHub rail and every
+`#hash` deep link — `/members/resources#videos` was landing at 224px too.
+
+**The scroll-spy is computed, not subscribed.** Two implementations were tried and
+discarded first. A ScrollTrigger per group caches its trigger's pixel offsets and
+has to be told when they move — opening an answer animates a height, which shifts
+every group below it, so the spy would need a `ScrollTrigger.refresh()` on every
+accordion toggle, and mid-animation refreshes are what make a sticky rail jitter.
+An IntersectionObserver reads live geometry, which fixes that, but only fires on
+threshold *crossings*: a restored scroll position, a deep link or a programmatic
+jump leaves the rail showing whatever was last true — worst of all on first paint.
+So instead, on each rAF-throttled scroll frame the active category is the last
+group whose top has passed a line 22% down the viewport (`SPY_LINE`), or the first
+group if none has. Four `getBoundingClientRect` calls, correct by construction at
+any scroll position and any group height. A second effect re-measures 420ms after
+an accordion toggle, since that moves groups without producing a scroll event.
+
+Three details make it stop feeling glitchy, and they're the whole reason the rail
+tracked the *wrong* category before:
+
+- **The reading line must sit below where a jump lands.** With jumps landing at 224px
+  (above) and the line at `0.22 × innerHeight` = 176px on an 800px window, a heading
+  you had just navigated to had not "passed" the line — so the rail kept showing the
+  previous category while the tail of the previous group sat on screen looking
+  deliberate. The line is now `max(NAV_OFFSET + 56, 0.22 × innerHeight)`, which can
+  never creep above a landing point on any viewport. A short laptop window was the
+  other way it broke: at 600px tall, `0.22 ×` gives 132px, four pixels from a heading
+  at 128.
+- **A click locks the spy for the length of the tween** (`JUMP_LOCK_MS`). Without it
+  the rail is technically correct the whole way and still feels wrong — a jump from
+  group 1 to 4 sweeps the line through 2 and 3, so the rail strobes before settling.
+  Wheel, touch or key input releases the lock immediately, because then the visitor is
+  driving and the measurement is the honest answer again.
+- **Max scroll awards the last group outright.** The final group can sit close enough
+  to the end of the document that its heading can never reach `NAV_OFFSET` — the
+  scroll runs out first — and measuring would report the second-to-last group forever.
+
+Verified with a headless pass over all 12 category-to-category jumps at 620, 800 and
+1000px viewport heights: every heading lands at exactly y=96 and the rail matches,
+with free scrolling and page-bottom still correct.
+
+**Search still spans all forty**, answers included — the thing a plain accordion
+can't do. Groups matching nothing are hidden rather than shown empty, and the rail
+greys those categories out and switches its count to `matches/total`, so the shape
+of a result set is readable from the rail alone. Open state is keyed by `id`: not
+by index (filtering reorders, and "3" would reveal whichever question shuffled
+into third place) and not by question text (thirty-two lorem questions could
+collide).
+
+The rail is `lg`-only. On a phone the group headings are the index.
 
 ## The video library opens in place
 

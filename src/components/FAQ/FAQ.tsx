@@ -2,16 +2,23 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Plus } from 'lucide-react'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
-import { HOMEPAGE_FAQ_INDEXES, memberFaqs } from '../../content/site'
+import { HOMEPAGE_FAQ_IDS, memberFaqs } from '../../content/site'
 import Button from '../Button'
 
 /**
- * Four of the eight member FAQs. Which four is a list of indexes in
- * content/site.ts, and the copy itself now comes from there too — this file used
- * to hold its own hard-coded duplicate of four answers, which meant an edit on
- * the For Members → FAQs page silently disagreed with the homepage.
+ * Four of the member FAQs. Which four is a list of ids in content/site.ts, and
+ * the copy itself now comes from there too — this file used to hold its own
+ * hard-coded duplicate of four answers, which meant an edit on the For Members →
+ * FAQs page silently disagreed with the homepage.
+ *
+ * Selected by id, not by index: the full list is now forty questions sorted into
+ * four categories, so "the 1st, 2nd, 3rd and 5th" would change meaning the next
+ * time anything is reordered. `filter` on ids also means a deleted question drops
+ * out of the band rather than promoting whatever moved into its slot.
  */
-const faqs = HOMEPAGE_FAQ_INDEXES.map((i) => memberFaqs[i])
+const faqs = HOMEPAGE_FAQ_IDS.map((id) => memberFaqs.find((faq) => faq.id === id)).filter(
+  (faq): faq is (typeof memberFaqs)[number] => Boolean(faq),
+)
 
 export default function FAQ() {
   const [open, setOpen] = useState<number | null>(0)
