@@ -72,8 +72,8 @@ export const pages = {
   members: { enabled: true, route: '/members' },
   membersFindDoctor: { enabled: true, route: '/members/find-a-doctor' },
   membersVirtualCare: { enabled: true, route: '/members/virtual-care' },
-  membersResources: { enabled: false, route: '/members/resources' },
-  membersFaqs: { enabled: false, route: '/members/faqs' },
+  membersResources: { enabled: true, route: '/members/resources' },
+  membersFaqs: { enabled: true, route: '/members/faqs' },
   membersApp: { enabled: false, route: '/members/app' },
   membersPortal: { enabled: false, route: '/members/portal' },
 

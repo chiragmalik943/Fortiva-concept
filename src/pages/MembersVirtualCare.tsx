@@ -2,7 +2,7 @@ import { Clock, Lock, Pill, RefreshCw, Thermometer, Timer, Video, Wallet } from 
 import PageHero from '../components/PageHero/PageHero'
 import StepFlow, { type Step } from '../components/StepFlow/StepFlow'
 import StatBand, { type Stat } from '../components/StatBand/StatBand'
-import FeatureGrid from '../components/FeatureGrid/FeatureGrid'
+import FeatureReveal from '../components/FeatureReveal/FeatureReveal'
 import { type Feature } from '../components/featureTypes'
 import CtaBand from '../components/CtaBand/CtaBand'
 import Button from '../components/Button'
@@ -20,7 +20,7 @@ import { useSplitReveal } from '../hooks/useSplitReveal'
  *   Virtual care made simple  → the split band, with the treatable-conditions card
  *   MyLiveDoc + How It Works  → StepFlow
  *   Why virtual care? + stats → StatBand, footnotes included
- *   Key benefits              → FeatureGrid
+ *   Key benefits              → FeatureReveal, the scroll-in card band
  *   Get started               → CtaBand
  *
  * ── The footnotes ship with the numbers ─────────────────────────────────────
@@ -273,14 +273,43 @@ export default function MembersVirtualCare() {
         ]}
       />
 
-      <FeatureGrid
+      {/* ── Key benefits ───────────────────────────────────────────────────
+          The doc's five-item benefits list, in FeatureReveal rather than the
+          plain grid it used to sit in — the same treatment the two Plans pages
+          give their five-item lists, so a member who arrives here from Plans
+          meets a shape they already recognise. See FeatureReveal.tsx.
+
+          ADDED — the lead paragraph and the two buttons. The doc gives this
+          section a heading and the five items and nothing else, and the split
+          layout has a left column to fill; the lead says only what the five
+          cards already say (they apply to every visit, at no extra cost) and
+          the buttons are the two the rest of the page already uses. */}
+      <FeatureReveal
         eyebrow="KEY BENEFITS"
         heading={
           <>
             What you get from a <span className="text-gold-dark">virtual visit</span>
           </>
         }
+        intro={
+          <>
+            Every MyLiveDoc visit comes with all five &mdash; whether it&rsquo;s a rash at 7am,
+            a refill you meant to sort out last week or a second opinion on something that has
+            been nagging at you. Nothing here is an add-on, and nothing depends on which tier
+            you&rsquo;re on.
+          </>
+        }
         features={benefits}
+        action={
+          <>
+            <ActionButton variant="gold" icon="arrow" href={externalTargets.myLiveDoc}>
+              Start a visit
+            </ActionButton>
+            <Button variant="ghost" href="/members/faqs">
+              Read the FAQs
+            </Button>
+          </>
+        }
       />
 
       <CtaBand

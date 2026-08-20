@@ -260,9 +260,17 @@ the buttons start opening in a new tab and no component needs editing.
   Fortiva, its plans or its network, and none of it is medical advice, so it can
   be replaced wholesale. Marked `PLACEHOLDER — TODO(client)` in the source.
 - **The video library** — the doc asks for a video section and supplies the intro
-  line, but no titles, URLs, thumbnails or durations. Three cards with invented
-  titles would read as a real library that 404s, so it's one player frame and an
-  empty thumbnail strip that says plainly it isn't populated.
+  line, but no titles, URLs, thumbnails or durations. It used to be one empty
+  player frame that said so out loud, which showed the shape but couldn't show
+  the *interaction*. It is now `VideoLibrary` populated from `videoLibrary` in
+  `pages/MembersResources.tsx`: six member-onboarding topics with titles, blurbs,
+  descriptions, tags and durations, playing Google's public sample clips. Every
+  field in that array is invented and the block is marked
+  `PLACEHOLDER — TODO(client)`, with a list of exactly what changes when the real
+  library lands. Authored durations do **not** match the sample clips' real run
+  times; real files fix that by themselves. Thumbnails are gradient plates with
+  the topic's glyph, not frame grabs — there are no real stills, and every image
+  in this build is a commissioned asset used exactly once.
 
 One line was **added** rather than reproduced: an emergency carve-out on the
 Virtual Care page ("Not for emergencies…"). A telehealth page without one is the
@@ -276,14 +284,34 @@ single omission worth flagging instead of copying; it's unbranded, and marked
 hold its own hard-coded duplicate of four answers, so an edit on the FAQs page
 silently disagreed with the homepage.
 
-## Plans pages: the five-card sections
+## The five-card sections
 
-Both Plans pages' five-benefit lists moved from `FeatureGrid` (a plain grid) to
-`FeatureReveal`: copy holds the left column, and the five cards fly up from below
-the fold into a staggered two-column layout, one after another, as you scroll
-past. `FeatureGrid` is still in use — Virtual Care's key benefits — and the rule
-for choosing is in its docblock: `FeatureReveal` where the list *is* the section,
-`FeatureGrid` for a supporting list on a page that already has a set-piece.
+Three pages carry a five-item benefits list — Plans → Individuals & Families,
+Plans → Employers and For Members → Virtual Care — and all three now render it
+through `FeatureReveal`: copy holds the left column, and the five cards fly up
+from below the fold into a staggered two-column layout, one after another, as you
+scroll past. `FeatureGrid` (the plain grid the three of them used to sit in) has
+been deleted; `Feature` itself still lives in `components/featureTypes.ts` rather
+than being exported from `FeatureReveal`, so a second renderer can be added later
+without every call site re-pointing its import.
+
+Virtual Care's section gained a lead paragraph and two buttons that the copy doc
+does not supply — the split layout has a left column to fill, and the lead only
+restates what the five cards already say. Both are marked `ADDED` in the source.
+
+**Spacing.** One gap value, `gap-5`, in both axes. Two earlier attempts at the
+staggered look each broke that. `sm:mt-14` on the odd cards put its 56px into the
+first row's *height*, so the gap under a card measured 76px against a 20px column
+gap. `items-start` was subtler: cards left to size themselves differ in height by
+however many lines of body copy separate them, and all that slack lands in the gap
+below the shorter one — 65px, and it moves whenever the copy is edited. The fix is
+no `items-start` (rows stretch, so both cards in a row match and every vertical gap
+is exactly the row gap) plus `relative` + `sm:top-14` for the offset, which paints
+the odd cards lower without touching the row boxes. It has to be `top` and not
+`translate-y`, because the reveal animation owns the transform.
+
+The hand-drawn gold rule that used to sit under the heading is **gone** — on all
+three pages, since it lived in the shared component.
 
 The section is deliberately **not pinned**. A tall section with a sticky 100vh
 viewport (the `ValuesStack` shape) was tried and abandoned: heading, lead, button
@@ -295,6 +323,37 @@ and the viewport's — every card is in place after 60vh of scrolling whatever t
 copy measures. Below `lg` each card gets its own trigger and rises 48px as it
 enters, because one shared 60vh window on a ~1200px-tall stacked column would
 place cards that are still far below the fold.
+
+## The video library opens in place
+
+`components/VideoLibrary` — For Members → Resources. A grid of thumbnails; click
+one and a full-width row slides in **directly beneath the row that card sits in**,
+player on the left, title, description, duration, tags and a follow-on link on the
+right. The card stays in the grid, ringed in gold and badged "Now playing".
+
+Under the row, not at the foot of the grid: a panel pinned to the bottom can be two
+rows of thumbnails away from the card that opened it, at which point a visitor has
+lost track of what they clicked.
+
+That insertion index can't come from CSS — it depends on how many columns the grid
+currently has, which is a breakpoint fact. So `cols` is tracked off the *same* two
+media queries the grid's own `sm:`/`lg:` prefixes compile to, and the panel is
+rendered after the last card of the selected card's row, spanning every column. The
+two must change together; a panel inserted mid-row silently pushes a card into the
+next one. Resizing across a breakpoint re-places the panel live.
+
+Opening and switching are different animations on purpose. Opening from closed runs
+height 0 → auto, because the grid genuinely has to make room. Switching while the
+panel is already open cross-fades the contents instead — collapsing to zero and
+re-expanding at the same size reads as a flinch. Closing has to animate *before*
+React unmounts the element, so the collapse clears the selection in its
+`onComplete`. Every path ends in `ScrollTrigger.refresh()`: adding or removing a row
+changes the document height and invalidates every scroll trigger below it.
+
+One detail worth knowing before editing a card: the scroll reveal lives on a wrapper
+`div`, not on the card `button`. `useScrollReveal` finishes by writing an inline
+`transform`, which beats Tailwind's `hover:-translate-y-*` class — a card can't both
+animate in and lift on hover unless the two sit on different elements.
 
 ## The homepage's lower band
 

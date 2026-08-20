@@ -30,7 +30,8 @@ interface FeatureRevealProps {
  * two-column cards measure ~830px, so on any laptop shorter than about 900px
  * the bottom card was clipped, and there is no way to know a visitor's viewport
  * height at authoring time. Pinning also costs ~110vh of extra scrolling on a
- * page that already runs long, on both Plans pages.
+ * page that already runs long — true of both Plans pages and of For Members →
+ * Virtual Care, the three places this section is used.
  *
  * So the cards animate against a FIXED 60vh scroll window instead, which is
  * independent of both the section's height and the viewport's: every card is in
@@ -48,7 +49,7 @@ interface FeatureRevealProps {
  * has already landed. Anchoring to the copy column instead ties the animation to
  * the thing being read: as the copy comes into view the slots beside it are
  * empty, and they fill as it settles. It also stops depending on the section's
- * height, which differs between the two Plans pages.
+ * height, which differs on all three pages that use it.
  *
  * ── Mobile is a different animation, not a scaled-down one ──────────────────
  * Below `lg` the cards stack into one or two columns and the section is ~1200px
@@ -87,7 +88,6 @@ export default function FeatureReveal({
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
 
   const headingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
-  const ruleRef = useScrollReveal<HTMLDivElement>({ y: 0, scale: 0.6, delay: 0.28, duration: 0.7 })
   const introRef = useScrollReveal<HTMLDivElement>({ y: 20, delay: 0.16 })
 
   useEffect(() => {
@@ -166,24 +166,6 @@ export default function FeatureReveal({
             {heading}
           </h2>
 
-          {/* Hand-drawn underline, in gold. Scales up from 60% width rather
-              than fading in, so it reads as being drawn under the heading. */}
-          <div ref={ruleRef} className="mt-5 origin-left opacity-0">
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 180 16"
-              fill="none"
-              className="h-[14px] w-[132px] text-gold"
-            >
-              <path
-                d="M3 11.5C24 3.5 41 3 58 8.5s33 5.5 50-.5 34-5.5 69 3"
-                stroke="currentColor"
-                strokeWidth="4.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
-
           {(intro || action) && (
             <div ref={introRef} className="opacity-0">
               {intro && (
@@ -197,22 +179,41 @@ export default function FeatureReveal({
         </div>
 
         {/* ── the half that arrives ──────────────────────────────────────────
-            `items-start` is load-bearing: stretched cards would all take their
-            row's height, which flattens the masonry back into a plain grid.
-            Every card in the second column carries the offset as a MARGIN, not a
-            transform: a transform is what the reveal animation is already
-            driving, and margin participates in layout, so the row simply grows
-            to fit rather than the offset card overlapping the one below it. */}
-        <div className="grid items-start gap-5 sm:grid-cols-2">
+            ── One gap value, both axes ─────────────────────────────────────
+            The staggered look here costs nothing in spacing, but getting there
+            took ruling out the two obvious ways of building it.
+
+            `sm:mt-14` on the odd cards was the first. Margin participates in
+            layout, so those 56px went into the FIRST ROW'S HEIGHT: the gap
+            between a card and the card under it came out at 56 + 20 = 76px
+            against a 20px column gap. Two gaps meant to read as one rhythm,
+            off by nearly 4x.
+
+            `items-start` was the second, and subtler. Left to size themselves,
+            two cards sharing a row differ in height by however many lines of
+            body copy separate them, and ALL of that slack lands in the gap
+            below the shorter one — measured at 65px against the same 20px
+            column gap, and it moves whenever the copy is edited.
+
+            So: no `items-start` (rows stretch, both cards in a row are the same
+            height, and every vertical gap is exactly the row gap), and the
+            offset is `relative` + `sm:top-14`, which paints the odd cards lower
+            without touching the row boxes. `gap-5` is now the only spacing in
+            here, in both directions.
+
+            It has to be `top` rather than `translate-y`, too — the reveal
+            animation below owns the transform on these elements, and GSAP
+            would overwrite a Tailwind translate on its first tick. */}
+        <div className="grid gap-5 sm:grid-cols-2">
           {features.map((feature, i) => {
             const Icon = feature.icon
             return (
               <div
                 key={feature.title}
                 ref={(el) => (cardRefs.current[i] = el)}
-                className={`corner-smooth flex flex-col rounded-card p-6 opacity-0 shadow-card-soft sm:p-7 ${
+                className={`corner-smooth relative flex flex-col rounded-card p-6 opacity-0 shadow-card-soft sm:p-7 ${
                   TINTS[i % TINTS.length]
-                } ${i % 2 === 1 ? 'sm:mt-14' : ''}`}
+                } ${i % 2 === 1 ? 'sm:top-14' : ''}`}
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gold">
                   <Icon size={20} className="text-navy-800" strokeWidth={1.75} />
