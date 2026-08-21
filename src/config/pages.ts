@@ -74,7 +74,7 @@ export const pages = {
   membersVirtualCare: { enabled: true, route: '/members/virtual-care' },
   membersResources: { enabled: true, route: '/members/resources' },
   membersFaqs: { enabled: true, route: '/members/faqs' },
-  membersApp: { enabled: false, route: '/members/app' },
+  membersApp: { enabled: true, route: '/members/app' },
   membersPortal: { enabled: false, route: '/members/portal' },
 
   /* For Brokers — not built yet. */
