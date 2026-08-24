@@ -232,14 +232,34 @@ slot for real photography when it exists.
 
 ### The interface mockups contain no invented member data
 
-`PhoneShowcase` and `PortalShowcase` both draw abstract screens: blocks, bars,
-pins and a stand-in for a scannable code. Not one contains a balance, a claim
-number, a deductible or a name. A mockup showing "$1,240 remaining" or "Claim
-#48213 — approved" would be inventing member data on the two pages whose whole
-subject is what those screens show you, and a reviewer would then have to work
-out which parts were product decisions and which were filler. Each screen
-communicates its *shape* — a summary, a map, a bar chart, an ID card, a
-conversation, a table, a form — and asserts nothing about its contents.
+`PortalShowcase` draws abstract screens: blocks, bars, pins and a stand-in for a
+scannable code. Not one contains a balance, a claim number, a deductible or a
+name. A mockup showing "$1,240 remaining" or "Claim #48213 — approved" would be
+inventing member data on a page whose whole subject is what those screens show
+you, and a reviewer would then have to work out which parts were product decisions
+and which were filler. Each panel communicates its *shape* — a summary, a table, a
+card, a search, a form, a conversation — and asserts nothing about its contents.
+
+`PhoneShowcase` used to work the same way and no longer needs to: it shows the real
+app captures in `public/app-scr-1.png` … `app-scr-5.png`, one per feature, full-bleed
+inside the bezel. Real screenshots also mean the hand-drawn status bar, Fortiva app
+bar and tab bar had to go — the captures bring their own, and keeping both showed
+two of each. **Those files are not in the repo yet**; until they are, the device
+renders as a dark screen rather than as a hole in the page.
+
+Export at **~9:18.8** (1179 x 2461, say) — deliberately *not* the stock iPhone
+9:19.5, because the redesigned device is 630:1266 with a 3.5% bezel, which leaves a
+slightly squarer aperture than a real phone. A 9:19.5 capture still works;
+`object-cover` just trims ~3% off the top and bottom, which is fine for a screen
+with padding at both ends and not fine for one with a status bar hard against the
+edge. The filenames live in `assets/images.ts` like every other image, as an
+`appScreens` array — the nth screen belongs to the nth feature, so five named slots
+would only have been five chances to pair them up wrongly.
+
+The **download button is gone** from that section. The App page already carried
+the same call three times — the hero, the two store buttons under "Getting
+started", and the closing band — and a fourth in the middle of the section whose
+whole job is showing what the app does was the one with least to say.
 
 ### Five destinations the doc never gives a URL for
 
@@ -320,16 +340,247 @@ the odd cards lower without touching the row boxes. It has to be `top` and not
 The hand-drawn gold rule that used to sit under the heading is **gone** — on all
 three pages, since it lived in the shared component.
 
-The section is deliberately **not pinned**. A tall section with a sticky 100vh
-viewport (the `ValuesStack` shape) was tried and abandoned: heading, lead, button
-and five two-column cards measure ~830px, so on any laptop under ~900px tall the
-bottom card clipped, and pinning also costs ~110vh of extra scrolling on two pages
-that already run long. Instead the cards animate against a **fixed 60vh scroll
-window** (`top 78%` → `top 18%`), which is independent of both the section's height
-and the viewport's — every card is in place after 60vh of scrolling whatever the
-copy measures. Below `lg` each card gets its own trigger and rises 48px as it
-enters, because one shared 60vh window on a ~1200px-tall stacked column would
-place cards that are still far below the fold.
+The section **pins** — see "Pinned set-pieces" below. Below `lg` each card gets its
+own trigger and rises 48px as it enters, because one shared window on a ~1200px-tall
+stacked column would place cards that are still far below the fold.
+
+### How long the reveal takes, and why it's a position not a distance
+
+It used to run over a fixed **60vh** window (`top 82%` → `top 22%`) with cards
+half-overlapping (`STEP` 0.5). Measured, that was 480px of scroll for all five and
+**80px between arrivals** — a normal wheel flick travels ~360px, so one gesture
+brought in four cards and the effect was over before you noticed it.
+
+Now the cards are strictly sequential (`STEP` 1, one finishes as the next starts)
+and the window **ends on the section's own bottom edge** — `endTrigger` the
+section, `end: bottom 55%` (`END_AT`). The start still anchors to the copy column,
+because anchoring it to the section runs the animation while the heading is still
+below the fold.
+
+The end had to become a position rather than a bigger number, and this is the part
+worth knowing before touching it. A fixed `end: '+=1150'` was tried first. Because
+the section isn't pinned, a longer window means it travels further up the screen
+before the last card lands: at 1440x1000 that finished with card five at
+y=20..229, comfortably in view — but at 1440x620 cards four and five settled at
+y=-279 and y=-305, entirely above the fold. Slower *and* invisible, which is worse
+than the fast version. Anchoring to the section's bottom edge makes the window
+`sectionHeight + startOffset - 0.55 × viewportHeight`, so a short viewport
+shortens the run instead of pushing the payoff off-screen, and the last card
+always settles in the same *place* rather than after the same number of pixels. It
+self-adjusts to the three pages too, whose copy columns are different heights.
+
+Measured across all three pages at 620px, 800px and 1000px viewport heights: an
+**850–950px run, cards arriving 150–200px apart**, and no card settling off-screen
+on any of them.
+
+## The app section, rebuilt from a mock
+
+`PhoneShowcase` was rebuilt against a supplied design. The proportions in it are
+**sampled from that mock, not estimated**, and they are written into the component's
+docblock because several are odd enough that a well-meaning tidy-up would undo them:
+
+| | measured |
+|---|---|
+| device aspect | 630 : 1266 — 2.01, so ~9:18.1, *not* the 9:19 it was |
+| bezel | 3.5% of the device width, uniform on all four sides |
+| corner radius | ~10.6% of the device width |
+| side buttons | `#1F3357`, three of them, protruding ~1.5% of the width — left at 21.2% (5.7% tall) and 29.7% (13.5% tall), right at 25.0% (10.6% tall) |
+| rail | 1px hairline, `navy-800/12`; the active segment is 2px gold |
+| numbers | gold when active, `navy-800/30` when not |
+
+The bezel and the buttons are **percentages, not pixels**, because the device is no
+longer a fixed size — a 10px bezel on a device that changes width by half reads as a
+chunky border at one size and a hairline at another.
+
+### The heading sits inside the right column
+
+The measurement that mattered most: in the mock the eyebrow, heading and intro all
+start at the same x as the list's rail, while the device runs from just under the
+eyebrow to past the last list item. **The device is beside the whole right-hand
+column, not just the list.** That is why the mock's phone looks so much bigger than a
+heading-above-the-grid layout can make it — it has the section's full height to
+occupy rather than the list's share of it.
+
+Reproducing that is explicit grid placement: device in column 1 spanning both rows,
+heading in column 2 row 1, list in column 2 row 2. Below the pin threshold the
+placement classes drop away and the same three children stack in source order —
+heading, device, list — which is what the section already did on a phone. Measured:
+the device went from 248px wide to 310px at a 900px window (the mock's is 315px)
+purely from this change.
+
+### The pair is centred, and the text column is capped
+
+The first build of this gave the right-hand column `minmax(0,1fr)` — all the width
+left over. That reads fine until you look at where the slack goes: the column was
+~1000px wide while its text measures ~550px, so every spare pixel piled up on the
+**right** and both the device and the copy hugged the left edge. The container was
+centred; its contents were not.
+
+So the text column is capped at its own measure (`36rem`), the device column stays
+`auto`, and `justify-center` centres the two tracks together — nothing has internal
+slack, so the leftover width becomes equal margins. Measured left/right margins agree
+within 6px at 1280, 1440 and 1680 wide, with a consistent 166px gap between device
+and rail (the gap the mock has; it is part of the design, not incidental spacing).
+
+`36rem` and not less because of a height coupling that is easy to miss: at `34rem`
+the longest description wrapped to two lines, which added 23px to the list and pushed
+the section 9px past a 760px window. **The measure and the pin threshold are coupled
+through the list's height** — a copy edit long enough to re-wrap a row is a change to
+whether this section still fits.
+
+### The device is sized in vh
+
+In the mock the device is 633px tall in an 885px frame — 72% of the viewport. No
+fixed pixel width reproduces that across window sizes: 240px looks right at 760px
+tall and postage-stamp-ish at 1200px. So it is `pin:h-[72vh]` and `aspect-ratio`
+derives the width. The right column's own natural height (heading block plus five
+rail rows, ~610px) is the floor: on a short window that floor, not the device, sets
+the section height.
+
+### The list is a rail, not cards
+
+Cards, icons and lit backgrounds are gone — replaced by a hairline rail with a 2px
+gold segment on the active item, a number, a title and one line of body. The
+`AppFeature.icon` field went with them, and so did five lucide imports on the page:
+the rail already says which item is active, and an icon beside it was two things
+saying the same thing.
+
+The gold marker is **per-item**, absolutely positioned inside its own `<li>`, rather
+than one bar that slides on a transform. A sliding bar has to assume every item is
+exactly the same height, and the moment one description wraps to two lines it is out
+of register with everything below it.
+
+Verified at 1440x760, 900 and 620: the section pins for its full 3000px at `top: 0`,
+the list's active item and the phone's visible screen step through 0–4 **in sync**,
+nothing clips, no horizontal overflow, and at 620px it falls back to unpinned with
+all five steps still reachable. On mobile all five markers are lit and the three
+blocks stack heading → device → list.
+
+## Pinned set-pieces
+
+`FeatureReveal`, `PhoneShowcase` and `ScrollSpyList` hold the page still while
+their reveal runs. The section sticks to the viewport at `top top`, the scroll
+drives its sequence from first item to last, and then it releases and the page
+carries on. Because each section is exactly `100vh` when pinned, "its top has
+reached the top of the viewport" and "all of it is on screen" are the same moment
+— which is what makes `start: 'top top'` an honest answer to *don't start until
+it's fully visible*.
+
+`src/animations/pinnedSequence.ts` owns every number involved, because each one
+has to agree with something else.
+
+### Pinning was only possible after the sections were trimmed
+
+This was tried and abandoned once, and the reason still holds: **pinning an
+element taller than the viewport clips its bottom.** Measured at 1440x800 before
+any trimming, the sections were 746px (ScrollSpyList), 892–944px (FeatureReveal)
+and 1188px (PhoneShowcase) — two of the three taller than the window they'd be
+pinned to.
+
+So the `pin:` Tailwind variant (a custom screen: `(min-width: 1024px) and
+(min-height: 760px)`) carries the trimming, and it is inert everywhere else:
+
+| | before | after `pin:` trims | needs a window of |
+|---|---|---|---|
+| FeatureReveal (worst of 3 pages) | 640px content | 521px | 657px |
+| ScrollSpyList | 522px | 442px | 578px |
+| PhoneShowcase | 924px | ~610px (right column is the floor; device is `72vh`) | ~746px |
+
+The trims are padding, gaps and type sizes. PhoneShowcase originally needed the most
+of all — its device was cut to 192px wide — but the rebuild described above reclaimed
+that by moving the heading into the right column, so its device is now *larger* while
+pinned than in the fallback, not smaller.
+
+Two details that are easy to get wrong:
+
+- **`pin:pt-24`, not symmetric padding.** The nav pill is `fixed` and floats over
+  the page. Centring content in the full viewport tucked the eyebrow underneath it
+  on shorter windows; the asymmetric top padding is nav clearance.
+- **`pin:overflow-hidden` on FeatureReveal.** Its cards start their travel below
+  their slots. Inside a pinned — that is, `position: fixed` — section, that
+  overflow paints over whatever comes next unless the section clips it.
+
+### The CSS threshold and the JS threshold are the same string
+
+`PIN_QUERY` in `pinnedSequence.ts` and the `pin` screen in `tailwind.config.js`
+must stay identical. If they drift, a section either pins while still too tall
+(clipped) or trims itself while scrolling normally (cramped for no reason). Both
+files say so at the point of definition.
+
+`760` is set from the measurements above: the tallest instance needs 742px, so
+760 is that plus a little and every other instance clears it by 50px or more.
+
+### Three branches, mutually exclusive
+
+`gsap.matchMedia` builds and tears down exactly one, so an overlap would run two
+reveals over the same elements and a gap would run none.
+
+- **PIN** — pin, `end: '+=' + steps * 600`.
+- **UNPINNED** (`lg`, window under 760px tall) — no pin; the behaviour these
+  sections already had. FeatureReveal scrubs from the copy column to the section's
+  bottom edge; the spy lists read progress off the section's passage through the
+  viewport.
+- **MOBILE** (under `lg`) — no two-column layout to hold still, so no set-piece.
+
+### What it costs
+
+`PX_PER_STEP` is **600px**. While pinned the section doesn't move, so a long step
+buys dwell at the price of page length and nothing else — which is why it can be
+this generous where the unpinned version had to cap out around 175px. It is well
+past the ~360px an unhurried wheel flick travels, so one gesture cannot clear a
+step.
+
+The bill, added to each page: **+3000px** for a five-card FeatureReveal (three
+pages have one), **+3000px** for the App page's five-item PhoneShowcase, and
+**+1800px** for Find a Doctor's three panels.
+
+Verified at 1440x800 and 1440x620: every instance pins at `top: 0` for exactly its
+step budget, shows all of its steps, clips nothing, releases, and reverses cleanly
+on the way back up — and at 620px none of them pin at all, with the fallback still
+showing every step.
+
+## Scroll-spy sensitivity: `useScrollSpyIndex`
+
+`ScrollSpyList` (Find a Doctor) and `PhoneShowcase` (the App page) both have a
+sticky column beside a list where one item is lit at a time. Both used to give
+each item its own ScrollTrigger with a `top 60%` → `bottom 40%` band, reporting
+`onToggle` when it became the one in the band. Two things were wrong with that.
+
+**Over-sensitive.** Consecutive bands overlap, so in practice the highlight
+advanced every time a new item's top crossed the line — once per item *pitch*,
+which is 175–180px here. A flick is ~360px, so one gesture reliably skipped an
+item and sometimes two. Arithmetic, not a bug.
+
+**Asymmetric.** With overlapping bands, scrolling back up meant the item you were
+returning to had never left its band, so no toggle fired and the highlight could
+stay on the item you had just left. Down felt twitchy, up felt sticky.
+
+Both now share `hooks/useScrollSpyIndex`, which derives the index from a 0-to-1
+progress rather than from enter/leave events. When the section pins, that progress
+is the pin's own; when it can't pin, it is the section's passage through the
+viewport (`top bottom` → `bottom top`). The rest of this section describes that
+unpinned case. The scroll each item owns becomes
+`(sectionHeight + viewportHeight) / count` instead of the item pitch — measured at
+1440x800, **525px per panel** for the three-panel list and **375–400px per item**
+for the five-item app list, against ~180px before, both past the ~360px a flick
+travels. It scales itself, so a taller section or a shorter window needs no
+re-tuning. And because the index is a pure function of scroll position rather than
+a history of enter/leave events, up and down are identical and arriving from either
+direction is already correct without anything having had to fire.
+
+The trade is precision: the lit item is "how far through the list you are", not
+"the item whose box is on a line", and near the top of the section it runs about
+one item ahead of a strict top-down read before converging. The two are directly
+opposed — a window short enough to track a box exactly is a window that advances
+once per item pitch, which is the thing being fixed — and in both sections the list
+is barely taller than the viewport, so every item is on screen at once and the
+highlight was always pacing rather than a positional readout.
+
+The hook also returns `tracking`, false under `lg` and under reduced motion. Both
+components now light **every** item when it's false. Previously they lit only item
+one there, so on a phone items 2..n sat permanently dimmed with no way to reach
+them — while both docblocks claimed every panel was lit. Verified: 3 of 3 and 5 of
+5 lit at 420px wide.
 
 ## The FAQ page: forty questions, four categories
 

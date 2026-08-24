@@ -1,10 +1,11 @@
-import { Apple, BarChart3, CreditCard, Download, FileText, MapPin, MessageCircle, Smartphone } from 'lucide-react'
+import { Apple, Smartphone } from 'lucide-react'
 import PageHero from '../components/PageHero/PageHero'
 import PhoneShowcase, { type AppFeature } from '../components/PhoneShowcase/PhoneShowcase'
 import StepFlow, { type Step } from '../components/StepFlow/StepFlow'
 import CtaBand from '../components/CtaBand/CtaBand'
 import Button from '../components/Button'
 import ActionButton from '../components/ActionButton'
+import { images } from '../assets/images'
 import { externalTargets, isPlaceholderHref } from '../content/site'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
@@ -20,39 +21,42 @@ import { useScrollReveal } from '../hooks/useScrollReveal'
  *
  * The doc's five bullets are the page's whole substance, so they get the
  * set-piece rather than a list: a phone that changes screen as you read down
- * them. The screens are abstract by design — see PhoneShowcase for why there
- * isn't a single invented balance or claim number in any of them.
+ * them. The screens are the real app captures in `public/app-scr-1..5.png`,
+ * paired to the bullets in order — see images.ts for the export ratio the device
+ * aperture expects. The bullets carry no icons: the redesigned section marks the
+ * active one with a gold segment on a rail instead, and an icon beside that was
+ * two things saying the same thing.
+ *
+ * There is no download button on that section. The page already carries the same
+ * call three times — the hero, the two store buttons under "Getting started", and
+ * the closing band — and a fourth in the middle of a section whose whole job is
+ * to show what the app does was the one that had least to say.
  */
 const features: AppFeature[] = [
   {
     title: 'View your plan details',
     body: 'Check your coverage, benefits and deductible anytime.',
-    icon: FileText,
-    shape: 'card',
+    screen: images.appScreens[0],
   },
   {
     title: 'Find care fast',
     body: 'Locate in-network doctors, specialists and facilities near you.',
-    icon: MapPin,
-    shape: 'map',
+    screen: images.appScreens[1],
   },
   {
     title: 'Track claims and spending',
     body: 'Stay on top of claims and monitor your out-of-pocket costs.',
-    icon: BarChart3,
-    shape: 'chart',
+    screen: images.appScreens[2],
   },
   {
     title: 'Access digital ID cards',
     body: 'No more digging for your card — your ID is always with you.',
-    icon: CreditCard,
-    shape: 'id',
+    screen: images.appScreens[3],
   },
   {
     title: 'Get support instantly',
     body: 'Chat with a Fortiva representative or access FAQs for quick answers.',
-    icon: MessageCircle,
-    shape: 'chat',
+    screen: images.appScreens[4],
   },
 ]
 
@@ -114,11 +118,6 @@ export default function MembersApp() {
         }
         intro="Scroll the list and the screen follows — each one is a real place in the app, not a feature bullet."
         features={features}
-        action={
-          <ActionButton variant="gold" icon="arrow" href={externalTargets.appStore}>
-            Download now
-          </ActionButton>
-        }
       />
 
       <StepFlow

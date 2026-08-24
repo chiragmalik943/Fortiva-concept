@@ -82,6 +82,22 @@ export const images = {
 
   forMask: `${import.meta.env.BASE_URL}for-mask.svg`,
 
+  // The five app screens shown inside the phone mockup on For Members →
+  // Download the App, in the order the feature list presents them.
+  //
+  // An array rather than five named slots because they genuinely are a sequence:
+  // PhoneShowcase takes one screenshot per feature and the nth screen belongs to
+  // the nth feature, so a named slot per screen would only be five chances to
+  // pair them up wrongly.
+  //
+  // Export target is ~9:18.8 — 1179 x 2461, say. That is NOT a stock iPhone
+  // capture ratio (9:19.5): the redesigned device is 630:1266 with a 3.5% bezel,
+  // which leaves a slightly squarer aperture than a real phone has. A 9:19.5
+  // capture still works, `object-cover` just trims ~3% off the top and bottom —
+  // fine for a screenshot with padding at both ends, not fine for one with a
+  // status bar or a tab bar hard against the edge.
+  appScreens: [1, 2, 3, 4, 5].map((n) => `${import.meta.env.BASE_URL}app-scr-${n}.png`),
+
   // The Available States dot map, in two halves. This one is the static grey
   // grid for the 44 states Fortiva doesn't name — a single <path>, drawn as a
   // plain <img> so half a megabyte of path data stays out of the JS bundle and

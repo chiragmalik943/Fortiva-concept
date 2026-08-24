@@ -42,6 +42,25 @@ export default {
         ultralight: '250',
         super: '900',
       },
+      // ── The pinned-set-piece breakpoint ──────────────────────────────────
+      // Three sections (FeatureReveal, PhoneShowcase, ScrollSpyList) pin
+      // themselves to the viewport and run their reveal while the page is held
+      // still. Pinning an element taller than the viewport clips its bottom, so
+      // it only happens where there is both width for the two-column layout and
+      // height for the whole section: this query is that condition, and the
+      // `pin:` variants are the trimming that makes the section fit it.
+      //
+      // MUST stay identical to PIN_QUERY in src/animations/pinnedSequence.ts —
+      // CSS decides the layout, JS decides the behaviour, and if the two
+      // disagree a section either pins while too tall (clipped) or trims itself
+      // while unpinned (needlessly cramped).
+      //
+      // Declared last so `pin:` utilities are emitted after `lg:` ones and win
+      // where both set the same property (`lg:sticky pin:static`).
+      screens: {
+        pin: { raw: '(min-width: 1024px) and (min-height: 760px)' },
+      },
+
       borderRadius: {
         xl2: '1.75rem',
         card: '2rem',

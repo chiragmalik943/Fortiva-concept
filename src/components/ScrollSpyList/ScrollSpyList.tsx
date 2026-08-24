@@ -1,7 +1,7 @@
-import { ReactNode, useEffect, useRef, useState } from 'react'
+import { ReactNode } from 'react'
 import { type LucideIcon } from 'lucide-react'
-import { ScrollTrigger, prefersReducedMotion } from '../../animations/gsap'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
+import { useScrollSpyIndex } from '../../hooks/useScrollSpyIndex'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
 
 export interface SpyItem {
@@ -25,14 +25,19 @@ interface ScrollSpyListProps {
  * of the viewport. The left column names it, so the pair reads as a single
  * moving focus rather than as a heading next to a list.
  *
- * ── Why the active item is state and not a scrub ─────────────────────────────
+ * ── Why the active item is discrete and not a scrub ──────────────────────────
  * Everything else scroll-driven on this site interpolates continuously. This one
  * is discrete on purpose: a panel is either the one you are reading or it isn't,
  * and cross-fading four panels at once produces a middle where all of them are
- * half-lit and none reads as chosen. So each panel owns a ScrollTrigger whose
- * only job is to report "I am the one in the band now", and the styling is plain
- * CSS transitions off a single index. That also keeps re-renders to one per
- * panel crossed rather than one per scroll frame.
+ * half-lit and none reads as chosen. So the styling is plain CSS transitions off
+ * a single index, and re-renders happen once per panel crossed rather than once
+ * per scroll frame.
+ *
+ * `useScrollSpyIndex` owns that index. It used to be a ScrollTrigger per panel
+ * reporting when it was the one in the reading band, which advanced the highlight
+ * once per panel PITCH — ~180px, half of one wheel flick, so a single scroll
+ * skipped panels. See that hook for why it is measured off the section's own
+ * progress through the viewport instead, and what that costs.
  *
  * Under `lg` the sticky column becomes a normal heading above the list and every
  * panel is lit — a spy list needs a viewport tall enough to hold the heading and
@@ -46,40 +51,32 @@ export default function ScrollSpyList({
   action,
   className = 'bg-cream-soft',
 }: ScrollSpyListProps) {
-  const [active, setActive] = useState(0)
-  const itemRefs = useRef<(HTMLLIElement | null)[]>([])
+  const { scopeRef, active, tracking } = useScrollSpyIndex(items.length)
 
   const headingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
   const introRef = useScrollReveal<HTMLDivElement>({ y: 20, delay: 0.12 })
 
-  useEffect(() => {
-    // Below lg every panel is lit, so there is nothing to track.
-    const desktop = window.matchMedia('(min-width: 1024px)')
-    if (!desktop.matches) return
-
-    const triggers = itemRefs.current.map((el, i) =>
-      el
-        ? ScrollTrigger.create({
-            trigger: el,
-            start: 'top 62%',
-            end: 'bottom 38%',
-            onToggle: (self) => {
-              if (self.isActive) setActive(i)
-            },
-          })
-        : null,
-    )
-
-    return () => triggers.forEach((t) => t?.kill())
-  }, [items.length])
-
-  // Reduced motion, or any viewport under lg, shows everything at full strength.
-  const allLit = prefersReducedMotion
+  // Reduced motion, or any viewport under lg, shows everything at full strength:
+  // nothing is following the scroll there, so a single lit panel would leave the
+  // rest permanently dimmed with no way to reach them.
+  const allLit = !tracking
 
   return (
-    <section className={`px-6 py-24 sm:py-28 ${className}`}>
-      <div className="mx-auto grid max-w-container gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-20">
-        <div className="lg:sticky lg:top-32 lg:self-start">
+    /* `pin:` = wide and tall enough for the section to pin itself to the viewport
+       (animations/pinnedSequence.ts owns the query, and useScrollSpyIndex reads
+       the same one). These variants trim the section to the viewport it is about
+       to occupy, and `pin:static` retires the sticky column: inside a pinned —
+       that is, fixed — section there is nothing left for it to stick to, and the
+       whole section is already held still. `pin:pt-24` rather than symmetric
+       padding, because the nav pill floats over the page and centring in the full
+       viewport tucks the eyebrow under it. All of this is inert on a window too
+       short to pin, so the fallback keeps exactly the layout this section had. */
+    <section
+      ref={scopeRef}
+      className={`px-6 py-24 sm:py-28 pin:flex pin:h-screen pin:items-center pin:pb-10 pin:pt-24 ${className}`}
+    >
+      <div className="mx-auto grid w-full max-w-container gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-20">
+        <div className="lg:sticky lg:top-32 lg:self-start pin:static pin:self-center">
           {eyebrow && (
             <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
               {eyebrow}
@@ -119,15 +116,14 @@ export default function ScrollSpyList({
           </div>
         </div>
 
-        <ul className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-4 pin:gap-3">
           {items.map((item, i) => {
             const Icon = item.icon
             const lit = allLit || i === active
             return (
               <li
                 key={item.title}
-                ref={(el) => (itemRefs.current[i] = el)}
-                className={`corner-smooth rounded-card border p-7 transition-all duration-500 sm:p-9 lg:opacity-60 ${
+                className={`corner-smooth rounded-card border p-7 transition-all duration-500 sm:p-9 lg:opacity-60 pin:p-6 ${
                   lit
                     ? 'border-navy-800/10 bg-white shadow-card-soft lg:!opacity-100'
                     : 'border-transparent bg-white/45'
