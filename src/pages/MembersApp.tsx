@@ -116,7 +116,7 @@ export default function MembersApp() {
             Five things you can do <span className="text-gold-dark">from your pocket</span>
           </>
         }
-        intro="Scroll the list and the screen follows — each one is a real place in the app, not a feature bullet."
+        intro="The Fortiva App is designed to make managing your health coverage effortless. Here’s what you can do."
         features={features}
       />
 
