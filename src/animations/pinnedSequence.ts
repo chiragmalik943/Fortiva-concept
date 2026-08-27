@@ -36,6 +36,25 @@
  * instance clears it by 50px or more.
  */
 
+/**
+ * ── Anything that pins MUST set it up in a layout effect ────────────────────
+ * `pin: true` makes ScrollTrigger wrap the pinned element in a `.pin-spacer`
+ * div: it inserts a new parent between that element and the parent React put it
+ * in. Killing the trigger unwraps it again — but a `useEffect` cleanup is
+ * PASSIVE, and React runs those only after it has already detached the nodes. On
+ * a route change React therefore called `removeChild` on an element whose real
+ * parent was now the spacer, the DOM threw `NotFoundError: The node to be
+ * removed is not a child of this node`, and because React cannot recover from a
+ * throw during unmount it tore down the entire tree: the URL changed, the page
+ * went blank, and only a reload brought it back.
+ *
+ * `useLayoutEffect` cleanups run synchronously in the deletion pass, before any
+ * node is removed, so the spacer is gone by the time React touches the DOM.
+ *
+ * Both pinning call sites use it (FeatureReveal, and hooks/useScrollSpyIndex for
+ * ScrollSpyList and PhoneShowcase). A third one must too.
+ */
+
 /** Must stay identical to the `pin` screen in tailwind.config.js. */
 export const PIN_QUERY = '(min-width: 1024px) and (min-height: 760px)'
 

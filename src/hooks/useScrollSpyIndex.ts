@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { gsap, ScrollTrigger, prefersReducedMotion } from '../animations/gsap'
 import {
   MOBILE_QUERY,
@@ -69,7 +69,14 @@ export function useScrollSpyIndex(count: number) {
   // ask React to re-render the list at all.
   const current = useRef(0)
 
-  useEffect(() => {
+  /* useLayoutEffect, not useEffect. `pin: true` below wraps the section in a
+     `.pin-spacer` — a new parent between it and the one React put it in — and
+     that has to be unwrapped BEFORE React removes the section on a route change.
+     A `useEffect` cleanup is passive and runs after the nodes are already
+     detached, so React threw `removeChild` mid-unmount and blanked the whole
+     page. See the same note in components/FeatureReveal/FeatureReveal.tsx and
+     the warning in animations/pinnedSequence.ts. */
+  useLayoutEffect(() => {
     const el = scopeRef.current
     if (!el || count < 2 || prefersReducedMotion) return
 

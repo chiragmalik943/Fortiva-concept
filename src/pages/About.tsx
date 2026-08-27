@@ -4,6 +4,38 @@ import Button from '../components/Button'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { useSplitReveal } from '../hooks/useSplitReveal'
 import { availability, companyLocation } from '../content/site'
+import { images } from '../assets/images'
+
+/**
+ * The mission band's artwork is a full-section composition, 1440 x 913: the
+ * consulting-room photograph, the lotus lattice panel down its outer edge, and
+ * its own dissolve into a flat background on the left and at the foot. So it is
+ * rendered full bleed and NOTHING is drawn on top of it — the lattice used to be
+ * generated here as an SVG pattern and is now part of the asset.
+ *
+ * What the mask is still for: the asset's flat background is `#ECEAE1`, the
+ * site's cream, and this section is white. Left un-masked, that flat area would
+ * read as a cream block against the white. These two ramps take it off — the left
+ * one reaches solid at 34%, which is about where the photograph starts, and the
+ * bottom one clears the last 12%.
+ *
+ * A mask rather than a white overlay for the usual reason: it removes the picture
+ * and lets the section's own background through, whatever colour that is. See
+ * DissolvePhoto.tsx.
+ *
+ * Two layers, intersected: `mask-composite: intersect` is the standard spelling,
+ * `-webkit-mask-composite: source-in` the WebKit one.
+ *
+ * NOTE for whoever re-exports this image: a rectangular ramp can only cut
+ * straight lines across a flat colour, and it leaves a small cream wedge around
+ * the photograph's lower left that no ramp can reach. Re-exporting with that flat
+ * area as #FFFFFF (or as real transparency) makes the section white edge to edge
+ * and this mask unnecessary.
+ */
+const PRINCIPLES_PHOTO_MASK = [
+  'linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.35) 16%, #000 34%, #000 100%)',
+  'linear-gradient(180deg, #000 0%, #000 88%, transparent 100%)',
+].join(', ')
 
 /**
  * About.
@@ -13,7 +45,7 @@ import { availability, companyLocation } from '../content/site'
  *
  *   Who We Are ─┐
  *   What We Do ─┴─→ the two-column "the company" band (white)
- *   Guided by principles → the navy mission plate
+ *   Guided by principles → the mission plate (the white disc)
  *   Powered by values → <ValuesStack /> (moved here from the homepage)
  *   FOR a better health insurance experience → the closing narrative
  *
@@ -33,8 +65,8 @@ export default function About() {
   const doBodyRef = useScrollReveal<HTMLParagraphElement>({ y: 24, delay: 0.15 })
   const factsRef = useScrollReveal<HTMLDListElement>({ y: 24, delay: 0.2 })
 
-  const principlesRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
-  const principlesBodyRef = useScrollReveal<HTMLParagraphElement>({ y: 24, delay: 0.12 })
+  const principlesMarkRef = useScrollReveal<HTMLImageElement>({ y: 14, duration: 0.7 })
+  const principlesBodyRef = useSplitReveal<HTMLParagraphElement>({ type: 'words' })
 
   const closingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
   const closingOneRef = useScrollReveal<HTMLParagraphElement>({ y: 24, delay: 0.1 })
@@ -138,26 +170,78 @@ export default function About() {
       </section>
 
       {/* ── Guided by principles ──────────────────────────────────────────
-          The doc gives this heading a single sentence. A full-width band at
-          quote size is the only treatment that doesn't make one sentence look
-          like a section that ran out of copy — and navy here echoes the
-          homepage's audience band, so the page keeps the site's light / dark
-          / light rhythm rather than running white → cream → cream. */}
-      <section className="bg-navy-800 px-6 py-24 text-center sm:py-32">
-        <div className="mx-auto max-w-3xl">
-          <h2
-            ref={principlesRef}
-            className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50 opacity-0"
-          >
-            Guided by <span className="text-gold">principles</span>
-          </h2>
-          <p
-            ref={principlesBodyRef}
-            className="mt-7 text-[26px] italic leading-[1.35] text-white opacity-0 sm:text-[36px]"
-          >
-            Our mission is to champion a member-first approach to health insurance &mdash;
-            transparent, affordable and designed for better outcomes.
-          </p>
+          The doc gives this heading a single sentence, and one sentence is the
+          whole design problem: any full-width treatment makes it look like a
+          section that ran out of copy. It used to be a navy band at quote size.
+          Now the sentence is a plate — a white disc holding the mark and the
+          mission, with the photograph running out behind it to the right.
+
+          A circle rather than a card because a circle has no reading width to
+          fill: the sentence sets its own measure inside one, and the shape reads
+          as a seal on the page rather than as an under-filled panel.
+
+          ── Where the heading went ────────────────────────────────────────
+          "Guided by principles" is `sr-only`. The plate carries the mark where a
+          label would go, which is what the layout was drawn with, and a small-caps
+          eyebrow floating above a disc had nothing to align to. The heading stays
+          in the document so the page's outline still matches the copy doc's five
+          sections — it is just not painted.
+
+          ── The band went from dark to white ──────────────────────────────
+          This was the page's one dark plate. White was the client's call, and it
+          leaves About running white → white → gradient → gradient with no break:
+          the page's contrast now comes from the photographs rather than from a
+          colour switch. */}
+      <section className="relative overflow-hidden bg-white px-6 py-20 sm:py-24 lg:flex lg:min-h-[820px] lg:items-center">
+        {/* The artwork, full bleed, `lg` and up. Below that the plate has the
+            section to itself — a photograph behind a full-width disc is a
+            texture, not a picture. See PRINCIPLES_PHOTO_MASK. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 hidden select-none lg:block"
+        >
+          <img
+            src={images.principlesPortrait}
+            alt=""
+            className="h-full w-full object-cover object-[center_35%]"
+            style={{
+              maskImage: PRINCIPLES_PHOTO_MASK,
+              WebkitMaskImage: PRINCIPLES_PHOTO_MASK,
+              maskComposite: 'intersect',
+              WebkitMaskComposite: 'source-in',
+            }}
+          />
+        </div>
+
+        <div className="relative mx-auto w-full max-w-container">
+          {/* Two things about this disc.
+
+              No `corner-smooth`, unlike every other rounded surface on the site:
+              `corner-shape: superellipse(1.6)` and `rounded-full` fight, and the
+              superellipse wins — you get a squircle where the layout calls for a
+              disc.
+
+              And it is cream below `lg`, white above. White is right where it sits
+              over the photograph; below `lg` the photograph is dropped and a white
+              disc on a white section is invisible — the plate disappeared and took
+              the shape of the section with it. Cream keeps it a plate. */}
+          <div className="mx-auto flex aspect-square w-full max-w-[400px] flex-col items-center justify-center rounded-full bg-cream px-9 text-center sm:max-w-[480px] sm:px-12 lg:mx-0 lg:bg-white">
+            <img
+              ref={principlesMarkRef}
+              src={images.icon}
+              alt=""
+              aria-hidden="true"
+              className="h-11 w-auto opacity-0 sm:h-[54px]"
+            />
+            <h2 className="sr-only">Guided by principles</h2>
+            <p
+              ref={principlesBodyRef}
+              className="mt-6 text-[17px] leading-[1.5] text-navy-800 opacity-0 sm:mt-8 sm:text-[22px]"
+            >
+              Our mission is to champion a member-first approach to health insurance &mdash;
+              transparent, affordable and designed for better outcomes.
+            </p>
+          </div>
         </div>
       </section>
 

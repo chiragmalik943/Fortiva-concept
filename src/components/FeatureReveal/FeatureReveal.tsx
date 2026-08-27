@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef } from 'react'
+import { ReactNode, useLayoutEffect, useRef } from 'react'
 import { gsap, ScrollTrigger, prefersReducedMotion } from '../../animations/gsap'
 import {
   MOBILE_QUERY,
@@ -20,6 +20,18 @@ interface FeatureRevealProps {
   features: Feature[]
   /** Buttons, rendered at the foot of the left column. */
   action?: ReactNode
+  /**
+   * Full-bleed background photograph, dissolving into the section's surface
+   * before it reaches the copy. Optional: without it the section is the plain
+   * plate it used to be, which is what every instance looked like before the
+   * photographs were commissioned.
+   *
+   * Decorative — it is rendered `alt=""` and `aria-hidden`. Nothing this section
+   * says is in the picture, and an empty alt is also what keeps the layout quiet
+   * while the image files are still to come: a missing photograph with alt text
+   * paints that text across the section.
+   */
+  image?: string
   /** Background utility for the section. Defaults to white. */
   className?: string
 }
@@ -76,14 +88,16 @@ interface FeatureRevealProps {
  * the right one and reverts the others.
  */
 
-/**
- * Card surfaces, cycled. The reference layout this section is modelled on used
- * four saturated pastels; those aren't in Fortiva's palette, so the variety comes
- * from the five tints the palette does have — two warm, two cool, one gold wash.
- * Every one is pale enough to keep a solid gold badge legible on top of it, which
- * is the constraint that ruled out anything stronger.
- */
-const TINTS = ['bg-cream-soft', 'bg-navy-50', 'bg-mist/45', 'bg-cream', 'bg-gold/15']
+/* ── One card surface, not five ──────────────────────────────────────────────
+   There used to be a five-tint cycle here (cream-soft / navy-50 / mist / cream /
+   gold wash), inherited from a reference layout that used four saturated pastels.
+   It was variety for its own sake, and it stopped working the moment the section
+   grew a photograph: five different pale tints over a photo read as five
+   different degrees of transparency — as if some cards were letting more of the
+   picture through than others.
+
+   Every card is `bg-cream-soft` now. The colour in this section comes from the
+   photograph and the gold badges; the cards are the quiet part. */
 
 /** How far below its slot a card starts, as a fraction of the viewport. */
 const TRAVEL = 0.42
@@ -124,12 +138,41 @@ const STEP = 1
  */
 const END_AT = 0.55
 
+/**
+ * The gradient that takes the photograph away, and it is deliberately slight.
+ *
+ * ── Why it is an ellipse in one corner and not a fade across the bottom ─────
+ * The first version was two linear ramps: solid to a fifth of the way down, gone
+ * by just past halfway, plus a short fade in from the left. That was written when
+ * these three slots had no photographs in them and the mask had to make the copy
+ * legible on ANY image. It ended up whitening the bottom half of the section
+ * across its full width — and the delivered assets already dissolve into white
+ * out of their own bottom-left corner, so the two dissolves stacked and most of
+ * the picture was gone.
+ *
+ * The photograph carries the copy area now. This is one ellipse anchored just
+ * outside the bottom-left corner: it opens the corner where the button and the
+ * lead sit, thins out through the heading, and is fully transparent — the picture
+ * untouched — across the right half and the whole top, which is where the cards
+ * and the subject are. Nothing whitens the full width any more.
+ *
+ * Which means the assets have a job: each one has to arrive with its own soft
+ * dissolve toward the bottom-left, the way img-12 and img-13 do. An image whose
+ * bottom-left corner is dark will put navy type on a dark photograph — this mask
+ * lifts it by about a third, not to white.
+ *
+ * One layer, so no `mask-composite` here.
+ */
+const PHOTO_MASK =
+  'radial-gradient(76% 90% at -4% 106%, transparent 0%, rgba(0,0,0,0.22) 34%, rgba(0,0,0,0.7) 66%, #000 90%)'
+
 export default function FeatureReveal({
   eyebrow,
   heading,
   intro,
   features,
   action,
+  image,
   className = 'bg-white',
 }: FeatureRevealProps) {
   const sectionRef = useRef<HTMLElement>(null)
@@ -139,7 +182,25 @@ export default function FeatureReveal({
   const headingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
   const introRef = useScrollReveal<HTMLDivElement>({ y: 20, delay: 0.16 })
 
-  useEffect(() => {
+  /* ── useLayoutEffect, not useEffect, and it is not a preference ──────────
+     `pin: true` makes ScrollTrigger WRAP this section in a `.pin-spacer` div —
+     it inserts a new parent between the section and the parent React put it in.
+     Reverting the pin unwraps it, and that has to happen before React removes
+     the section from the DOM.
+
+     `useEffect` cleanups are PASSIVE: React defers them and runs them after it
+     has already detached the nodes. So on a route change React called
+     `parent.removeChild(section)` while the pin-spacer was still in between,
+     the section was no longer a child of that parent, and the DOM threw
+     `NotFoundError: The node to be removed is not a child of this node`. React
+     cannot recover from a throw during unmount, so it tore down the whole tree:
+     you clicked a link, the URL changed, and the page went blank until reload.
+
+     A layout effect's cleanup is called synchronously during the deletion pass,
+     before any node is removed. The pin is gone by the time React touches the
+     DOM. This is the documented shape for GSAP in React and the only reason this
+     is not a plain `useEffect`; leave it alone. */
+  useLayoutEffect(() => {
     const cards = cardRefs.current.filter((el): el is HTMLDivElement => Boolean(el))
     if (cards.length === 0) return
 
@@ -247,9 +308,41 @@ export default function FeatureReveal({
        is what keeps the fallback identical to the layout this section had. */
     <section
       ref={sectionRef}
-      className={`px-6 py-24 sm:py-28 pin:flex pin:h-screen pin:items-center pin:overflow-hidden pin:pb-10 pin:pt-24 ${className}`}
+      className={`relative px-6 py-24 sm:py-28 pin:flex pin:h-screen pin:items-center pin:overflow-hidden pin:pb-10 pin:pt-24 ${className}`}
     >
-      <div className="mx-auto grid w-full max-w-container items-center gap-14 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-20 pin:gap-10">
+      {/* ── the photograph ───────────────────────────────────────────────────
+          Full bleed, with one corner of it opened up for the copy. See
+          PHOTO_MASK for the shape and for what that asks of the asset.
+
+          The picture is REMOVED rather than dimmed: `maskImage` takes it away and
+          lets `className`'s background through, which is why this works on any
+          surface the section is given instead of only on white. A white scrim
+          would have been a white scrim on a cream section.
+
+          Hidden below `lg`. There is no two-column layout to sit behind down
+          there — the section is a ~1200px single column, and a photograph
+          stretched over that is a smear rather than a backdrop. */}
+      {image && (
+        <div className="pointer-events-none absolute inset-0 hidden select-none overflow-hidden lg:block">
+          <img
+            src={image}
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full select-none object-cover object-[center_18%]"
+            style={{ maskImage: PHOTO_MASK, WebkitMaskImage: PHOTO_MASK }}
+          />
+        </div>
+      )}
+
+      <div
+        className={`relative z-10 mx-auto grid w-full max-w-container gap-14 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-20 pin:gap-10 ${
+          /* With a photograph the copy drops to the foot of its column: the
+             subject of every one of these shots is at the top of the frame, and
+             a vertically centred heading sat across their face. Without one,
+             centred is still right — nothing to avoid. */
+          image ? 'items-center lg:items-end' : 'items-center'
+        }`}
+      >
         {/* ── the half that is there when you arrive ─────────────────────── */}
         <div ref={copyRef}>
           {eyebrow && (
@@ -259,7 +352,7 @@ export default function FeatureReveal({
           )}
           <h2
             ref={headingRef}
-            className={`max-w-xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px] pin:text-[34px] ${
+            className={`max-w-xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px] ${
               eyebrow ? 'mt-5 pin:mt-4' : ''
             }`}
           >
@@ -306,21 +399,38 @@ export default function FeatureReveal({
             It has to be `top` rather than `translate-y`, too — the reveal
             animation below owns the transform on these elements, and GSAP
             would overwrite a Tailwind translate on its first tick. */}
-        <div className="grid gap-5 sm:grid-cols-2 pin:gap-3">
+        {/* ── Two gap values in the pinned layout, and only one of them is the
+            drawn number ──────────────────────────────────────────────────────
+            It was `pin:gap-3` — 12px, which read as one block of five rather
+            than as five cards. The layout is drawn at 28px in both directions,
+            and the column gap is 28px here because a column gap costs nothing:
+            it doesn't touch the section's height.
+
+            The ROW gap does, three rows deep, and the pinned height budget is
+            genuinely tight. Worth knowing before raising it: at 1024px wide the
+            card titles wrap to two lines, and the five cards alone measure ~637px
+            against the 624px a 760px-tall window leaves after `pin:pt-24` and
+            `pin:pb-10` — so that window is over budget with a gap of ZERO, and has
+            been since the section started pinning at 1024. (The fix for that is
+            the pin breakpoint's width in animations/pinnedSequence.ts, not this
+            value.) 20px keeps the overflow within a few px of where it already
+            was there, and reads as the same rhythm as the 28px column gap on the
+            windows this layout was drawn for. */}
+        <div className="grid gap-5 sm:grid-cols-2 sm:gap-7 pin:gap-x-7 pin:gap-y-5">
           {features.map((feature, i) => {
             const Icon = feature.icon
             return (
               <div
                 key={feature.title}
                 ref={(el) => (cardRefs.current[i] = el)}
-                className={`corner-smooth relative flex flex-col rounded-card p-6 opacity-0 shadow-card-soft sm:p-7 pin:p-4 ${
-                  TINTS[i % TINTS.length]
-                } ${i % 2 === 1 ? 'sm:top-14' : ''}`}
+                className={`corner-smooth relative flex flex-col rounded-2xl bg-cream-soft p-6 opacity-0 shadow-card-soft sm:p-7 pin:p-4 ${
+                  i % 2 === 1 ? 'sm:top-14' : ''
+                }`}
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gold">
                   <Icon size={20} className="text-navy-800" strokeWidth={1.75} />
                 </div>
-                <h3 className="mt-6 text-[18px] font-semibold leading-snug text-navy-800 sm:text-[19px] pin:mt-3.5 pin:text-[17px]">
+                <h3 className="mt-6 text-[18px] font-medium leading-snug text-navy-800 sm:text-[19px] pin:mt-3.5 pin:text-[18px]">
                   {feature.title}
                 </h3>
                 <p className="mt-3 text-[14.5px] leading-relaxed text-navy-800/65 pin:mt-2 pin:text-[13.5px]">

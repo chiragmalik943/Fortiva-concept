@@ -1,10 +1,12 @@
-import { ArrowRight, Building2, ClipboardList, Route, Search, ShieldCheck, Stethoscope, Users, Wallet } from 'lucide-react'
+import { ArrowRight, Building2, FileText, Route, Search, ShieldCheck, Stethoscope, Users, Wallet } from 'lucide-react'
 import PageHero from '../components/PageHero/PageHero'
+import DissolvePhoto from '../components/DissolvePhoto/DissolvePhoto'
 import ScrollSpyList, { type SpyItem } from '../components/ScrollSpyList/ScrollSpyList'
 import CtaBand from '../components/CtaBand/CtaBand'
 import Button from '../components/Button'
 import ActionButton from '../components/ActionButton'
 import { externalTargets, isPlaceholderHref } from '../content/site'
+import { images } from '../assets/images'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { useSplitReveal } from '../hooks/useSplitReveal'
 
@@ -18,14 +20,14 @@ import { useSplitReveal } from '../hooks/useSplitReveal'
  *   Why choose an in-network …   → ScrollSpyList, the three reasons
  *   Tips for talking to your …   → PLACEHOLDER, see the note on that section
  *
- * ── No photographs on any For Members page ──────────────────────────────────
- * Six pages arrived at once with no new image assets, and README.md records that
- * no image on this site is reused anywhere. Quietly repurposing the hero or the
- * insurance-card photos across six new pages would have broken that on the first
- * page and made the claim untrue everywhere. So these pages are built from type,
- * tinted surfaces, the Fortiva mark and purpose-drawn interface mockups instead —
- * which is a coherent look rather than a compromise, and leaves an obvious slot
- * for real photography when it exists.
+ * ── The one photograph on this page ─────────────────────────────────────────
+ * The For Members pages arrived with no image assets of their own, and README.md
+ * records that no image on this site is reused anywhere — so rather than
+ * repurpose the hero or the insurance-card shots, they were built from type,
+ * tinted surfaces, the Fortiva mark and purpose-drawn interface mockups. That is
+ * still true of everything above "Before you go in", which now has a slot of its
+ * own (`images.doctorTipsPortrait`). The file is not in the repo yet; the section
+ * lays out correctly without it and the photograph drops in with no code change.
  */
 
 // Doc's "Why choose an in-network doctor?" — the three bolded labels and their
@@ -73,30 +75,25 @@ const networkKinds = [
    needing to change.
    ───────────────────────────────────────────────────────────────────────────── */
 const askPrompts = [
-  'What is this test or treatment for, and what happens after it?',
+  'What is this test or treatment for, and what’s next?',
   'Are there other options, and which would you choose?',
   'Which of my current medications should I keep taking?',
   'Is everything you are ordering today in network?',
   'What should make me call you before my next visit?',
-  'Can you write the plan down so I can read it at home?',
 ]
 
+/**
+ * Three labels, no sentences. Each of these used to carry a line of explanation
+ * and sit in a navy panel with a "Get the app" button under it; the panel was
+ * doing the job of a second column, and once the photograph took that side of the
+ * section there was no second column to fill. A row of three labels says the same
+ * thing in a strip, and the page already ends on a CTA band — the button was the
+ * third call to the app on one screen.
+ */
 const bringWithYou = [
-  {
-    title: 'Your medication list',
-    body: 'Everything you take, including anything over the counter.',
-    icon: ClipboardList,
-  },
-  {
-    title: 'Your questions, written down',
-    body: 'Appointments are short. A list means the important one gets asked.',
-    icon: Search,
-  },
-  {
-    title: 'Your digital ID card',
-    body: 'It lives in the Fortiva app, so there is nothing to remember to pack.',
-    icon: ShieldCheck,
-  },
+  { label: 'Your full medical history', icon: FileText },
+  { label: 'Your questions, written down', icon: Search },
+  { label: 'Your digital ID card', icon: ShieldCheck },
 ]
 
 export default function MembersFindDoctor() {
@@ -104,7 +101,7 @@ export default function MembersFindDoctor() {
   const searchBodyRef = useScrollReveal<HTMLDivElement>({ y: 24, delay: 0.12 })
 
   const tipsHeadingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
-  const tipsListRef = useScrollReveal<HTMLUListElement>({ y: 26, delay: 0.12 })
+  const tipsListRef = useScrollReveal<HTMLOListElement>({ y: 26, delay: 0.12 })
   const bringRef = useScrollReveal<HTMLDivElement>({ y: 30, delay: 0.2 })
 
   return (
@@ -193,7 +190,17 @@ export default function MembersFindDoctor() {
         </div>
       </section>
 
+      {/* ── one gradient, two sections ──────────────────────────────────────
+          "Why in-network" and "Before you go in" now share a single cream → blue
+          → cream sweep, with the cool peak on the seam between them: `-in` here,
+          `-out` on the section below. Two halves rather than one wrapper because
+          the two sections are never the same height — the spy list grows with its
+          items and the tips section doesn't — so a wrapper with a mid-stop would
+          put the peak somewhere inside whichever happens to be taller. Each half
+          runs its own full height instead, which pins the turnaround to the
+          boundary. Same reasoning as `.gradient-band-in/-out`; see index.css. */}
       <ScrollSpyList
+        className="gradient-cool-in"
         eyebrow="WHY IN-NETWORK"
         heading={
           <>
@@ -210,67 +217,127 @@ export default function MembersFindDoctor() {
       />
 
       {/* ── Tips for talking to your doctor ────────────────────────────────
-          See the PLACEHOLDER note above `askPrompts`. */}
-      <section className="bg-white px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-container">
-          <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-            BEFORE YOU GO IN
-          </span>
-          <h2
-            ref={tipsHeadingRef}
-            className="mt-5 max-w-2xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
-          >
-            Tips for talking to <span className="text-gold-dark">your doctor</span>
-          </h2>
+          See the PLACEHOLDER note above `askPrompts`.
 
-          <div className="mt-14 grid gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:gap-16">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-navy-800/45">
-                Worth asking
+          One column of type on the left, one photograph on the right, and the
+          photograph is absolutely positioned rather than a grid cell: the list is
+          ~470px of text in a 1360px container, so a real two-column grid would
+          have given the picture a hard edge halfway across an otherwise open
+          section. Behind-and-to-the-right lets it run to the viewport edge and
+          dissolve, which is what the layout was drawn with.
+
+          `lg` and up. Below that the photo is dropped entirely — under a
+          two-column width it would sit behind the questions rather than beside
+          them, and questions are the one thing on this page that has to be
+          legible. */}
+      <section className="gradient-cool-out relative overflow-hidden px-6 py-24 sm:py-28">
+        {/* ── the photograph ───────────────────────────────────────────────────
+            The mark is in the artwork now, not drawn here — see DissolvePhoto.tsx.
+
+            `blend`, and no mask. The asset is a photograph flattened onto WHITE
+            that fades to white on its left and at its foot, and this section is no
+            longer white: it is the cool end of the band above. Masking the white
+            away would have meant guessing where it starts with straight ramps.
+            Multiplying is exact instead — white multiplied by the background IS
+            the background, so every pixel the retoucher faded takes the gradient's
+            own colour, soft edges included, and the picture needs no mask at all.
+
+            The one thing to know before changing the section's surface: multiply
+            only works while that surface is light. On navy this photograph would
+            go black.
+
+            68% wide, not the 54% the copy column leaves free, and that is not an
+            overlap bug. The asset is 1114 x 933; a 54%-wide box is narrower than
+            that aspect needs to cover the section height, so `object-cover` cropped
+            ~110px off each side — and the left 110px is the most-faded part of the
+            picture, the part doing the blending. Cropping it left a visible vertical
+            step where the photo began. At 68% the frame is close enough to the
+            asset's own aspect that almost nothing is cropped, and the extra width
+            costs nothing: everything it reaches over the list is white in the asset,
+            and white multiplied by the background is the background. */}
+        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[68%] select-none lg:block">
+          <DissolvePhoto
+            src={images.doctorTipsPortrait}
+            position="object-center"
+            edges="none"
+            blend
+            className="h-full w-full"
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-container">
+          <div className="max-w-[640px]">
+            <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
+              BEFORE YOU GO IN
+            </span>
+
+            {/* Two explicit lines. The break after "talking" is the drawn one,
+                and letting it fall where the measure happens to put it would have
+                meant tuning a max-width to land it — a number that moves the next
+                time the type scale does. Set in regular, not semibold: this
+                heading sits over a photograph rather than on a plate, and the
+                lighter weight is what keeps it from competing with the subject. */}
+            <h2
+              ref={tipsHeadingRef}
+              className="mt-5 text-[30px] font-normal leading-[1.28] text-navy-800 opacity-0 sm:text-[44px]"
+            >
+              <span className="block">Tips for talking</span>
+              <span className="block">
+                to <span className="text-gold-dark">your doctor</span>
+              </span>
+            </h2>
+
+            <p className="mt-11 text-[11px] font-semibold uppercase tracking-[0.14em]">
+              <span className="text-navy-800/40">Worth </span>
+              <span className="text-gold-dark">asking</span>
+            </p>
+
+            {/* An `<ol>`, not a `<ul>`: the numbers are painted, so the order has
+                to be real. The gold rule replaces the tinted card each of these
+                used to sit in — five cards in a two-column grid over a photograph
+                was five opaque plates covering it. */}
+            <ol ref={tipsListRef} className="mt-6 space-y-4 opacity-0">
+              {askPrompts.map((prompt, i) => (
+                <li
+                  key={prompt}
+                  className="flex items-center gap-5 border-l-2 border-gold py-1 pl-5"
+                >
+                  <span className="text-[13px] font-semibold text-navy-800/75">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <p className="text-[15.5px] leading-relaxed text-navy-800">
+                    &ldquo;{prompt}&rdquo;
+                  </p>
+                </li>
+              ))}
+            </ol>
+
+            <div ref={bringRef} className="mt-12 opacity-0">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em]">
+                <span className="text-navy-800/40">Worth </span>
+                <span className="text-gold-dark">bringing</span>
               </p>
-              <ul ref={tipsListRef} className="mt-6 grid gap-4 opacity-0 sm:grid-cols-2">
-                {askPrompts.map((prompt, i) => (
+
+              {/* A row from `sm` up, divided by hairlines rather than boxed. The
+                  dividers are `border-l` on every item but the first, so adding a
+                  fourth thing to bring needs no change here. */}
+              <ul className="mt-5 flex flex-col gap-5 sm:mt-6 sm:flex-row sm:gap-0">
+                {bringWithYou.map(({ label, icon: Icon }, i) => (
                   <li
-                    key={prompt}
-                    className="corner-smooth relative rounded-card rounded-tl-md bg-cream-soft p-6"
+                    key={label}
+                    className={`flex items-center gap-4 sm:flex-1 ${
+                      i > 0 ? 'sm:border-l sm:border-navy-800/10 sm:pl-6' : ''
+                    } ${i < bringWithYou.length - 1 ? 'sm:pr-6' : ''}`}
                   >
-                    <span className="text-[13px] font-semibold text-gold-dark">
-                      {String(i + 1).padStart(2, '0')}
+                    <span className="corner-smooth flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-mist/40">
+                      <Icon size={19} strokeWidth={1.9} className="text-navy-800" />
                     </span>
-                    <p className="mt-2.5 text-[15.5px] leading-relaxed text-navy-800">
-                      &ldquo;{prompt}&rdquo;
-                    </p>
+                    <span className="text-[15px] font-medium leading-snug text-navy-800">
+                      {label}
+                    </span>
                   </li>
                 ))}
               </ul>
-            </div>
-
-            <div ref={bringRef} className="opacity-0">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-navy-800/45">
-                Worth bringing
-              </p>
-              <div className="corner-smooth mt-6 rounded-card bg-navy-800 p-7 sm:p-8">
-                <ul className="flex flex-col">
-                  {bringWithYou.map(({ title, body, icon: Icon }) => (
-                    <li key={title} className="border-b border-white/10 py-5 first:pt-0 last:border-b-0 last:pb-0">
-                      <div className="flex items-start gap-4">
-                        <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-white/10">
-                          <Icon size={17} strokeWidth={1.9} className="text-gold" />
-                        </span>
-                        <div>
-                          <h3 className="text-[16px] font-semibold text-white">{title}</h3>
-                          <p className="mt-1.5 text-[14px] leading-relaxed text-white/60">{body}</p>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-7">
-                  <Button variant="gold" icon="arrow" href="/members/app">
-                    Get the app
-                  </Button>
-                </div>
-              </div>
             </div>
           </div>
         </div>

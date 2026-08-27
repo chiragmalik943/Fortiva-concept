@@ -138,6 +138,7 @@ export default function PlansEmployers() {
           </>
         }
         features={deliverables}
+        image={images.featureEmployers}
         action={
           <Button variant="gold" icon="arrow" href="/contact">
             Talk to our team
@@ -147,8 +148,13 @@ export default function PlansEmployers() {
 
       {/* ── Why Fortiva? ──────────────────────────────────────────────────
           Closes on the corporate photograph already in the asset set, so the
-          page ends on people rather than on another block of type. */}
-      <div className="gradient-lower">
+          page ends on people rather than on another block of type.
+
+          `gradient-cool-in` rather than `gradient-lower`: this is the last section
+          on the page, and a there-and-back ramp spent its second half climbing
+          back to cream for nothing — the footer's navy is what comes next, not
+          more page. One way to the cool end, and hand off. */}
+      <div className="gradient-cool-in">
         <section className="px-6 py-24 sm:py-32">
           <div className="mx-auto grid max-w-container items-center gap-12 lg:grid-cols-2 lg:gap-20">
             <div>

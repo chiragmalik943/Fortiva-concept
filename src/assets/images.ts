@@ -58,6 +58,65 @@ export const images = {
   blogPost2: `${import.meta.env.BASE_URL}img-10.png`,
   blogPost3: `${import.meta.env.BASE_URL}img-11.png`,
 
+  // ── The four photo-backed sections added with the 2026 layout pass ──────
+  //
+  // These six differ from everything above in one important way: the DISSOLVE IS
+  // IN THE ARTWORK. Each one arrives already fading into a flat background, and
+  // each one already carries the Fortiva mark or the lotus lattice where the
+  // layout calls for it. Nothing in the code draws a mark over a photograph any
+  // more, and the CSS masks that remain are slight — they only take the flat
+  // background off where it meets a section of a different colour.
+  //
+  // Which means replacing one of these is not simply swapping a photo: a
+  // replacement has to carry the same treatment, or the section it lands in will
+  // look like a rectangle. Each entry says what its slot expects.
+  //
+  // FeatureReveal's full-bleed backdrop, one per instance. Three files rather
+  // than one shared photo because no image on this site is reused anywhere —
+  // see the note at the top of this file.
+  //
+  // EXPECTS: a soft dissolve to white out of the bottom-LEFT corner, which is
+  // where the heading, lead and button sit. FeatureReveal's own mask opens that
+  // corner by about a third more; it does not take the picture to white, so an
+  // asset with a dark bottom-left will put navy type on a dark photograph.
+  // img-12 and img-13 are the reference for the treatment; img-14 currently has
+  // no dissolve of its own and is the one to re-export.
+  featureIndividuals: `${import.meta.env.BASE_URL}img-12.png`,
+  featureEmployers: `${import.meta.env.BASE_URL}img-13.png`,
+  featureVirtualCare: `${import.meta.env.BASE_URL}img-14.png`,
+
+  // About → Guided by principles. A FULL-SECTION composition, 1440 x 913, not a
+  // photograph to be arranged: the consulting-room shot, the lotus lattice panel
+  // down its right edge, and its own dissolve on the left and at the foot. It is
+  // rendered full bleed with the white mission disc laid over it.
+  //
+  // EXPECTS its flat background to be #FFFFFF (or real transparency) — the
+  // section is white. The delivered file is flattened onto cream #ECEAE1, which
+  // About.tsx masks off; see PRINCIPLES_PHOTO_MASK there for what that mask can
+  // and cannot reach.
+  principlesPortrait: `${import.meta.env.BASE_URL}img-15.png`,
+
+  // About → Powered by values. Left of the card stack.
+  //
+  // The one asset here with real TRANSPARENCY, and it needs it: the section is a
+  // cream-to-blue gradient and the subjects stand on it directly. The Fortiva
+  // mark is composited in behind them.
+  //
+  // EXPECTS: transparent background, mark included, subject full-height. Drawn
+  // `object-contain` into a portrait column, so a square or portrait frame keeps
+  // the mark's petals whole — a wide frame would have them cropped.
+  valuesPortrait: `${import.meta.env.BASE_URL}img-16.png`,
+
+  // For Members → Find a Doctor → Before you go in. Right of the question list,
+  // with the mark composited in.
+  //
+  // EXPECTS: flattened onto WHITE, dissolving to white on its left and at its
+  // foot. It sits on the cool end of a gradient band, and the page renders it
+  // `mix-blend-multiply` so the white takes the gradient's colour exactly —
+  // which is why white specifically, and why no transparency is needed. See the
+  // note on that section in MembersFindDoctor.tsx.
+  doctorTipsPortrait: `${import.meta.env.BASE_URL}img-17.png`,
+
   cardOneBg: `${import.meta.env.BASE_URL}img-card-1-bg.png`,
   cardOne: `${import.meta.env.BASE_URL}img-card-1.png`,
   cardTwoBg: `${import.meta.env.BASE_URL}img-card-2-bg.png`,

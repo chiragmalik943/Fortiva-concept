@@ -112,6 +112,7 @@ export default function PlansIndividuals() {
           </>
         }
         features={individualFeatures}
+        image={images.featureIndividuals}
         action={
           <Button variant="gold" icon="arrow" href="/contact">
             Get a Quote

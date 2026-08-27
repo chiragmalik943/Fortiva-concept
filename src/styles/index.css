@@ -147,6 +147,30 @@ body {
   --band-tint: #E3E9EC;
 }
 
+/* ── The cool band ───────────────────────────────────────────────────────────
+   `.gradient-lower` runs cream → #C7D2D6 → cream inside ONE section. These two
+   are that same ramp cut in half, for a band made of TWO sections: `-in` on the
+   first, `-out` on the last, and the cool peak lands exactly on the seam between
+   them however tall either section happens to be. The stops are lifted verbatim
+   from `.gradient-lower` so a two-section band and a one-section band are the
+   same colour at the same point.
+
+   Why not `.gradient-band-in` / `-out` below, which already do cream → tint →
+   cream across two sections: those go to `#E3E9EC`, about a 4% step off cream —
+   a change of temperature rather than a colour. These go all the way to the blue
+   `.gradient-lower` reaches, because that is what the band on For Members →
+   Find a Doctor was asked for.
+
+   `-in` is also used on its own, on Plans → Employers' closing section, where the
+   page is meant to arrive at the cool end and stay there rather than come back. */
+.gradient-cool-in {
+  background: linear-gradient(180deg, #ECEAE1 0%, #D7DEE0 55%, #C7D2D6 100%);
+}
+
+.gradient-cool-out {
+  background: linear-gradient(180deg, #C7D2D6 0%, #D7DEE0 45%, #ECEAE1 100%);
+}
+
 /* cream → tint. Goes on the FIRST section of the band. */
 .gradient-band-in {
   background: linear-gradient(180deg, var(--band-cream) 0%, var(--band-tint) 100%);

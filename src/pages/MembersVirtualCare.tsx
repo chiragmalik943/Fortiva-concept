@@ -8,6 +8,7 @@ import CtaBand from '../components/CtaBand/CtaBand'
 import Button from '../components/Button'
 import ActionButton from '../components/ActionButton'
 import { externalTargets } from '../content/site'
+import { images } from '../assets/images'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { useSplitReveal } from '../hooks/useSplitReveal'
 
@@ -300,6 +301,7 @@ export default function MembersVirtualCare() {
           </>
         }
         features={benefits}
+        image={images.featureVirtualCare}
         action={
           <>
             <ActionButton variant="gold" icon="arrow" href={externalTargets.myLiveDoc}>
