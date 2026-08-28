@@ -29,6 +29,12 @@ interface PortalShowcaseProps {
    * a moving part.
    */
   overview: string
+  /**
+   * What the window's address bar reads. Required rather than defaulted: there
+   * are two portals on this site and the wrong URL in the chrome is the kind of
+   * detail that quietly undermines everything else in the frame.
+   */
+  url: string
 }
 
 /**
@@ -95,6 +101,7 @@ export default function PortalShowcase({
   items,
   action,
   overview,
+  url,
 }: PortalShowcaseProps) {
   const { scopeRef, active, tracking } = useScrollSpyIndex(items.length)
 
@@ -163,7 +170,7 @@ export default function PortalShowcase({
                 <span className="h-2.5 w-2.5 rounded-full bg-navy-800/15" />
               </span>
               <span className="corner-smooth flex-1 truncate rounded-[10px] bg-white px-3.5 py-1 text-[12px] text-navy-800/45">
-                fortiva.com/members/portal
+                {url}
               </span>
             </div>
 
@@ -228,7 +235,7 @@ export default function PortalShowcase({
                   <img
                     key={item.title}
                     src={item.screen}
-                    alt={`The Fortiva Member Portal: ${item.title.toLowerCase()}`}
+                    alt={`The Fortiva portal: ${item.title.toLowerCase()}`}
                     aria-hidden={i !== active}
                     /* The first screen is what everyone sees; the rest are only
                        needed once someone starts scrolling. */
@@ -269,7 +276,10 @@ export default function PortalShowcase({
           <div className="corner-smooth overflow-hidden rounded-card border border-navy-800/8 bg-navy-900 shadow-card-soft">
             <img
               src={overview}
-              alt="The Fortiva Member Portal"
+              /* Deliberately not "Member" or "Broker": both portals render this
+                 component, and the page's own H1 and this section's heading have
+                 already said which one. */
+              alt="The Fortiva portal"
               draggable={false}
               className="block h-auto w-full select-none"
             />
@@ -311,6 +321,10 @@ export default function PortalShowcase({
  * Said in both layouts, because both of them draw a convincing-looking
  * application and neither one is the real thing. Kept as one constant so the two
  * copies cannot drift into saying different things.
+ *
+ * "the live portal" rather than "the live Member Portal": two pages render this
+ * component now — For Members and For Brokers — and each one's own heading has
+ * already said which portal is on screen.
  */
 const DISCLAIMER =
-  'Shown for representational purposes. The live Member Portal may differ in appearance.'
+  'Shown for representational purposes. The live portal may differ in appearance.'

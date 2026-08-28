@@ -102,6 +102,7 @@ export default function MembersPortal() {
         intro="The portal is designed to give you control and convenience — here is what each of its six sections holds."
         items={portalItems}
         overview={images.portalOverview}
+        url="fortiva.com/members/portal"
         action={
           <ActionButton variant="gold" icon="arrow" href={externalTargets.memberPortal}>
             Access your Member Portal

@@ -12,6 +12,10 @@ import MembersResources from './pages/MembersResources'
 import MembersFaqs from './pages/MembersFaqs'
 import MembersApp from './pages/MembersApp'
 import MembersPortal from './pages/MembersPortal'
+import BrokersOverview from './pages/BrokersOverview'
+import BrokersResources from './pages/BrokersResources'
+import BrokersFaqs from './pages/BrokersFaqs'
+import BrokersPortal from './pages/BrokersPortal'
 import ComingSoon from './pages/ComingSoon'
 import NotFound from './pages/NotFound'
 import { Router, useRoute } from './router/router'
@@ -51,6 +55,14 @@ const pageComponents: Partial<Record<PageKey, () => JSX.Element>> = {
   membersFaqs: MembersFaqs,
   membersApp: MembersApp,
   membersPortal: MembersPortal,
+
+  // For Brokers — the whole section, including /brokers itself. The nav renders
+  // that one as a dropdown trigger rather than a link, but the footer links it
+  // and so does anyone who trims the URL, so it gets a real overview page.
+  brokers: BrokersOverview,
+  brokersResources: BrokersResources,
+  brokersFaqs: BrokersFaqs,
+  brokersPortal: BrokersPortal,
 }
 
 /**

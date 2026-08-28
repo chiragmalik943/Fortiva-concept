@@ -525,6 +525,7 @@ export const externalTargets = {
   providerDirectory: '#', // PLACEHOLDER — provider search
   myLiveDoc: '#', // PLACEHOLDER — telehealth scheduling
   memberPortal: '#', // PLACEHOLDER — portal sign-in
+  brokerPortal: '#', // PLACEHOLDER — broker portal sign-in
   appStore: '#', // PLACEHOLDER — Apple App Store listing
   playStore: '#', // PLACEHOLDER — Google Play listing
 }

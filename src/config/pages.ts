@@ -77,11 +77,11 @@ export const pages = {
   membersApp: { enabled: true, route: '/members/app' },
   membersPortal: { enabled: true, route: '/members/portal' },
 
-  /* For Brokers — not built yet. */
-  brokers: { enabled: false, route: '/brokers' },
-  brokersResources: { enabled: false, route: '/brokers/resources' },
-  brokersFaqs: { enabled: false, route: '/brokers/faqs' },
-  brokersPortal: { enabled: false, route: '/brokers/portal' },
+  /* For Brokers — complete. */
+  brokers: { enabled: true, route: '/brokers' },
+  brokersResources: { enabled: true, route: '/brokers/resources' },
+  brokersFaqs: { enabled: true, route: '/brokers/faqs' },
+  brokersPortal: { enabled: true, route: '/brokers/portal' },
 
   /* For Providers — not built yet. */
   providers: { enabled: false, route: '/providers' },

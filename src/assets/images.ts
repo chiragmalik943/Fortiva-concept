@@ -174,6 +174,41 @@ export const images = {
   // PortalShowcase.tsx.
   portalOverview: `${import.meta.env.BASE_URL}portal-overview.png`,
 
+  // ── The half-window photo panels ────────────────────────────────────────
+  //
+  // The four `ImageBand` sections. Unlike everything else photographic on this
+  // site these need NO treatment at all — no dissolve, no baked-in fade, no
+  // transparency. ImageBand neither masks nor frames them: each one fills half
+  // the window, full height, bleeding off its own edge with a straight cut down
+  // the middle where the copy starts.
+  //
+  // EXPECTS: an ordinary, uncropped, un-faded photograph, roughly SQUARE TO
+  // PORTRAIT — 1200 x 1400 is a good target. The panel it lands in is about
+  // 720px wide on a 1440px window and between 660px and 780px tall depending on
+  // how much copy sits beside it, so the aspect it is asked to fill moves a
+  // little from section to section. It is drawn `object-cover object-center`,
+  // which means it is cropped from the edges rather than letterboxed: keep the
+  // subject away from all four margins and any crop is safe. Pass
+  // `imagePosition` at the call site if a particular photo needs anchoring.
+  //
+  //   18. Broker Overview → "FOR you. FOR your clients. FOR change."
+  //   19. Broker Overview → "FOR the future of health insurance"
+  //   20. Broker Resources → the support band under Plan Documents
+  //   21. Broker Portal → the "more than a dashboard" band
+  brokerPartner: `${import.meta.env.BASE_URL}img-18.png`,
+  brokerFuture: `${import.meta.env.BASE_URL}img-19.png`,
+  brokerSupport: `${import.meta.env.BASE_URL}img-20.png`,
+  brokerPortalPhoto: `${import.meta.env.BASE_URL}img-21.png`,
+
+  // The Broker Portal's three screens, in the order its sidebar lists them, plus
+  // the whole-portal image the mobile layout shows instead of the window. Exactly
+  // the contract `portalScreens` / `portalOverview` carry above — content area
+  // only for the three, everything for the overview.
+  brokerPortalScreens: [1, 2, 3].map(
+    (n) => `${import.meta.env.BASE_URL}broker-portal-scr-${n}.png`,
+  ),
+  brokerPortalOverview: `${import.meta.env.BASE_URL}broker-portal-overview.png`,
+
   // The Available States dot map, in two halves. This one is the static grey
   // grid for the 44 states Fortiva doesn't name — a single <path>, drawn as a
   // plain <img> so half a megabyte of path data stays out of the JS bundle and
