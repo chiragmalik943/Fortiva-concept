@@ -37,16 +37,30 @@ const TONES = {
     body: 'text-white/65',
     note: 'text-white/40',
   },
-  /* Nothing on gold is white, and that is a contrast decision rather than a
-     stylistic one. Gold's relative luminance is 0.443, so white type on it
-     measures 2.1:1 — under the 3:1 that even large text needs. Navy-800 on the
-     same gold is 6.8:1, so the emphasis runs the other way here: the accent is
-     FULL navy and the rest of the heading is held back to 70% (3.8:1, which
-     clears 3:1 for display sizes). Body copy sits at 80% for 4.7:1, since
-     paragraph text needs the full 4.5:1. */
+  /* ── The heading is white on gold, and that is a deliberate exception ──────
+     This band used to run the emphasis entirely in navy: the accent at full
+     strength and the rest of the heading held back to 70%. That was a contrast
+     decision. Gold's relative luminance is 0.446, so white type on it measures
+     2.1:1 — under the 3:1 that even display-size text needs — while navy-800 on
+     the same gold is 7.0:1.
+
+     White is the client's call, made with the number in front of them: the
+     heading reads far better as white with one navy phrase than as two weights of
+     navy, and this is one short display line rather than anything anyone has to
+     read at length. Recorded here rather than quietly reversed, because the next
+     person to look at it will otherwise "fix" it back.
+
+     If it ever has to pass: no gold in the palette carries white at 3:1 (even
+     `gold-dark` only reaches 2.8:1). It would take a deeper gold — around
+     #A97F42, where white measures 3.6:1 and navy still measures 4.1:1 — so the
+     fix is the band's colour, not this line.
+
+     Everything else on gold stays navy. Body copy sits at 80% for 4.7:1, because
+     paragraph text needs the full 4.5:1 and there is no display-size exemption
+     for it. */
   gold: {
     section: 'bg-gold',
-    heading: 'text-navy-800/70',
+    heading: 'text-white',
     accent: 'text-navy-800',
     body: 'text-navy-800/80',
     note: 'text-navy-800/80',

@@ -4,6 +4,7 @@ import PortalShowcase, { type PortalItem } from '../components/PortalShowcase/Po
 import CtaBand from '../components/CtaBand/CtaBand'
 import Button from '../components/Button'
 import ActionButton from '../components/ActionButton'
+import { images } from '../assets/images'
 import { externalTargets } from '../content/site'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { useSplitReveal } from '../hooks/useSplitReveal'
@@ -19,46 +20,46 @@ import { useSplitReveal } from '../hooks/useSplitReveal'
  *   Access your Member Portal  → CtaBand
  *
  * The six items are drawn as the portal's own sidebar rather than listed as
- * cards, and clicking one changes the panel beside it — the only set-piece
- * across these six pages that responds to a click instead of to scrolling, which
- * is the point of a portal. See PortalShowcase.
+ * cards, and the screen beside them changes as you scroll — the same treatment
+ * the sibling app page gives its five bullets, so the pair reads as one idea on
+ * two devices. See PortalShowcase.
  */
 const portalItems: PortalItem[] = [
   {
     title: 'View your plan details',
     body: 'Check your benefits, coverage limits and deductible in seconds.',
     icon: FileText,
-    shape: 'summary',
+    screen: images.portalScreens[0],
   },
   {
     title: 'Track claims and payments',
     body: 'Monitor claim status and review your payment history with ease.',
     icon: BarChart3,
-    shape: 'table',
+    screen: images.portalScreens[1],
   },
   {
     title: 'Download digital ID cards',
     body: 'Access your ID card instantly — no more waiting for mail.',
     icon: CreditCard,
-    shape: 'card',
+    screen: images.portalScreens[2],
   },
   {
     title: 'Find care fast',
     body: 'Search for in-network doctors, specialists and facilities near you.',
     icon: Search,
-    shape: 'search',
+    screen: images.portalScreens[3],
   },
   {
     title: 'Update personal information',
     body: 'Keep your contact details and preferences up to date.',
     icon: UserCog,
-    shape: 'form',
+    screen: images.portalScreens[4],
   },
   {
     title: 'Get support',
     body: 'Message a Fortiva representative or browse FAQs for quick answers.',
     icon: LifeBuoy,
-    shape: 'chat',
+    screen: images.portalScreens[5],
   },
 ]
 
@@ -98,8 +99,9 @@ export default function MembersPortal() {
             Six things waiting <span className="text-gold-dark">when you sign in</span>
           </>
         }
-        intro="The portal is designed to give you control and convenience. Pick any section to see what it holds."
+        intro="The portal is designed to give you control and convenience — here is what each of its six sections holds."
         items={portalItems}
+        overview={images.portalOverview}
         action={
           <ActionButton variant="gold" icon="arrow" href={externalTargets.memberPortal}>
             Access your Member Portal

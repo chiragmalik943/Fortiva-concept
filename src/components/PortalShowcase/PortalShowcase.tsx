@@ -1,16 +1,19 @@
-import { ReactNode, useState } from 'react'
+import { ReactNode } from 'react'
 import { type LucideIcon } from 'lucide-react'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
+import { useScrollSpyIndex } from '../../hooks/useScrollSpyIndex'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
-
-/** Which abstract panel an item draws in the window's main area. */
-export type PanelShape = 'summary' | 'table' | 'card' | 'search' | 'form' | 'chat'
 
 export interface PortalItem {
   title: string
   body: string
   icon: LucideIcon
-  shape: PanelShape
+  /**
+   * The screenshot this section shows in the window's content area. Comes from
+   * `images.portalScreens` — see assets/images.ts, which is the only place a
+   * filename appears, and which carries the export note for the aperture.
+   */
+  screen: string
 }
 
 interface PortalShowcaseProps {
@@ -18,28 +21,72 @@ interface PortalShowcaseProps {
   heading: ReactNode
   intro?: ReactNode
   items: PortalItem[]
+  /** Rendered under the intro, inside the centred column. */
   action?: ReactNode
+  /**
+   * One image of the whole portal — chrome, sidebar and content together — for
+   * the mobile layout, which shows a picture and a list instead of a window with
+   * a moving part.
+   */
+  overview: string
 }
 
 /**
  * The portal, drawn as the portal: a browser window with the six things the copy
- * doc lists down its sidebar, and a main area that changes when you pick one.
+ * doc lists down its sidebar, and a content area that changes as you read.
  *
- * ── Clicked, not scrolled ────────────────────────────────────────────────────
- * Deliberately the one interactive set-piece on the For Members pages that isn't
- * driven by scroll position. Everything about a portal is that YOU choose what to
- * look at, and a section that demonstrates that by making the visitor choose says
- * it better than a paragraph does. It also gives a run of six pages a change of
- * pace — four of them already animate on scroll, and a fifth would start to feel
- * like the site was performing at the visitor rather than answering them.
+ * == Scrolled, not clicked ==================================================
+ * This section used to be the one interactive set-piece on the For Members pages
+ * that wasn't driven by scroll position — you picked a sidebar item and the panel
+ * beside it changed. The argument was that choosing is what a portal IS, so a
+ * section that makes the visitor choose says it better than a paragraph does.
  *
- * Like PhoneShowcase, the panels contain no invented member data — no balances,
- * no claim numbers, no names. They show the shape of each screen and nothing
- * more. See that file for the full reasoning.
+ * It is scroll-driven now, matching the app showcase on the sibling page, and the
+ * reason is worth keeping: a click target that looks exactly like a real portal
+ * nav sets an expectation the page cannot meet — six items that respond to a
+ * click, in a window with a working URL bar, invite the visitor to try to USE the
+ * thing. The scroll version shows the same six screens without pretending to be
+ * the application. The two pages now also behave the same way, which is what the
+ * pair was always meant to do.
  *
- * Below `sm` the sidebar becomes a horizontally scrollable chip row: six labels
- * in a 320px-wide column would wrap to two lines each and take up more of the
- * screen than the panel they're selecting.
+ * `useScrollSpyIndex` is shared with PhoneShowcase and ScrollSpyList: pinned, the
+ * section holds still while the scroll walks the index; unpinned — a window too
+ * short to hold the section — the index comes from the section's own passage
+ * through the viewport.
+ *
+ * == The window is one fixed rectangle ======================================
+ * It has an aspect ratio and nothing inside it can change that. This matters more
+ * than it sounds: the previous version drew a different abstract panel per
+ * section — a table, a form, a chat thread — and each one was a different height,
+ * so the whole window grew and shrank as you moved down the list. A browser window
+ * that resizes itself while you read is the one thing a browser window never does,
+ * and it made the section feel unstable in a way that was hard to name.
+ *
+ * So: `aspect-[16/10]`, sized by height while pinned (the same technique the
+ * phone uses — the room the section has left, with the ratio giving the width) and
+ * by width when it isn't. The screens inside are absolutely positioned and
+ * cross-fade; none of them can push on the frame.
+ *
+ * == What is centred, and why the copy sits under the window ================
+ * Heading block centred above, window centred below. That is a change from the
+ * left-aligned column this had, and it follows from the window being SMALLER: a
+ * ~700px window left-aligned in a 1360px container puts half the section's width
+ * on the right doing nothing.
+ *
+ * The active section's own sentence goes UNDER the window rather than inside it.
+ * There is nowhere in a fixed-size window for a line of copy that changes length
+ * — the content area is a screenshot and the sidebar is a nav — and the sentences
+ * are the client's own words, so dropping them was not an option. The slot has a
+ * reserved height so a one-line and a two-line sentence don't move the disclaimer
+ * under it.
+ *
+ * == Mobile is a picture and a list ========================================
+ * Below `lg` the window, its sidebar and the tracking are all gone, replaced by
+ * one image of the whole portal and the six sections written out underneath. The
+ * tracking would not have run down there anyway (`useScrollSpyIndex` doesn't
+ * track under `lg`), which would have left a window with all six items lit and
+ * one screen showing — a set-piece with its mechanism switched off. A picture and
+ * a list is an honest version of the same information.
  */
 export default function PortalShowcase({
   eyebrow,
@@ -47,252 +94,223 @@ export default function PortalShowcase({
   intro,
   items,
   action,
+  overview,
 }: PortalShowcaseProps) {
-  const [active, setActive] = useState(0)
+  const { scopeRef, active, tracking } = useScrollSpyIndex(items.length)
 
   const headingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
   const introRef = useScrollReveal<HTMLDivElement>({ y: 20, delay: 0.12 })
-  const windowRef = useScrollReveal<HTMLDivElement>({ y: 44, scale: 0.97, delay: 0.1 })
+  const windowRef = useScrollReveal<HTMLDivElement>({ y: 40, scale: 0.97, delay: 0.1 })
 
-  const current = items[active]
+  const current = items[active] ?? items[0]
 
   return (
-    <section className="bg-cream-soft px-6 py-24 sm:py-28">
-      <div className="mx-auto max-w-container">
-        {eyebrow && (
-          <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-            {eyebrow}
-          </span>
-        )}
-        <h2
-          ref={headingRef}
-          className={`max-w-2xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px] ${
-            eyebrow ? 'mt-5' : ''
-          }`}
-        >
-          {heading}
-        </h2>
-        {intro && (
-          <div ref={introRef} className="opacity-0">
-            <p className="mt-6 max-w-2xl text-[16px] leading-relaxed text-navy-800/65 sm:text-[17px]">
-              {intro}
-            </p>
-          </div>
-        )}
+    /* `pin:` = wide and tall enough for the section to pin itself to the viewport
+       (animations/pinnedSequence.ts owns the query, and useScrollSpyIndex reads
+       the same one). `pin:pt-24` rather than symmetric padding, because the nav
+       pill floats over the page and centring in the full viewport tucks the
+       eyebrow underneath it. All of it is inert on a window too short to pin. */
+    <section
+      ref={scopeRef}
+      className="bg-cream-soft px-6 py-24 sm:py-28 pin:flex pin:h-screen pin:items-center pin:pb-10 pin:pt-24"
+    >
+      <div className="mx-auto w-full max-w-container">
+        {/* ── the centred copy block ──────────────────────────────────────── */}
+        <div className="mx-auto max-w-2xl text-center">
+          {eyebrow && (
+            <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
+              {eyebrow}
+            </span>
+          )}
+          <h2
+            ref={headingRef}
+            className={`text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px] pin:text-[32px] ${
+              eyebrow ? 'mt-5 pin:mt-4' : ''
+            }`}
+          >
+            {heading}
+          </h2>
+          {(intro || action) && (
+            <div ref={introRef} className="opacity-0">
+              {intro && (
+                <p className="mx-auto mt-6 max-w-xl text-[16px] leading-relaxed text-navy-800/65 sm:text-[17px] pin:mt-3 pin:text-[15.5px]">
+                  {intro}
+                </p>
+              )}
+              {action && (
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-3 pin:mt-5">
+                  {action}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
-        <div ref={windowRef} className="mt-14 opacity-0">
-          <div className="corner-smooth overflow-hidden rounded-card border border-navy-800/8 bg-white shadow-card-soft">
-            {/* ── window chrome ──────────────────────────────────────────── */}
-            <div className="flex items-center gap-4 border-b border-navy-800/8 bg-cream-soft/70 px-5 py-3.5">
+        {/* ── the window: `lg` and up ─────────────────────────────────────── */}
+        <div
+          ref={windowRef}
+          className="mt-12 hidden opacity-0 lg:block pin:mt-7"
+        >
+          <div className="corner-smooth mx-auto flex aspect-[16/9] w-full max-w-[820px] flex-col overflow-hidden rounded-card border border-navy-800/8 bg-white shadow-card-soft pin:h-[40vh] pin:max-h-[440px] pin:w-auto pin:max-w-full">
+            {/* ── window chrome ────────────────────────────────────────────
+                A real address bar on a window nobody can click is a small lie
+                worth keeping: it is what tells you at a glance that the thing
+                below is a website rather than an app or a diagram. */}
+            <div className="flex shrink-0 items-center gap-4 border-b border-navy-800/8 bg-cream-soft/70 px-5 py-3">
               <span aria-hidden="true" className="flex gap-1.5">
                 <span className="h-2.5 w-2.5 rounded-full bg-navy-800/15" />
                 <span className="h-2.5 w-2.5 rounded-full bg-navy-800/15" />
                 <span className="h-2.5 w-2.5 rounded-full bg-navy-800/15" />
               </span>
-              <span className="corner-smooth flex-1 truncate rounded-[10px] bg-white px-3.5 py-1.5 text-[12px] text-navy-800/45">
+              <span className="corner-smooth flex-1 truncate rounded-[10px] bg-white px-3.5 py-1 text-[12px] text-navy-800/45">
                 fortiva.com/members/portal
               </span>
             </div>
 
-            <div className="sm:flex">
-              {/* ── sidebar ──────────────────────────────────────────────── */}
-              <div
-                data-lenis-prevent
-                role="tablist"
-                aria-label="Portal sections"
-                className="flex gap-1 overflow-x-auto border-b border-navy-800/8 p-3 sm:w-[236px] sm:shrink-0 sm:flex-col sm:overflow-visible sm:border-b-0 sm:border-r sm:p-4 lg:w-[264px]"
-              >
+            <div className="flex min-h-0 flex-1">
+              {/* ── sidebar ──────────────────────────────────────────────────
+                  An `<ol>` of six labels, not six buttons. The list is the
+                  section's index, and the scroll is what moves it — see the
+                  docblock on why this stopped being clickable.
+
+                  ── Six rows that divide the height, not six rows that add up ──
+                  `flex-1` on every item, so they share whatever height the window
+                  has and the sidebar can never be taller than it. That is not
+                  tidiness: sized by their own content the six items measured
+                  ~300px (three of the labels wrap to two lines), which fit the
+                  360px window a 900px viewport gives and did NOT fit the 304px one
+                  at 760px — the last two items were simply cut off by the window's
+                  overflow, and on a viewport where the sixth was the active one
+                  there was no visible highlight at all.
+
+                  Dividing the height also happens to be what a real portal nav
+                  looks like, and `overflow-hidden` on each row means a very short
+                  window crops a label rather than bursting the frame. */}
+              <ol className="flex w-[200px] shrink-0 flex-col gap-1 border-r border-navy-800/8 p-2.5 xl:w-[228px] xl:p-3">
                 {items.map((item, i) => {
                   const Icon = item.icon
+                  /* Exactly one item lit, always — including when nothing is
+                     tracking, where `active` stays 0. Lighting all six (which is
+                     what the sibling rail does when it isn't tracking) would have
+                     contradicted the window beside it: the content area can only
+                     ever show one screen. Un-lit items are held at 70% rather than
+                     dimmed out, so the sidebar reads as a nav with one section
+                     selected rather than as five disabled buttons. */
                   const on = i === active
                   return (
-                    <button
+                    <li
                       key={item.title}
-                      type="button"
-                      role="tab"
-                      aria-selected={on}
-                      onClick={() => setActive(i)}
-                      className={`corner-smooth flex shrink-0 items-center gap-3 rounded-[12px] px-3.5 py-3 text-left text-[13.5px] font-medium leading-snug transition-colors sm:w-full sm:shrink ${
-                        on
-                          ? 'bg-navy-800 text-cream-soft'
-                          : 'text-navy-800/60 hover:bg-navy-800/5 hover:text-navy-800'
+                      aria-current={on && tracking ? 'true' : undefined}
+                      className={`corner-smooth flex min-h-0 flex-1 items-center gap-2.5 overflow-hidden rounded-[10px] px-2.5 text-[12.5px] font-medium leading-snug transition-colors duration-500 ease-out xl:px-3 xl:text-[13px] ${
+                        on ? 'bg-navy-800 text-cream-soft' : 'text-navy-800/70'
                       }`}
                     >
                       <Icon
-                        size={17}
+                        size={16}
                         strokeWidth={1.9}
-                        className={`shrink-0 ${on ? 'text-gold' : 'text-navy-800/45'}`}
+                        className={`shrink-0 transition-colors duration-500 ${
+                          on ? 'text-gold' : 'text-navy-800/35'
+                        }`}
                       />
-                      <span className="whitespace-nowrap sm:whitespace-normal">{item.title}</span>
-                    </button>
+                      <span>{item.title}</span>
+                    </li>
                   )
                 })}
-              </div>
+              </ol>
 
-              {/* ── main area ────────────────────────────────────────────── */}
-              <div className="min-w-0 flex-1 bg-white p-6 sm:p-9">
-                <h3 className="text-[20px] font-semibold leading-snug text-navy-800 sm:text-[24px]">
-                  {current.title}
-                </h3>
-                <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-navy-800/65 sm:text-[15.5px]">
-                  {current.body}
-                </p>
-
-                {/* `key` forces a remount per panel so the fade replays on every
-                    switch — without it React reuses the DOM and the animation
-                    only ever runs once. */}
-                <div key={current.title} className="mt-8 animate-[fadeUp_450ms_ease-out]">
-                  <Panel shape={current.shape} />
-                </div>
+              {/* ── content area ────────────────────────────────────────────
+                  Every screen is rendered and they cross-fade, so switching is a
+                  dissolve rather than a pop and nothing inside can resize the
+                  frame. Navy underneath, so a screenshot that hasn't loaded reads
+                  as a dark display rather than as a hole in the page. */}
+              <div className="relative min-w-0 flex-1 bg-navy-900">
+                {items.map((item, i) => (
+                  <img
+                    key={item.title}
+                    src={item.screen}
+                    alt={`The Fortiva Member Portal: ${item.title.toLowerCase()}`}
+                    aria-hidden={i !== active}
+                    /* The first screen is what everyone sees; the rest are only
+                       needed once someone starts scrolling. */
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                    draggable={false}
+                    /* `object-left-top`: the aperture is a little squarer than a
+                       3:2 capture, so something has to go. Cropping the right and
+                       bottom edges of a UI screenshot reads as a window revealing
+                       part of a page; cropping it symmetrically (which plain
+                       `object-cover` does) slices the left edge off the sidebar-side
+                       of the content and looks broken. */
+                    className={`absolute inset-0 h-full w-full select-none object-cover object-left-top transition-opacity duration-500 ease-out ${
+                      i === active ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
+                ))}
               </div>
             </div>
           </div>
+
+          {/* The active section's own sentence, and the standing disclaimer. The
+              reserved height is what stops a two-line sentence shunting the
+              disclaimer down as you scroll. */}
+          <div className="mx-auto mt-7 max-w-xl text-center pin:mt-5">
+            <p
+              key={current.title}
+              className="min-h-[3rem] animate-[fadeUp_400ms_ease-out] text-[15.5px] leading-relaxed text-navy-800/70 sm:min-h-[2.5rem]"
+            >
+              {current.body}
+            </p>
+            <p className="text-[12.5px] leading-relaxed text-navy-800/40">{DISCLAIMER}</p>
+          </div>
         </div>
 
-        {action && <div className="mt-14 flex flex-wrap gap-3">{action}</div>}
+        {/* ── mobile: a picture and a list ────────────────────────────────── */}
+        <div className="mt-12 lg:hidden">
+          <div className="corner-smooth overflow-hidden rounded-card border border-navy-800/8 bg-navy-900 shadow-card-soft">
+            <img
+              src={overview}
+              alt="The Fortiva Member Portal"
+              draggable={false}
+              className="block h-auto w-full select-none"
+            />
+          </div>
+          <p className="mt-4 text-center text-[12.5px] leading-relaxed text-navy-800/40">
+            {DISCLAIMER}
+          </p>
+
+          <ol className="mt-9 flex flex-col">
+            {items.map((item, i) => {
+              const Icon = item.icon
+              return (
+                <li key={item.title} className="flex gap-4 border-t border-navy-800/10 py-5 last:border-b">
+                  <span className="corner-smooth mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-navy-800/5">
+                    <Icon size={17} strokeWidth={1.9} className="text-gold-dark" />
+                  </span>
+                  <div>
+                    <h3 className="text-[16.5px] font-semibold leading-snug text-navy-800">
+                      <span className="mr-2 text-[13px] font-semibold tabular-nums text-gold-dark">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      {item.title}
+                    </h3>
+                    <p className="mt-1.5 text-[14.5px] leading-relaxed text-navy-800/65">
+                      {item.body}
+                    </p>
+                  </div>
+                </li>
+              )
+            })}
+          </ol>
+        </div>
       </div>
     </section>
   )
 }
 
-/* ── the abstract panels ───────────────────────────────────────────────────── */
-
-const line = (w: string, tone = 'bg-navy-800/10') => (
-  <span className={`block h-2.5 rounded-full ${tone}`} style={{ width: w }} />
-)
-
-function Panel({ shape }: { shape: PanelShape }) {
-  if (shape === 'summary') {
-    return (
-      <div className="grid gap-4 sm:grid-cols-3">
-        {[0, 1, 2].map((i) => (
-          <div
-            key={i}
-            className={`corner-smooth rounded-[18px] p-5 ${i === 0 ? 'bg-navy-800' : 'bg-cream-soft'}`}
-          >
-            {line('44%', i === 0 ? 'bg-white/25' : 'bg-navy-800/12')}
-            <span
-              className={`mt-4 block h-4 rounded-full ${i === 0 ? 'bg-gold' : 'bg-navy-800/25'}`}
-              style={{ width: i === 0 ? '70%' : '55%' }}
-            />
-            {line('34%', i === 0 ? 'bg-white/15' : 'bg-navy-800/8')}
-          </div>
-        ))}
-      </div>
-    )
-  }
-
-  if (shape === 'table') {
-    return (
-      <div className="corner-smooth overflow-hidden rounded-[18px] border border-navy-800/8">
-        <div className="flex items-center gap-4 border-b border-navy-800/8 bg-cream-soft px-5 py-3">
-          {line('22%', 'bg-navy-800/15')}
-          {line('16%', 'bg-navy-800/15')}
-          <span className="flex-1" />
-          {line('12%', 'bg-navy-800/15')}
-        </div>
-        {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="flex items-center gap-4 border-b border-navy-800/6 px-5 py-4 last:border-b-0">
-            {line('26%')}
-            {line('14%', 'bg-navy-800/6')}
-            <span className="flex-1" />
-            <span
-              className={`h-5 w-16 rounded-full ${i === 0 ? 'bg-gold/70' : 'bg-navy-800/8'}`}
-            />
-          </div>
-        ))}
-      </div>
-    )
-  }
-
-  if (shape === 'card') {
-    return (
-      <div className="flex flex-wrap gap-5">
-        <div className="corner-smooth w-full max-w-[340px] rounded-[18px] bg-gold p-6">
-          {line('30%', 'bg-navy-800/25')}
-          <span className="mt-5 block h-4 w-2/3 rounded-full bg-navy-800/70" />
-          <div className="mt-6 flex items-end justify-between">
-            <span className="flex flex-col gap-2">
-              {line('90px', 'bg-navy-800/25')}
-              {line('64px', 'bg-navy-800/25')}
-            </span>
-            <span className="grid h-12 w-12 grid-cols-3 grid-rows-3 gap-0.5" aria-hidden="true">
-              {Array.from({ length: 9 }).map((_, i) => (
-                <span key={i} className={i % 4 === 1 ? 'bg-navy-800/20' : 'bg-navy-800/70'} />
-              ))}
-            </span>
-          </div>
-        </div>
-        <div className="flex flex-1 flex-col justify-center gap-3">
-          {['62%', '48%', '54%'].map((w, i) => (
-            <span key={i} className="flex items-center gap-3">
-              <span className="h-8 w-8 shrink-0 rounded-[10px] bg-cream-soft" />
-              {line(w)}
-            </span>
-          ))}
-        </div>
-      </div>
-    )
-  }
-
-  if (shape === 'search') {
-    return (
-      <div className="flex flex-col gap-4">
-        <div className="corner-smooth flex items-center gap-3 rounded-[14px] border border-navy-800/10 bg-cream-soft px-4 py-3.5">
-          <span className="h-3.5 w-3.5 shrink-0 rounded-full border-2 border-navy-800/25" />
-          {line('40%', 'bg-navy-800/12')}
-          <span className="ml-auto h-7 w-20 rounded-[10px] bg-gold" />
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {[0, 1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="corner-smooth flex items-center gap-4 rounded-[16px] border border-navy-800/8 p-4"
-            >
-              <span className="h-10 w-10 shrink-0 rounded-full bg-cream-soft" />
-              <span className="flex flex-1 flex-col gap-2">
-                {line('72%')}
-                {line('48%', 'bg-navy-800/6')}
-              </span>
-              <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${i === 0 ? 'bg-gold' : 'bg-navy-800/12'}`} />
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  }
-
-  if (shape === 'form') {
-    return (
-      <div className="grid gap-4 sm:grid-cols-2">
-        {[0, 1, 2, 3].map((i) => (
-          <div key={i} className={i === 3 ? 'sm:col-span-2' : ''}>
-            {line('30%', 'bg-navy-800/12')}
-            <div className="corner-smooth mt-2.5 h-11 rounded-[12px] border border-navy-800/10 bg-cream-soft" />
-          </div>
-        ))}
-        <div className="sm:col-span-2">
-          <span className="corner-smooth block h-11 w-36 rounded-[12px] bg-gold" />
-        </div>
-      </div>
-    )
-  }
-
-  // chat
-  return (
-    <div className="flex flex-col gap-3">
-      <div className="corner-smooth max-w-[76%] rounded-[16px] rounded-tl-sm bg-cream-soft p-4">
-        {line('100%')}
-        <span className="mt-2 block h-2.5 w-3/5 rounded-full bg-navy-800/10" />
-      </div>
-      <div className="corner-smooth ml-auto max-w-[68%] rounded-[16px] rounded-tr-sm bg-navy-800 p-4">
-        {line('100%', 'bg-white/25')}
-        <span className="mt-2 block h-2.5 w-1/2 rounded-full bg-white/25" />
-      </div>
-      <div className="corner-smooth mt-2 flex items-center gap-3 rounded-[14px] border border-navy-800/10 p-2.5 pl-4">
-        {line('40%', 'bg-navy-800/8')}
-        <span className="ml-auto h-9 w-9 shrink-0 rounded-[10px] bg-gold" />
-      </div>
-    </div>
-  )
-}
+/**
+ * Said in both layouts, because both of them draw a convincing-looking
+ * application and neither one is the real thing. Kept as one constant so the two
+ * copies cannot drift into saying different things.
+ */
+const DISCLAIMER =
+  'Shown for representational purposes. The live Member Portal may differ in appearance.'

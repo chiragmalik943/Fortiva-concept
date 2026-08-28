@@ -75,7 +75,7 @@ export const pages = {
   membersResources: { enabled: true, route: '/members/resources' },
   membersFaqs: { enabled: true, route: '/members/faqs' },
   membersApp: { enabled: true, route: '/members/app' },
-  membersPortal: { enabled: false, route: '/members/portal' },
+  membersPortal: { enabled: true, route: '/members/portal' },
 
   /* For Brokers — not built yet. */
   brokers: { enabled: false, route: '/brokers' },

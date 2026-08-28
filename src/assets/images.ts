@@ -157,6 +157,23 @@ export const images = {
   // status bar or a tab bar hard against the edge.
   appScreens: [1, 2, 3, 4, 5].map((n) => `${import.meta.env.BASE_URL}app-scr-${n}.png`),
 
+  // The six screens shown in the portal window's content area on For Members →
+  // Member Portal, in the order the sidebar lists them. An array rather than six
+  // named slots for the same reason as `appScreens`: they genuinely are a
+  // sequence, and the nth screen belongs to the nth section.
+  //
+  // EXPECTS: just the portal's CONTENT AREA, not the whole application — the
+  // window's chrome and its sidebar are drawn by PortalShowcase. Landscape,
+  // roughly 3:2 (say 1200 x 800); the aperture is `object-cover object-top`, so a
+  // taller capture loses its bottom rather than its top.
+  portalScreens: [1, 2, 3, 4, 5, 6].map((n) => `${import.meta.env.BASE_URL}portal-scr-${n}.png`),
+
+  // One image of the WHOLE portal — chrome, sidebar, content — for the mobile
+  // layout, where the window and its scroll-driven sidebar are replaced by a
+  // single picture with the six sections listed underneath it. See
+  // PortalShowcase.tsx.
+  portalOverview: `${import.meta.env.BASE_URL}portal-overview.png`,
+
   // The Available States dot map, in two halves. This one is the static grey
   // grid for the 44 states Fortiva doesn't name — a single <path>, drawn as a
   // plain <img> so half a megabyte of path data stays out of the JS bundle and
