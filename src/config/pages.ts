@@ -81,7 +81,7 @@ export const pages = {
   brokers: { enabled: true, route: '/brokers' },
   brokersResources: { enabled: true, route: '/brokers/resources' },
   brokersFaqs: { enabled: true, route: '/brokers/faqs' },
-  brokersPortal: { enabled: true, route: '/brokers/portal' },
+  brokersPortal: { enabled: false, route: '/brokers/portal' },
 
   /* For Providers — not built yet. */
   providers: { enabled: false, route: '/providers' },
