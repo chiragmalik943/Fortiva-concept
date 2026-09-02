@@ -19,10 +19,14 @@ import { useSplitReveal } from '../hooks/useSplitReveal'
  *   Why use the Member Portal? → the two-up band
  *   Access your Member Portal  → CtaBand
  *
- * The six items are drawn as the portal's own sidebar rather than listed as
- * cards, and the screen beside them changes as you scroll — the same treatment
- * the sibling app page gives its five bullets, so the pair reads as one idea on
- * two devices. See PortalShowcase.
+ * The six items are the tabs under one large window rather than a grid of cards,
+ * and the screenshot slides from one to the next as you scroll — the same
+ * treatment the sibling app page gives its five bullets, so the pair reads as one
+ * idea on two devices. See PortalShowcase.
+ *
+ * Six is the most any page asks of that component, and it is what its tablist was
+ * sized for: on a phone the strip scrolls sideways rather than cramming six
+ * labels into 390px.
  */
 const portalItems: PortalItem[] = [
   {
@@ -101,8 +105,6 @@ export default function MembersPortal() {
         }
         intro="The portal is designed to give you control and convenience — here is what each of its six sections holds."
         items={portalItems}
-        overview={images.portalOverview}
-        url="fortiva.com/members/portal"
         action={
           <ActionButton variant="gold" icon="arrow" href={externalTargets.memberPortal}>
             Access your Member Portal

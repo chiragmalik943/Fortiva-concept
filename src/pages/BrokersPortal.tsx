@@ -20,12 +20,13 @@ import { images } from '../assets/images'
  *
  * The same set-piece as the Member Portal page, deliberately: the two portals are
  * the same product for two audiences, and a broker who has seen the member page
- * should recognise the shape. See PortalShowcase.tsx — the sidebar tracks the
- * scroll, the content area changes with it, and the window never resizes.
+ * should recognise the shape. See PortalShowcase.tsx — the section pins, each
+ * screenshot slides out to the left as the next arrives, and the tab underneath
+ * lights up as it lands.
  *
- * Three sections here against the member portal's six, which the component
- * handles by itself: its sidebar rows divide the window's height rather than
- * stacking to it, so three rows are simply taller.
+ * Three sections here against the member portal's six, which costs the component
+ * nothing: a tablist reads correctly at any length, and the pin is three steps
+ * long instead of six.
  */
 
 // The doc's three, verbatim: bolded phrase, then its sentence.
@@ -88,8 +89,6 @@ export default function BrokersPortal() {
         }
         intro="The Broker Portal is a secure, online hub for the three things that take up most of a broker’s week."
         items={portalItems}
-        overview={images.brokerPortalOverview}
-        url="fortiva.com/brokers/portal"
         action={
           <ActionButton variant="gold" icon="arrow" href={externalTargets.brokerPortal}>
             Log in to your Portal

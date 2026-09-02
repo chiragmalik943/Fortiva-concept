@@ -1,0 +1,8 @@
+declare const t: globalThis.ScrollTrigger
+export const a: number = t.start
+export const b: number = t.end
+// @ts-expect-error — proves the type is real and not `any`
+export const c = t.nonsenseProperty
+declare const v: ScrollTrigger.Vars
+// @ts-expect-error — same, for the vars type
+export const d = v.nonsenseVar

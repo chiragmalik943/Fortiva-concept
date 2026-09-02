@@ -85,6 +85,16 @@ export const images = {
   featureEmployers: `${import.meta.env.BASE_URL}img-13.png`,
   featureVirtualCare: `${import.meta.env.BASE_URL}img-14.png`,
 
+  // Provider Overview → Our commitment to providers. The fourth FeatureReveal
+  // backdrop, and the same contract as the three above it — soft dissolve to
+  // WHITE out of the bottom-LEFT corner, where the heading, lead and button sit.
+  // Its section is deliberately white rather than tinted so that this stays true;
+  // see the note on that section in pages/ProvidersOverview.tsx.
+  //
+  // One note on subject matter: the copy beside it is about a practice's time, so
+  // the picture wants a practice at work rather than a patient being reassured.
+  featureProviderCommitment: `${import.meta.env.BASE_URL}img-23.png`,
+
   // About → Guided by principles. A FULL-SECTION composition, 1440 x 913, not a
   // photograph to be arranged: the consulting-room shot, the lotus lattice panel
   // down its right edge, and its own dissolve on the left and at the foot. It is
@@ -157,22 +167,40 @@ export const images = {
   // status bar or a tab bar hard against the edge.
   appScreens: [1, 2, 3, 4, 5].map((n) => `${import.meta.env.BASE_URL}app-scr-${n}.png`),
 
-  // The six screens shown in the portal window's content area on For Members →
-  // Member Portal, in the order the sidebar lists them. An array rather than six
-  // named slots for the same reason as `appScreens`: they genuinely are a
-  // sequence, and the nth screen belongs to the nth section.
+  // The six screens shown in the window on For Members → Member Portal, in the
+  // order the tabs list them. An array rather than six named slots for the same
+  // reason as `appScreens`: they genuinely are a sequence, and the nth screen
+  // belongs to the nth tab.
   //
-  // EXPECTS: just the portal's CONTENT AREA, not the whole application — the
-  // window's chrome and its sidebar are drawn by PortalShowcase. Landscape,
-  // roughly 3:2 (say 1200 x 800); the aperture is `object-cover object-top`, so a
-  // taller capture loses its bottom rather than its top.
+  // ── What PortalShowcase draws, and what it does not ─────────────────────────
+  // It draws a rounded, shadowed card and puts the screenshot in it. Nothing
+  // else: no browser chrome, no address bar, no sidebar. Both of those were
+  // earlier layouts — the portal's own nav used to be drawn down the left of a
+  // small window, and the window used to sit inside a browser mock — and neither
+  // survives. The screenshot IS the set-piece, and the section index lives in a
+  // tablist underneath it, so:
+  //
+  // EXPECTS the portal's WHOLE PAGE, exactly as a screenshot of it would look
+  // with the browser's own chrome cropped off — the application's sidebar or top
+  // nav included, because nothing in the code supplies one. Landscape, roughly
+  // 16:10 to 3:2 (1600 x 1000 is a good target; a retina 2x capture is welcome,
+  // these are the largest thing on the page).
+  //
+  // Three of them are on screen at once — the active one centred and sharp, its
+  // neighbours small, faint and heavily blurred at the edges of the window — so
+  // what matters most is that each is legible at full size and DISTINGUISHABLE at
+  // a glance. Six captures of the same layout with one number changed will read
+  // as a carousel that isn't moving.
+  //
+  // THE BOTTOM IS CROPPED, BY DESIGN. Twice, in fact: the frame is a little taller
+  // than the space it sits in so the window runs behind the tab strip, and the
+  // aperture is wider than a screenshot's own ratio so `object-cover object-top`
+  // trims the foot as well. Between them, expect the lowest ~25% of the capture to
+  // be unseen at 1440 x 900 and more on a shorter window. Nothing that matters —
+  // no footer, no primary action, no closing row of a table — should live down
+  // there; the top two-thirds is the whole picture as far as this section is
+  // concerned.
   portalScreens: [1, 2, 3, 4, 5, 6].map((n) => `${import.meta.env.BASE_URL}portal-scr-${n}.png`),
-
-  // One image of the WHOLE portal — chrome, sidebar, content — for the mobile
-  // layout, where the window and its scroll-driven sidebar are replaced by a
-  // single picture with the six sections listed underneath it. See
-  // PortalShowcase.tsx.
-  portalOverview: `${import.meta.env.BASE_URL}portal-overview.png`,
 
   // ── The half-window photo panels ────────────────────────────────────────
   //
@@ -195,19 +223,78 @@ export const images = {
   //   19. Broker Overview → "FOR the future of health insurance"
   //   20. Broker Resources → the support band under Plan Documents
   //   21. Broker Portal → the "more than a dashboard" band
+  //   22. Provider Overview → the mission band under the hero
+  //   24. Provider Portal → the "one login, both jobs" band
+  //   25. Partner with Us → "A movement to make care accessible"
+  //
+  // (23 is not an ImageBand — it is the FeatureReveal backdrop above, numbered
+  // where it falls in page order rather than by which component draws it.)
   brokerPartner: `${import.meta.env.BASE_URL}img-18.png`,
   brokerFuture: `${import.meta.env.BASE_URL}img-19.png`,
   brokerSupport: `${import.meta.env.BASE_URL}img-20.png`,
   brokerPortalPhoto: `${import.meta.env.BASE_URL}img-21.png`,
 
-  // The Broker Portal's three screens, in the order its sidebar lists them, plus
-  // the whole-portal image the mobile layout shows instead of the window. Exactly
-  // the contract `portalScreens` / `portalOverview` carry above — content area
-  // only for the three, everything for the overview.
+  // The three provider panels. Same contract as the four above — an ordinary,
+  // un-faded photograph, square to portrait, subject away from all four margins.
+  //
+  // WORTH KNOWING BEFORE COMMISSIONING THESE: the four delivered broker panels
+  // (img-18 to img-21) are not what the paragraph above describes. Each arrived as
+  // a subject cutout flattened onto white with the lotus composited in behind —
+  // the treatment the FeatureReveal and About assets carry — rather than as a
+  // photograph filling its frame. ImageBand draws them happily either way, so
+  // this is a look, not a bug: a plain photograph is what the half-window panel
+  // was designed for, and a white cutout reads as a lighter, more graphic band. The
+  // one thing that would look like a mistake is mixing the two inside the For
+  // Providers section, so pick whichever matches the broker pages these sit beside
+  // and use it for all three.
+  //
+  // One note on subject matter rather than treatment: these are the only
+  // photographs on the site whose audience is a clinician rather than a patient.
+  // A stock "doctor smiling at camera" reads as a member-facing plan photo and
+  // undoes the page's whole framing; what these slots want is practice life —
+  // front-desk and back-office work, a clinician at a workstation, two colleagues
+  // conferring — the side of a practice a provider recognises as their own day.
+  providerPatients: `${import.meta.env.BASE_URL}img-22.png`,
+  providerPortalPhoto: `${import.meta.env.BASE_URL}img-24.png`,
+  providerPartnerPhoto: `${import.meta.env.BASE_URL}img-25.png`,
+
+  // The Broker Portal's three screens, in the order its tabs list them. Exactly
+  // the contract `portalScreens` carries above, including the cropped foot.
   brokerPortalScreens: [1, 2, 3].map(
     (n) => `${import.meta.env.BASE_URL}broker-portal-scr-${n}.png`,
   ),
-  brokerPortalOverview: `${import.meta.env.BASE_URL}broker-portal-overview.png`,
+
+  // The Provider Portal's two screens, in the order its tabs list them. Same
+  // contract again, cropped foot included.
+  //
+  // TWO here against the broker portal's three and the member portal's six,
+  // because the copy doc gives the provider portal exactly two sections. That
+  // costs the layout nothing — two tabs sit at the left of the strip — so nothing
+  // needs a third file to look right, and a third screen with no copy beside it
+  // would have to be invented.
+  //
+  // What these two must NOT contain: a real claim number, a real member name, a
+  // real NPI or a real dollar amount. Same rule the member and broker screens
+  // follow — see the note in README.md on the interface mockups.
+  providerPortalScreens: [1, 2].map(
+    (n) => `${import.meta.env.BASE_URL}provider-portal-scr-${n}.png`,
+  ),
+
+  // ── THREE SLOTS RETIRED, and the files they pointed at ──────────────────
+  //
+  // `portalOverview`, `brokerPortalOverview` and `providerPortalOverview` used to
+  // live here: one image of a whole portal per page, for the old mobile layout,
+  // which replaced the window and its scroll-driven sidebar with a single picture
+  // and a list. PortalShowcase's rebuild has no such layout — the window and its
+  // tablist work at every width now, so a phone gets the same real screenshots a
+  // desktop does instead of one unreadable overview — and the slots went with it.
+  //
+  // public/portal-overview.png and public/broker-portal-overview.png are still in
+  // the repo and nothing references them. Delete them when you are confident the
+  // old layout isn't coming back. provider-portal-overview.png was never
+  // commissioned, which is one fewer asset to produce.
+  //
+  // ────────────────────────────────────────────────────────────────────────────
 
   // The Available States dot map, in two halves. This one is the static grey
   // grid for the 44 states Fortiva doesn't name — a single <path>, drawn as a

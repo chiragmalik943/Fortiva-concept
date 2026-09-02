@@ -83,10 +83,11 @@ export const pages = {
   brokersFaqs: { enabled: true, route: '/brokers/faqs' },
   brokersPortal: { enabled: false, route: '/brokers/portal' },
 
-  /* For Providers — not built yet. */
-  providers: { enabled: false, route: '/providers' },
-  providersPortal: { enabled: false, route: '/providers/portal' },
-  providersPartnerWithUs: { enabled: false, route: '/providers/partner-with-us' },
+  /* For Providers — complete. `/providers` is the Provider Overview itself,
+     the same arrangement For Brokers uses. */
+  providers: { enabled: true, route: '/providers' },
+  providersPortal: { enabled: true, route: '/providers/portal' },
+  providersPartnerWithUs: { enabled: true, route: '/providers/partner-with-us' },
 
   /* Footer-only and in-page CTA destinations — not built yet. */
   availableStates: { enabled: false, route: '/available-states' },

@@ -528,6 +528,18 @@ export const externalTargets = {
   brokerPortal: '#', // PLACEHOLDER — broker portal sign-in
   appStore: '#', // PLACEHOLDER — Apple App Store listing
   playStore: '#', // PLACEHOLDER — Google Play listing
+
+  /* The provider portal, and its two deep links. Three entries rather than one
+     because the copy doc asks for three distinct buttons — "Provider Portal",
+     "Submit a Claim" and "Check Insurance Status" — and on a real portal those
+     are a sign-in page and two authenticated routes behind it, which will not
+     share a URL. Keeping them apart means the day the first one lands the other
+     two are still visibly outstanding, rather than silently pointing at a
+     sign-in screen and looking finished. If the portal turns out to have one
+     entry point after all, set all three to it. */
+  providerPortal: '#', // PLACEHOLDER — provider portal sign-in
+  providerClaimSubmission: '#', // PLACEHOLDER — claim submission, inside the portal
+  providerEligibility: '#', // PLACEHOLDER — eligibility check, inside the portal
 }
 
 export const isPlaceholderHref = (href: string) => href === '#'

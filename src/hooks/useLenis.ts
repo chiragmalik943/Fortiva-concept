@@ -98,6 +98,27 @@ export function scrollPageTo(target: string | HTMLElement, offset = NAV_OFFSET) 
 }
 
 /**
+ * Smooth-scroll to an absolute document position.
+ *
+ * `scrollPageTo` above answers "put this element under the nav", which covers
+ * every in-page link on the site. This one answers a different question that has
+ * exactly one caller: PortalShowcase's tablist, where clicking a tab has to move
+ * the page to the scroll position at which that tab's screenshot is the one
+ * showing. There is no element at that position — it is a fraction of the way
+ * through a pinned section's scroll range, computed from its ScrollTrigger's own
+ * `start` and `end` — so there is nothing for `scrollPageTo` to measure.
+ *
+ * No nav offset, deliberately. A caller working in ScrollTrigger's coordinates
+ * has already accounted for where the section sits; subtracting 96px here would
+ * land the timeline 96px short of the progress the caller asked for.
+ */
+export function scrollPageToY(y: number, { duration = 0.9 } = {}) {
+  const top = Math.max(0, Math.round(y))
+  if (instance) instance.scrollTo(top, { duration })
+  else window.scrollTo(0, top)
+}
+
+/**
  * Boots a single Lenis instance for the whole app and syncs it with
  * GSAP's ticker + ScrollTrigger so every scroll-driven animation stays
  * perfectly in step with the smoothed scroll position.

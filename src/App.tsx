@@ -16,6 +16,9 @@ import BrokersOverview from './pages/BrokersOverview'
 import BrokersResources from './pages/BrokersResources'
 import BrokersFaqs from './pages/BrokersFaqs'
 import BrokersPortal from './pages/BrokersPortal'
+import ProvidersOverview from './pages/ProvidersOverview'
+import ProvidersPortal from './pages/ProvidersPortal'
+import ProvidersPartnerWithUs from './pages/ProvidersPartnerWithUs'
 import ComingSoon from './pages/ComingSoon'
 import NotFound from './pages/NotFound'
 import { Router, useRoute } from './router/router'
@@ -63,6 +66,14 @@ const pageComponents: Partial<Record<PageKey, () => JSX.Element>> = {
   brokersResources: BrokersResources,
   brokersFaqs: BrokersFaqs,
   brokersPortal: BrokersPortal,
+
+  // For Providers — all three, including `/providers` itself, which is the
+  // Provider Overview rather than a hub of cards: content/site.ts lists
+  // "Provider Overview" at that route, the same way "Broker Overview" sits at
+  // `/brokers`.
+  providers: ProvidersOverview,
+  providersPortal: ProvidersPortal,
+  providersPartnerWithUs: ProvidersPartnerWithUs,
 }
 
 /**
