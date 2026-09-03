@@ -88,6 +88,7 @@ export default function MembersApp() {
   return (
     <>
       <PageHero
+        tone="sky"
         eyebrow="FORTIVA APP"
         titleTop="Your health coverage,"
         titleBottom="simplified."
@@ -99,10 +100,10 @@ export default function MembersApp() {
         }
         actions={
           <>
-            <ActionButton variant="gold" icon="arrow" size="lg" href={externalTargets.appStore}>
+            <ActionButton variant="dark" icon="arrow" size="lg" href={externalTargets.appStore}>
               Download now
             </ActionButton>
-            <Button variant="ghost" size="lg" href="/members/portal">
+            <Button variant="white" size="lg" href="/members/portal">
               Prefer the browser?
             </Button>
           </>
@@ -166,8 +167,12 @@ export default function MembersApp() {
         tone="gold"
         heading={
           <>
-            Life moves fast. Your health coverage{' '}
-            <span className="text-navy-800">should keep up.</span>
+            {/* The break between the two inks is on the SENTENCE boundary. It
+                used to fall mid-clause — white through "Your health coverage",
+                navy from "should keep up" — which read as a line that had
+                changed colour rather than as two statements. */}
+            Life moves fast.{' '}
+            <span className="text-navy-800">Your health coverage should keep up.</span>
           </>
         }
         body="With the Fortiva App you have the tools to make informed decisions about your care, wherever you are."

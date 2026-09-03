@@ -26,6 +26,7 @@ export default function MembersFaqs() {
   return (
     <>
       <PageHero
+        tone="sky"
         eyebrow="FAQS"
         titleTop="Answers, without"
         titleBottom="the fine print."
@@ -38,10 +39,10 @@ export default function MembersFaqs() {
         }
         actions={
           <>
-            <Button variant="gold" icon="arrow" size="lg" href="/plans">
+            <Button variant="dark" icon="arrow" size="lg" href="/plans">
               Explore Plans
             </Button>
-            <Button variant="ghost" size="lg" href="/contact">
+            <Button variant="white" size="lg" href="/contact">
               Ask us directly
             </Button>
           </>

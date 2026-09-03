@@ -117,6 +117,7 @@ export default function MembersVirtualCare() {
   return (
     <>
       <PageHero
+        tone="sky"
         eyebrow="VIRTUAL CARE"
         titleTop="Care that comes"
         titleBottom="to you."
@@ -128,10 +129,10 @@ export default function MembersVirtualCare() {
         }
         actions={
           <>
-            <ActionButton variant="gold" icon="arrow" size="lg" href={externalTargets.myLiveDoc}>
+            <ActionButton variant="dark" icon="arrow" size="lg" href={externalTargets.myLiveDoc}>
               Schedule an appointment
             </ActionButton>
-            <Button variant="ghost" size="lg" href="/members/find-a-doctor">
+            <Button variant="white" size="lg" href="/members/find-a-doctor">
               Prefer to be seen in person?
             </Button>
           </>
@@ -201,7 +202,7 @@ export default function MembersVirtualCare() {
                     {item}
                   </li>
                 ))}
-                <li className="corner-smooth flex items-center gap-2 rounded-[12px] border border-navy-800/12 px-3.5 py-2 text-[14px] font-medium text-navy-800/55">
+                <li className="corner-smooth flex items-center gap-2 rounded-[12px] border border-navy-800/[0.12] px-3.5 py-2 text-[14px] font-medium text-navy-800/55">
                   <Pill size={14} strokeWidth={2} />
                   and more
                 </li>

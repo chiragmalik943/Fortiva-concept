@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react'
 import { Heart, Zap, ShieldCheck, KeyRound, Lightbulb, type LucideIcon } from 'lucide-react'
 import { gsap, prefersReducedMotion } from '../../animations/gsap'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
-import DissolvePhoto from '../DissolvePhoto/DissolvePhoto'
 import { images } from '../../assets/images'
 
 interface ValueCard {
@@ -83,12 +82,29 @@ const DARK_STEP = 0.04
  * follows a white two-column band and precedes a two-column closing band, and a
  * centred column between them read as a gap in the page rather than as a set
  * piece. The photograph gives the left half something to do and the stack keeps
- * the right half; the `.gradient-lower` sweep underneath is the same one the
- * closing section uses, so the two now read as one run of the page.
+ * the right half. The surface underneath is a flat #CCD0D2 — it used to be the
+ * same `.gradient-lower` sweep the closing section ran, so the two read as one
+ * run of the page; that section is white now and this one is the page's only
+ * tinted plate, which is what gives the run its break instead.
  *
  * The photograph is `lg` and up only. Below that the section is a single column
- * and the stack needs all of it - see MarkedPhoto.tsx for the dissolve, which is
- * a mask rather than a scrim precisely so it can sit on this gradient.
+ * and the stack needs all of it.
+ *
+ * == Nothing is drawn over or around the photograph ==========================
+ * It used to go through DissolvePhoto with `edges: 'bottom'`, which masked the
+ * lower 10-38% of the frame away so the subjects' feet faded into the section
+ * instead of stopping on a line. That mask is gone, and so is the box it sat in:
+ * no aspect ratio, no `gap`, no `px`, no centring. The <img> takes the entire
+ * left half of the sticky viewport, top to bottom and out to the window edge,
+ * and about-value.png is a transparent cutout with the Fortiva mark already
+ * composited behind the subject, so the section's own grey shows through
+ * everywhere the artwork does not reach.
+ *
+ * `object-contain`, not `cover`: the asset must not be cropped - the mark's
+ * petals are the thing a crop would cut. Which means `contain` letterboxes it
+ * inside a half-viewport box that is rarely the asset's ratio, and that
+ * letterboxing is transparent, not padding. Any visual margin around the subject
+ * is the asset's own to set.
  */
 export default function ValuesStack() {
   const headingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
@@ -153,42 +169,39 @@ export default function ValuesStack() {
   }, [])
 
   return (
+    /* Flat #CCD0D2, not the `.gradient-lower` sweep this section used to run.
+       Two reasons it had to stop being a gradient rather than just change colour:
+       the section is 432vh tall (five cards at 83vh each plus a viewport), so a
+       ramp authored against one section height was travelling four screens and
+       reading as a slow colour drift; and the closing section under it is white
+       now, which a cream-ending gradient has nothing to hand off to. A single
+       grey plate holds the whole pinned run at one value and lets the white
+       below it be the break. */
     <section
       ref={outerRef}
-      className="relative gradient-lower"
+      className="relative bg-[#CCD0D2]"
       style={{ height: `${SECTION_HEIGHT_VH}vh` }}
     >
       <div className="sticky top-0 h-screen overflow-hidden">
-        <div className="mx-auto grid h-full max-w-container items-center gap-10 px-6 lg:grid-cols-2 lg:gap-16">
+        {/* No `max-w-container` and no `mx-auto` on the grid, which is what lets
+            the picture reach the window's own left edge — inside a 1360px
+            container it would have carried 40px of margin on a 1440px window.
+            The copy column takes the padding the grid used to apply to both. */}
+        <div className="grid h-full lg:grid-cols-2">
           {/* ── the photograph ───────────────────────────────────────────────
-              A transparent cutout of the two clinicians with the Fortiva mark
-              already behind them in the artwork, so nothing is drawn over it here
-              — see DissolvePhoto.tsx on why the mark this used to paint is gone.
-
-              `contain`, not `cover`: the asset is square and this column is
-              portrait, and cover would crop the mark's petals off at the sides —
-              the one thing in the frame that has to stay whole.
-
-              `aspect-square` gives the box the asset's own shape, which is what
-              lets the bottom fade be expressed against the picture instead of
-              against the box — see CUTOUT_FADE in DissolvePhoto.tsx. It costs
-              nothing in size (contain was already fitting by width) and it is why
-              the dissolve lands on the subjects' feet rather than below them.
-
-              The flex parent centres it, rather than a percentage height on the
-              grid item: a percentage height resolves against the row, and one
-              indirection makes "centred in the viewport" mean that everywhere
-              instead of only where the row happens to be definite. */}
-          <div className="hidden h-full items-center lg:flex">
-            <DissolvePhoto
+              Full height of the sticky viewport, out to the window edge, with no
+              mask, no frame and no margin of any kind. See the note above the
+              component for why `contain` and what that asks of the asset. */}
+          <div className="hidden h-full lg:block">
+            <img
               src={images.valuesPortrait}
-              fit="contain"
-              edges="bottom"
-              className="aspect-square w-full"
+              alt=""
+              aria-hidden="true"
+              className="h-full w-full select-none object-contain object-bottom"
             />
           </div>
 
-          <div className="flex flex-col items-center">
+          <div className="flex h-full flex-col items-center justify-center px-6 lg:px-10">
             <div className="mb-11 text-center">
               <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
                 OUR VALUES

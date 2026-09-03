@@ -192,10 +192,10 @@ export default function StateMap({
             label sits on, so the dot would sometimes be invisible. The status
             word says it unambiguously at any palette. */}
         <div className="corner-smooth flex items-center gap-2.5 rounded-[12px] bg-navy-800 px-3.5 py-2 shadow-card">
-          <span className="whitespace-nowrap text-[13px] font-semibold leading-none text-cream-soft">
+          <span className="whitespace-nowrap text-[13px] font-semibold leading-none text-white">
             {tipState?.name}
           </span>
-          <span className="whitespace-nowrap text-[11px] font-medium leading-none text-cream-soft/55">
+          <span className="whitespace-nowrap text-[11px] font-medium leading-none text-white/55">
             {tipState?.status === 'live' ? 'Live now' : 'Coming soon'}
           </span>
         </div>

@@ -177,6 +177,7 @@ export default function BrokersResources() {
   return (
     <>
       <PageHero
+        tone="dark"
         eyebrow="BROKER RESOURCES"
         titleTop="Everything you need"
         titleBottom="to sell Fortiva."
@@ -191,7 +192,7 @@ export default function BrokersResources() {
             <Button variant="gold" icon="arrow" size="lg" href="/brokers/portal">
               Broker Portal
             </Button>
-            <Button variant="ghost" size="lg" href="/contact">
+            <Button variant="white" size="lg" href="/contact">
               Contact broker support
             </Button>
           </>

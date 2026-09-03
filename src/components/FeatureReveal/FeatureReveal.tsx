@@ -32,7 +32,24 @@ interface FeatureRevealProps {
    * paints that text across the section.
    */
   image?: string
-  /** Background utility for the section. Defaults to white. */
+  /**
+   * Which surface the section is drawn on.
+   *
+   *   'light' — white plate, navy type. The default, and what the section was.
+   *   'dark'  — navy plate, light type. THE CARDS DO NOT CHANGE.
+   *
+   * That last part is the whole design of the dark variant: the eyebrow, the
+   * heading and the lead invert, and the five cards stay cream-soft with gold
+   * badges and navy type exactly as they are on white. They are the section's
+   * figure — the thing that arrives — and inverting them too would have left a
+   * dark section with dark cards on it and nothing to arrive at. See TONES.
+   */
+  tone?: 'light' | 'dark'
+  /**
+   * Background utility for the section, overriding the tone's own surface. For a
+   * caller that needs a gradient or a tint rather than a flat plate; the type
+   * colours still come from `tone`, so a light gradient wants `tone: 'light'`.
+   */
   className?: string
 }
 
@@ -99,6 +116,30 @@ interface FeatureRevealProps {
    Every card is `bg-cream-soft` now. The colour in this section comes from the
    photograph and the gold badges; the cards are the quiet part. */
 
+/* ── The two surfaces ────────────────────────────────────────────────────────
+   Four tokens each, and there is deliberately no fifth for the cards: see the
+   note on `tone` above. `surface` is separate from the other three so a caller
+   can override it (`className`) without also having to restate the type colours.
+
+   On navy the accent inside a caller's `heading` should be `text-gold` (#D5AC67)
+   rather than `text-gold-dark` (#BD9455) — the dark gold was mixed for light
+   plates and measures 2.6:1 on navy-800. The call sites that switched to this
+   tone were updated with it. */
+const TONES = {
+  light: {
+    surface: 'bg-white',
+    eyebrow: 'bg-navy-800/5 text-navy-800/70',
+    heading: 'text-navy-800',
+    intro: 'text-navy-800/70',
+  },
+  dark: {
+    surface: 'bg-navy-800',
+    eyebrow: 'bg-white/10 text-white/75',
+    heading: 'text-white',
+    intro: 'text-white/70',
+  },
+} as const
+
 /** How far below its slot a card starts, as a fraction of the viewport. */
 const TRAVEL = 0.42
 
@@ -138,33 +179,25 @@ const STEP = 1
  */
 const END_AT = 0.55
 
-/**
- * The gradient that takes the photograph away, and it is deliberately slight.
- *
- * ── Why it is an ellipse in one corner and not a fade across the bottom ─────
- * The first version was two linear ramps: solid to a fifth of the way down, gone
- * by just past halfway, plus a short fade in from the left. That was written when
- * these three slots had no photographs in them and the mask had to make the copy
- * legible on ANY image. It ended up whitening the bottom half of the section
- * across its full width — and the delivered assets already dissolve into white
- * out of their own bottom-left corner, so the two dissolves stacked and most of
- * the picture was gone.
- *
- * The photograph carries the copy area now. This is one ellipse anchored just
- * outside the bottom-left corner: it opens the corner where the button and the
- * lead sit, thins out through the heading, and is fully transparent — the picture
- * untouched — across the right half and the whole top, which is where the cards
- * and the subject are. Nothing whitens the full width any more.
- *
- * Which means the assets have a job: each one has to arrive with its own soft
- * dissolve toward the bottom-left, the way img-12 and img-13 do. An image whose
- * bottom-left corner is dark will put navy type on a dark photograph — this mask
- * lifts it by about a third, not to white.
- *
- * One layer, so no `mask-composite` here.
- */
-const PHOTO_MASK =
-  'radial-gradient(76% 90% at -4% 106%, transparent 0%, rgba(0,0,0,0.22) 34%, rgba(0,0,0,0.7) 66%, #000 90%)'
+/* ── Nothing is drawn over the photograph any more ───────────────────────────
+   There was a mask here: one radial ellipse anchored just outside the bottom-left
+   corner, opening the corner where the heading, the lead and the button sit,
+   thinning through the heading and fully transparent across the right half and
+   the whole top where the cards and the subject are. It removed about a third of
+   the picture under the copy rather than whitening it, so it worked on any
+   surface the section was given.
+
+   It is gone, along with every other generated gradient and overlay in this
+   component. The photograph is painted flat, corner to corner, and the copy sits
+   directly on it.
+
+   Which moves the whole burden onto the assets, and it is worth being explicit
+   about what they now have to do: the bottom-left corner of each one — roughly
+   the left 45% below the halfway line — is live type. On `tone: 'light'` that is
+   navy at 65-100%, so that corner has to stay pale; on `tone: 'dark'` it is white
+   at 70-100%, so it has to stay dark. An asset that is busy or mid-toned there
+   will put type on texture, and there is no longer any code between the two.
+*/
 
 export default function FeatureReveal({
   eyebrow,
@@ -173,8 +206,10 @@ export default function FeatureReveal({
   features,
   action,
   image,
-  className = 'bg-white',
+  tone = 'light',
+  className,
 }: FeatureRevealProps) {
+  const t = TONES[tone]
   const sectionRef = useRef<HTMLElement>(null)
   const copyRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -308,16 +343,11 @@ export default function FeatureReveal({
        is what keeps the fallback identical to the layout this section had. */
     <section
       ref={sectionRef}
-      className={`relative px-6 py-24 sm:py-28 pin:flex pin:h-screen pin:items-center pin:overflow-hidden pin:pb-10 pin:pt-24 ${className}`}
+      className={`relative px-6 py-24 sm:py-28 pin:flex pin:h-screen pin:items-center pin:overflow-hidden pin:pb-10 pin:pt-24 ${className ?? t.surface}`}
     >
       {/* ── the photograph ───────────────────────────────────────────────────
-          Full bleed, with one corner of it opened up for the copy. See
-          PHOTO_MASK for the shape and for what that asks of the asset.
-
-          The picture is REMOVED rather than dimmed: `maskImage` takes it away and
-          lets `className`'s background through, which is why this works on any
-          surface the section is given instead of only on white. A white scrim
-          would have been a white scrim on a cream section.
+          Full bleed and untouched — no mask, no scrim, no overlay. See the note
+          above the component for what that asks of the asset.
 
           Hidden below `lg`. There is no two-column layout to sit behind down
           there — the section is a ~1200px single column, and a photograph
@@ -329,7 +359,6 @@ export default function FeatureReveal({
             alt=""
             aria-hidden="true"
             className="h-full w-full select-none object-cover object-[center_18%]"
-            style={{ maskImage: PHOTO_MASK, WebkitMaskImage: PHOTO_MASK }}
           />
         </div>
       )}
@@ -346,13 +375,15 @@ export default function FeatureReveal({
         {/* ── the half that is there when you arrive ─────────────────────── */}
         <div ref={copyRef}>
           {eyebrow && (
-            <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
+            <span
+              className={`inline-block rounded-full px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] ${t.eyebrow}`}
+            >
               {eyebrow}
             </span>
           )}
           <h2
             ref={headingRef}
-            className={`max-w-xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px] ${
+            className={`max-w-xl text-[30px] font-semibold leading-tight opacity-0 sm:text-[38px] ${t.heading} ${
               eyebrow ? 'mt-5 pin:mt-4' : ''
             }`}
           >
@@ -362,7 +393,9 @@ export default function FeatureReveal({
           {(intro || action) && (
             <div ref={introRef} className="opacity-0">
               {intro && (
-                <p className="mt-7 max-w-lg text-[16px] leading-relaxed text-navy-800/70 sm:text-[17px] pin:mt-5">
+                <p
+                  className={`mt-7 max-w-lg text-[16px] leading-relaxed sm:text-[17px] pin:mt-5 ${t.intro}`}
+                >
                   {intro}
                 </p>
               )}

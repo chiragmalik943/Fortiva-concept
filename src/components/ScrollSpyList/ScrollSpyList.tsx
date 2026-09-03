@@ -132,7 +132,7 @@ export default function ScrollSpyList({
                 <div className="flex items-start gap-5">
                   <span
                     className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors duration-500 ${
-                      lit ? 'bg-gold' : 'bg-navy-800/8'
+                      lit ? 'bg-gold' : 'bg-navy-800/[0.08]'
                     }`}
                   >
                     <Icon

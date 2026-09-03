@@ -188,7 +188,7 @@ export default function PhoneShowcase({
               <li
                 key={feature.title}
                 aria-current={lit && tracking ? 'true' : undefined}
-                className="relative border-l border-navy-800/12 py-4 pl-5 sm:pl-6 pin:py-3"
+                className="relative border-l border-navy-800/[0.12] py-4 pl-5 sm:pl-6 pin:py-3"
               >
                 {/* Exactly as tall as its own item, so a description that wraps
                     cannot put it out of register with the ones below. */}

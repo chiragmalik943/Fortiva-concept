@@ -12,8 +12,18 @@ import StateMap from './StateMap'
  * navy-800 lettering on a navy-800 chip is the failure this exists to avoid.
  *
  * sRGB relative luminance, WCAG's formula. The threshold is where navy-800 and
- * cream-soft trade places as the higher-contrast choice against the background,
- * not a guess: solving (L+0.05)² = (0.0226+0.05)(0.887+0.05) puts it at 0.211.
+ * the light ink trade places as the higher-contrast choice against the
+ * background, not a guess — and it MOVED when the light ink did.
+ *
+ * It was cream-soft (#F3F5EE, luminance 0.887), and solving
+ * (L+0.05)² = (0.0226+0.05)(0.887+0.05) put the crossover at 0.211. The 2026
+ * pass took every beige out of the palette, and light ink on a dark surface went
+ * to pure white rather than to the new grey — white's luminance is 1.0, so the
+ * same equation, (L+0.05)² = (0.0226+0.05)(1.0+0.05), moves it to 0.226.
+ *
+ * Recomputed rather than left alone: a threshold derived for one ink is simply
+ * wrong for another, and between 0.211 and 0.226 it would have picked white
+ * where navy is now the better choice.
  */
 function readableOn(hex: string) {
   const channel = (i: number) => {
@@ -22,7 +32,7 @@ function readableOn(hex: string) {
   }
   const luminance =
     0.2126 * channel(0) + 0.7152 * channel(1) + 0.0722 * channel(2)
-  return luminance > 0.211 ? '#11284B' : '#F3F5EE'
+  return luminance > 0.226 ? '#11284B' : '#FFFFFF'
 }
 
 // Copy doc, "Available States — Footer". Worth a homepage slot because it's a

@@ -59,6 +59,7 @@ export default function BrokersPortal() {
           business" is the line under it. Running the H2 as the headline pushed it
           to three lines and buried the name of the thing. */}
       <PageHero
+        tone="dark"
         eyebrow="BROKER PORTAL"
         titleTop="The Fortiva"
         titleBottom="Broker Portal."
@@ -73,7 +74,7 @@ export default function BrokersPortal() {
             <ActionButton variant="gold" icon="arrow" size="lg" href={externalTargets.brokerPortal}>
               Log in to your Portal
             </ActionButton>
-            <Button variant="ghost" size="lg" href="/contact">
+            <Button variant="white" size="lg" href="/contact">
               Request access
             </Button>
           </>

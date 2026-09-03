@@ -100,7 +100,7 @@ export default function FaqAccordion({
             {faqs.map((faq) => {
               const open = faq.id === openId
               return (
-                <li key={faq.id} className="border-b border-navy-800/12 first:border-t">
+                <li key={faq.id} className="border-b border-navy-800/[0.12] first:border-t">
                   <h3>
                     <button
                       type="button"

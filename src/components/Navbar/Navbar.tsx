@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronDown, Menu, X } from 'lucide-react'
 import Logo from '../Logo'
 import Button from '../Button'
+import { HERO_TONES, useHeroTone } from '../PageHero/heroTone'
 import { Link, useRoute } from '../../router/router'
 import { navigation } from '../../content/site'
 import { lockPageScroll, unlockPageScroll } from '../../hooks/useLenis'
@@ -21,6 +22,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileExpanded, setMobileExpanded] = useState<number | null>(null)
   const route = useRoute()
+  const heroTone = useHeroTone()
 
   const headerRef = useRef<HTMLElement>(null)
   const triggerRefs = useRef<(HTMLButtonElement | null)[]>([])
@@ -189,6 +191,18 @@ export default function Navbar() {
         panel never floats over a fully transparent bar ───────────────────── */
   const solid = scrolled || openIndex !== null || mobileOpen
 
+  /* ── The nav's own ink, and why it is not a constant ──────────────────────
+     While the pill is transparent the logo and the links sit directly on the
+     hero's surface, and that surface is now one of four colours (see
+     PageHero/heroTone.tsx). navy-800/90 links and the four-colour mark are
+     invisible on the navy hero, and the mark's lotus disappears on the gold one.
+
+     The moment the pill goes solid it is cream-soft again, whatever is behind it,
+     so `solid` collapses straight back to the mist tokens — the ink follows the
+     PILL, not the page. Which also means everything below is a plain colour swap
+     on a `transition-colors`, with no state to keep in sync. */
+  const t = solid ? HERO_TONES.mist : HERO_TONES[heroTone]
+
   return (
     <header
       ref={headerRef}
@@ -207,11 +221,13 @@ export default function Navbar() {
           }`}
         >
           <Link href="/" aria-label="Fortiva home" className="shrink-0">
-            <Logo />
+            <Logo variant={t.navLogo} />
           </Link>
 
           {/* ── desktop links ─────────────────────────────────────────── */}
-          <ul className="hidden items-center gap-7 text-[14.5px] font-medium text-navy-800/90 lg:flex xl:gap-9">
+          <ul
+            className={`hidden items-center gap-7 text-[14.5px] font-medium transition-colors duration-500 lg:flex xl:gap-9 ${t.navInk}`}
+          >
             {navigation.map((item, i) => {
               const hasChildren = Boolean(item.children?.length)
               const isOpen = openIndex === i
@@ -236,7 +252,7 @@ export default function Navbar() {
                       aria-controls={panelId}
                       onClick={() => setOpenIndex(isOpen ? null : i)}
                       onKeyDown={(e) => onTriggerKeyDown(e, i, hasChildren)}
-                      className="flex items-center gap-1 py-1 transition-colors hover:text-navy-800"
+                      className={`flex items-center gap-1 py-1 transition-colors ${t.navInkHover}`}
                     >
                       {item.label}
                       <ChevronDown
@@ -249,8 +265,10 @@ export default function Navbar() {
                     <Link
                       href={item.href}
                       aria-current={route === item.href ? 'page' : undefined}
-                      className={`flex items-center gap-1 py-1 transition-colors hover:text-navy-800 ${
-                        route === item.href ? 'text-navy-800 underline underline-offset-[6px] decoration-gold decoration-2' : ''
+                      className={`flex items-center gap-1 py-1 transition-colors ${t.navInkHover} ${
+                        route === item.href
+                          ? `${t.navInkStrong} underline underline-offset-[6px] decoration-gold decoration-2`
+                          : ''
                       }`}
                     >
                       {item.label}
@@ -287,7 +305,7 @@ export default function Navbar() {
                               href={child.href}
                               tabIndex={isOpen ? 0 : -1}
                               onClick={() => setOpenIndex(null)}
-                              className="block rounded-[12px] corner-smooth px-3.5 py-2.5 text-[14px] text-navy-800/75 transition-colors hover:bg-navy-800 hover:text-cream-soft"
+                              className="block rounded-[12px] corner-smooth px-3.5 py-2.5 text-[14px] text-navy-800/75 transition-colors hover:bg-navy-800 hover:text-white"
                             >
                               {child.label}
                             </Link>
@@ -307,7 +325,7 @@ export default function Navbar() {
                 eats the width this used to sit in. Nothing is lost — the same
                 CTA is pinned to the bottom of the mobile drawer. */}
             <Button
-              variant="gold"
+              variant={t.navCta}
               icon="arrow"
               href="/contact"
               className="!py-1.5 !text-[14px] max-[479px]:!hidden"
@@ -321,7 +339,7 @@ export default function Navbar() {
               aria-controls="mobile-nav"
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               onClick={() => setMobileOpen((v) => !v)}
-              className="flex h-10 w-10 items-center justify-center rounded-[14px] corner-smooth bg-navy-800/5 text-navy-800 transition-colors hover:bg-navy-800 hover:text-cream-soft lg:hidden"
+              className={`flex h-10 w-10 items-center justify-center rounded-[14px] corner-smooth transition-colors duration-500 lg:hidden ${t.navToggle}`}
             >
               {mobileOpen ? <X size={19} strokeWidth={2.25} /> : <Menu size={19} strokeWidth={2.25} />}
             </button>

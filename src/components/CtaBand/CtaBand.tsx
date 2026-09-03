@@ -92,7 +92,7 @@ export default function CtaBand({
         {eyebrow && (
           <span
             className={`inline-block rounded-full px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] ${
-              tone === 'navy' ? 'bg-white/10 text-white/70' : 'bg-navy-800/8 text-navy-800/85'
+              tone === 'navy' ? 'bg-white/10 text-white/70' : 'bg-navy-800/[0.08] text-navy-800/85'
             }`}
           >
             {eyebrow}

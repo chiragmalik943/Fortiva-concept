@@ -1,6 +1,7 @@
 import { Wallet, Eye, SlidersHorizontal, Sparkles, Headphones } from 'lucide-react'
 import PageHero from '../components/PageHero/PageHero'
 import FeatureReveal, { type Feature } from '../components/FeatureReveal/FeatureReveal'
+import ListBand from '../components/ListBand/ListBand'
 import Button from '../components/Button'
 import { images } from '../assets/images'
 import { useScrollReveal } from '../hooks/useScrollReveal'
@@ -13,8 +14,8 @@ import { useSplitReveal } from '../hooks/useSplitReveal'
  * section, unabridged and in its own order:
  *
  *   H1 + intro        → PageHero
- *   FOR individuals   → FeatureReveal, the scroll-in card band (white)
- *   FOR families      → the split band (navy + photograph)
+ *   FOR individuals   → FeatureReveal, the scroll-in card band (dark)
+ *   FOR families      → <ListBand />, the inset photograph + numbered list
  *   Our promise       → the closing plate
  *
  * The doc writes each "FOR individuals" item as a bolded phrase plus a
@@ -57,11 +58,6 @@ const familyPoints = [
 ]
 
 export default function PlansIndividuals() {
-  const familyHeadingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
-  const familyIntroRef = useScrollReveal<HTMLParagraphElement>({ y: 22, delay: 0.1 })
-  const familyListRef = useScrollReveal<HTMLUListElement>({ y: 24, delay: 0.2 })
-  const familyImageRef = useScrollReveal<HTMLDivElement>({ y: 40, scale: 0.96 })
-
   const promiseRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
   const promiseBodyRef = useScrollReveal<HTMLParagraphElement>({ y: 24, delay: 0.12 })
   const promiseTailRef = useScrollReveal<HTMLParagraphElement>({ y: 24, delay: 0.22 })
@@ -70,6 +66,7 @@ export default function PlansIndividuals() {
   return (
     <>
       <PageHero
+        tone="teal"
         eyebrow="INDIVIDUALS & FAMILIES"
         titleTop="Health coverage that works"
         titleBottom="for real life."
@@ -86,7 +83,7 @@ export default function PlansIndividuals() {
             <Button variant="gold" icon="arrow" size="lg" href="/contact">
               Get a Quote
             </Button>
-            <Button variant="ghost" size="lg" href="/plans">
+            <Button variant="white" size="lg" href="/plans">
               See all plans
             </Button>
           </>
@@ -99,10 +96,11 @@ export default function PlansIndividuals() {
           five cards rise into their slots one at a time as you scroll past.
           See FeatureReveal.tsx for why the section isn't pinned. */}
       <FeatureReveal
+        tone="dark"
         eyebrow="FOR INDIVIDUALS"
         heading={
           <>
-            Coverage built around <span className="text-gold-dark">one person</span>
+            Coverage built around <span className="text-gold">one person</span>
           </>
         }
         intro={
@@ -121,56 +119,36 @@ export default function PlansIndividuals() {
       />
 
       {/* ── FOR families ──────────────────────────────────────────────────
-          Photograph plus navy, the same split shape as the homepage's
-          enrollment band — the doc gives this section three short bullets and
-          one lead sentence, which is far too little to hold a full-width plate
-          on its own. Pairing it with the family photograph already in the
-          asset set gives it the weight the copy can't. */}
-      <section className="bg-navy-800">
-        <div className="grid lg:min-h-[80vh] lg:grid-cols-2">
-          <div ref={familyImageRef} className="relative order-2 min-h-[320px] lg:order-1 lg:min-h-0">
-            <img
-              src={images.insuranceFamily}
-              alt="A Fortiva family plan member"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          </div>
+          The doc gives this section one lead sentence and three short bullets —
+          far too little to hold a full-width plate on its own — so it is paired
+          with a photograph. That pairing is now <ListBand />, shared with "What
+          employers believe" on Plans → Employers: the two pages are meant to read
+          as a matched pair, and this is the shape they have in common.
 
-          <div className="order-1 flex flex-col justify-center px-8 py-16 lg:order-2 lg:px-16 lg:py-20">
-            <h2
-              ref={familyHeadingRef}
-              className="text-[30px] font-semibold leading-tight text-white opacity-0 sm:text-[38px]"
-            >
-              <span className="text-gold">FOR</span> families
-            </h2>
-            <p
-              ref={familyIntroRef}
-              className="mt-6 max-w-md text-[18px] leading-[1.5] text-white/85 opacity-0 sm:text-[20px]"
-            >
-              Your family&rsquo;s health matters most. Our family plans offer:
-            </p>
+          Two things moved when it became a component. The photograph is INSET
+          rather than bleeding to the window edge, and the surface is a navy→teal
+          ramp rather than flat navy-800 — see ListBand.tsx for both, including
+          what the inset frame now asks of the asset.
 
-            <ul ref={familyListRef} className="mt-8 flex max-w-md flex-col opacity-0">
-              {familyPoints.map((point, i) => (
-                <li key={point} className="border-t border-white/10 py-5 last:border-b">
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-[14px] font-semibold text-gold">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <span className="text-[16px] leading-relaxed text-white/80">{point}</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-9">
-              <Button variant="gold" icon="arrow" href="/contact">
-                Get a Quote
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+          The photograph is plan-family.png, not img-4.png. It is its own key in
+          assets/images.ts rather than a repoint of `insuranceFamily`, because
+          img-4 is also the family card on the homepage. */}
+      <ListBand
+        heading={
+          <>
+            <span className="text-gold">FOR</span> families
+          </>
+        }
+        intro={<>Your family&rsquo;s health matters most. Our family plans offer:</>}
+        items={familyPoints}
+        image={images.planFamily}
+        imageAlt="A Fortiva family plan member"
+        action={
+          <Button variant="gold" icon="arrow" href="/contact">
+            Get a Quote
+          </Button>
+        }
+      />
 
       {/* ── Our promise ───────────────────────────────────────────────────
           Two sentences, set large and centred. The doc's second line ("No

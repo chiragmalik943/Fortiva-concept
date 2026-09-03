@@ -278,7 +278,7 @@ export default function FaqExplorer({
                   type="button"
                   onClick={() => setQuery('')}
                   aria-label="Clear search"
-                  className="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-navy-800/45 transition-colors hover:bg-navy-800/8 hover:text-navy-800"
+                  className="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-navy-800/45 transition-colors hover:bg-navy-800/[0.08] hover:text-navy-800"
                 >
                   <X size={15} strokeWidth={2.25} />
                 </button>
@@ -330,7 +330,7 @@ export default function FaqExplorer({
                         empty
                           ? 'cursor-not-allowed text-navy-800/25'
                           : isActive
-                            ? 'bg-navy-800 text-cream-soft'
+                            ? 'bg-navy-800 text-white'
                             : 'text-navy-800/65 hover:bg-navy-800/5 hover:text-navy-800'
                       }`}
                     >
@@ -349,7 +349,7 @@ export default function FaqExplorer({
                           empty
                             ? 'text-navy-800/20'
                             : isActive
-                              ? 'text-cream-soft/60'
+                              ? 'text-white/60'
                               : 'text-navy-800/35'
                         }`}
                       >

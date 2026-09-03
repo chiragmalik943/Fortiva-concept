@@ -14,6 +14,7 @@ import VideoLibrary, { type VideoItem } from '../components/VideoLibrary/VideoLi
 import CtaBand from '../components/CtaBand/CtaBand'
 import Button from '../components/Button'
 import { expertResources } from '../content/site'
+import { images } from '../assets/images'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
 /**
@@ -23,8 +24,8 @@ import { useScrollReveal } from '../hooks/useScrollReveal'
  *
  *   H1 + intro       → PageHero
  *   Videos           → VideoLibrary (PLACEHOLDER DATA, see below)
- *   Plan details     → the two-up band, left
- *   Blog             → the two-up band, right
+ *   Plan details     → the photo band, upper card
+ *   Blog             → the photo band, lower card
  *   Expert resources → LinkHub, all eight outbound tools with the doc's own URLs
  *
  * The eight expert-resource links live in content/site.ts. Every URL is the one
@@ -162,6 +163,7 @@ export default function MembersResources() {
   return (
     <>
       <PageHero
+        tone="sky"
         eyebrow="RESOURCES"
         titleTop="Meeting you where you are"
         titleBottom="with quality resources."
@@ -173,10 +175,10 @@ export default function MembersResources() {
         }
         actions={
           <>
-            <Button variant="gold" icon="arrow" size="lg" href="/plans">
+            <Button variant="dark" icon="arrow" size="lg" href="/plans">
               Plan details
             </Button>
-            <Button variant="ghost" size="lg" href="/members/faqs">
+            <Button variant="white" size="lg" href="/members/faqs">
               Read the FAQs
             </Button>
           </>
@@ -203,15 +205,66 @@ export default function MembersResources() {
       />
 
       {/* ── Plan details + Blog ────────────────────────────────────────────
-          Two of the doc's three H2s, side by side. They're a matched pair —
-          heading, one sentence, one button each — so they read better as one
-          band than as two near-empty full-width sections. */}
-      <section className="bg-cream-soft px-6 py-24 sm:py-28">
-        <div ref={shelfRef} className="mx-auto grid max-w-container gap-5 opacity-0 lg:grid-cols-2">
-          {shelf.map(({ label, title, body, cta, href, icon: Icon }) => (
+          Two of the doc's three H2s. They're a matched pair — heading, one
+          sentence, one button each — so they read better as one band than as two
+          near-empty full-width sections.
+
+          ── Side by side on cream, now stacked on a photograph ───────────────
+          The band was two cards in a 2-column grid on `bg-cream-soft`. It is a
+          full-bleed photograph with both cards stacked in a column down its right
+          half instead, which turns the pair from a row of two panels into a
+          composition: the picture holds the left, the two asks hold the right.
+
+          Three things it needs to keep working:
+
+          • A minimum height. The section's height used to come from two cards
+            side by side; stacked, they are taller than the photograph needs and
+            shorter than it wants on a wide window, so `min-h` gives the picture
+            a floor to fill.
+          • `object-[28%_center]`. The asset is 1920 x 1080 and its subject is in
+            the left third; a tall section crops a 16:9 photograph hard from the
+            sides, and centred crops the subject out.
+          • The cards stay OPAQUE white. A photograph is the one surface a
+            translucent card cannot sit on — every line of body copy would be
+            reading against whatever pixel happened to be behind it.
+
+          The cards occupy the right ~34% of the container at `lg` and up, so the
+          asset's subject needs to stay clear of that band. */}
+      <section className="relative overflow-hidden px-6 py-24 sm:py-28 lg:min-h-[760px]">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 select-none">
+          <img
+            src={images.resourcesBg}
+            alt=""
+            className="h-full w-full object-cover object-[28%_center]"
+          />
+        </div>
+
+        {/* `lg:ml-auto` inside a `max-w-container` rather than a two-column grid
+            with an empty first cell: the column is a fixed measure, and pushing it
+            to the container's right edge keeps it there at every width above `lg`
+            without a phantom cell to keep in step with it.
+
+            ── 460px, and the content inside runs the full width of it ─────────
+            The column was 560px and the copy inside each card was capped at
+            `max-w-sm` (384px), which is where the dead space came from: 560 minus
+            80px of padding leaves 480px of usable width, so every heading and
+            paragraph stopped ~96px short of the card's right edge and each card
+            read as three-quarters filled.
+
+            Both halves of that are fixed. The column is 460px — 380px of usable
+            width — and the caps are gone, so the copy sets to the card's own
+            measure. The cards stay wider than tall (~460 x 300), which is the
+            proportion they were drawn at; they are just no longer carrying a
+            column of blank surface down the right. */}
+        <div className="relative mx-auto max-w-container">
+          <div
+            ref={shelfRef}
+            className="flex flex-col gap-5 opacity-0 lg:ml-auto lg:max-w-[460px]"
+          >
+            {shelf.map(({ label, title, body, cta, href, icon: Icon }) => (
             <div
               key={label}
-              className="corner-smooth flex flex-col justify-between rounded-card bg-white p-8 sm:p-10"
+              className="corner-smooth flex flex-col justify-between rounded-card bg-white p-7 shadow-card sm:p-8"
             >
               <div>
                 <div className="flex items-center gap-3">
@@ -222,10 +275,10 @@ export default function MembersResources() {
                     {label}
                   </span>
                 </div>
-                <h3 className="mt-7 max-w-sm text-[24px] font-semibold leading-snug text-navy-800 sm:text-[28px]">
+                <h3 className="mt-7 text-[24px] font-semibold leading-snug text-navy-800 sm:text-[27px]">
                   {title}
                 </h3>
-                <p className="mt-4 max-w-sm text-[15.5px] leading-relaxed text-navy-800/65">
+                <p className="mt-4 text-[15.5px] leading-relaxed text-navy-800/65">
                   {body}
                 </p>
               </div>
@@ -235,7 +288,8 @@ export default function MembersResources() {
                 </Button>
               </div>
             </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 

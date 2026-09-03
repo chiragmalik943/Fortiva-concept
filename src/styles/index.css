@@ -34,7 +34,7 @@ html.lenis body {
 
 body {
   font-family: 'New Hero', ui-sans-serif, system-ui, sans-serif;
-  background-color: #ECEAE1;
+  background-color: #CCD0D2;
   color: #11284B;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -110,17 +110,17 @@ body {
 
 /* soft ambient gradients, sampled from the reference screenshot */
 .gradient-hero {
-  background: linear-gradient(180deg, #BCCAD1 0%, #D3DCDF 30%, #E4E3DA 60%, #ECEAE1 100%);
+  background: linear-gradient(180deg, #BCCAD1 0%, #D3DCDF 30%, #CFD5D7 60%, #CCD0D2 100%);
 }
 
 .gradient-lower {
   background: linear-gradient(
     180deg,
-    #ECEAE1 0%,
+    #CCD0D2 0%,
     #D7DEE0 28%,
     #C7D2D6 50%,
     #D7DEE0 72%,
-    #ECEAE1 100%
+    #CCD0D2 100%
   );
 }
 
@@ -135,7 +135,7 @@ body {
    each section a gradient that runs its own full height, which pins the
    turnaround to the boundary no matter what either one measures.
 
-   And it is deliberately almost invisible. `--band-tint` is cream nudged a few
+   And it is deliberately almost invisible. `--band-tint` is the page grey nudged a few
    percent toward the brand's mist blue — about a 4% lightness step, so the band
    reads as a change of temperature rather than as a coloured stripe. The older
    `.gradient-lower` above travelled all the way to #C7D2D6 and back inside a
@@ -143,12 +143,17 @@ body {
    because Plans → Employers uses it for a single self-contained section, where
    a full there-and-back ramp is the right shape. */
 :root {
-  --band-cream: #ECEAE1;
+  /* Named `--band-cream` when it WAS cream. It is the page's grey now, and the
+     tint above it still lifts a few percent toward the brand's mist blue — so
+     the band reads as a subtle lightening of the grey rather than as a change
+     of temperature off a beige. The name is kept because two files and four
+     rules read it; what it holds is the page surface, whatever that is. */
+  --band-cream: #CCD0D2;
   --band-tint: #E3E9EC;
 }
 
 /* ── The cool band ───────────────────────────────────────────────────────────
-   `.gradient-lower` runs cream → #C7D2D6 → cream inside ONE section. These two
+   `.gradient-lower` runs #CCD0D2 → #C7D2D6 → #CCD0D2 inside ONE section. These two
    are that same ramp cut in half, for a band made of TWO sections: `-in` on the
    first, `-out` on the last, and the cool peak lands exactly on the seam between
    them however tall either section happens to be. The stops are lifted verbatim
@@ -164,19 +169,39 @@ body {
    `-in` is also used on its own, on Plans → Employers' closing section, where the
    page is meant to arrive at the cool end and stay there rather than come back. */
 .gradient-cool-in {
-  background: linear-gradient(180deg, #ECEAE1 0%, #D7DEE0 55%, #C7D2D6 100%);
+  background: linear-gradient(180deg, #CCD0D2 0%, #D7DEE0 55%, #C7D2D6 100%);
 }
 
 .gradient-cool-out {
-  background: linear-gradient(180deg, #C7D2D6 0%, #D7DEE0 45%, #ECEAE1 100%);
+  background: linear-gradient(180deg, #C7D2D6 0%, #D7DEE0 45%, #CCD0D2 100%);
 }
 
-/* cream → tint. Goes on the FIRST section of the band. */
+/* ── ListBand's surface ──────────────────────────────────────────────────────
+   Straight down, no tilt, and the navy holds most of the section before it turns.
+
+   Both of those are the point. It was `bg-gradient-to-br` — a 135deg ramp whose
+   light end landed in a corner, which read as a wash across the band rather than
+   as a colour changing down it. And it interpolated from the first stop, so the
+   midpoint was already halfway to teal: the band looked navy-to-beige rather than
+   navy-to-teal, because a 50/50 mix of #12284B and #0074A6 is a muddy slate.
+
+   Holding #12284B flat to 70% fixes both. The top two thirds are unambiguously
+   navy, the turn happens late and fast, and the ramp only passes through the
+   muddy middle in the last third where it is clearly on its way somewhere.
+
+   #12284B is the logo's own navy (logo-color.svg's `cls-4`), one step off the
+   palette's `navy-800` (#11284B) — visually identical, and specified by hex, so
+   it is written out here. If the palette navy ever moves, move this with it. */
+.gradient-navy-teal {
+  background: linear-gradient(180deg, #12284B 0%, #12284B 70%, #0074A6 100%);
+}
+
+/* page grey → tint. Goes on the FIRST section of the band. */
 .gradient-band-in {
   background: linear-gradient(180deg, var(--band-cream) 0%, var(--band-tint) 100%);
 }
 
-/* tint → cream. Goes on the LAST section of the band. */
+/* tint → page grey. Goes on the LAST section of the band. */
 .gradient-band-out {
   background: linear-gradient(180deg, var(--band-tint) 0%, var(--band-cream) 100%);
 }

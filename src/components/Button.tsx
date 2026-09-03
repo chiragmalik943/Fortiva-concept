@@ -4,7 +4,7 @@ import { Link, isInternalHref } from '../router/router'
 
 interface ButtonProps {
   children: ReactNode
-  variant?: 'light' | 'gold' | 'dark' | 'ghost'
+  variant?: 'light' | 'white' | 'gold' | 'dark' | 'ghost'
   icon?: 'arrow' | 'arrowUpRight' | 'plus' | 'none'
   /** 'lg' is the 56px hero size; everywhere else uses the default. */
   size?: 'default' | 'lg'
@@ -23,22 +23,43 @@ const iconMap = { arrow: ArrowRight, arrowUpRight: ArrowUpRight, plus: Plus }
 
 // "primary" style variants: on hover the button flips to a navy fill with
 // white text, and the icon swaps to the leading edge and rotates -45deg.
-const PRIMARY_VARIANTS: ButtonProps['variant'][] = ['light', 'gold']
+//
+// `dark` is in here even though it is ALREADY navy, so the fill half of that flip
+// is a no-op on it. The rest of the flip is not: the badge goes white → gold and
+// the icon crosses to the leading edge, which is the same gesture every other
+// primary button on the site makes. Without it, the navy hero button was the only
+// primary control that did nothing on hover.
+const PRIMARY_VARIANTS: ButtonProps['variant'][] = ['light', 'white', 'gold', 'dark']
 
 const baseColors: Record<NonNullable<ButtonProps['variant']>, string> = {
   light: 'bg-cream-soft text-navy-800 shadow-sm',
+  // `white`, next to a `light` that is already nearly white, because #F3F5EE is
+  // NOT white: it is the site's warm off-white, mixed to sit on cream. On the
+  // gold, teal, navy and sky hero surfaces that warmth reads as a dirty panel,
+  // and the brief for all four asks for a white button with navy text. So the two
+  // coexist — `light` on cream and white page sections, `white` on a saturated
+  // one — and neither is a substitute for the other.
+  white: 'bg-white text-navy-800 shadow-sm',
   gold: 'bg-gold text-navy-800',
-  dark: 'bg-navy-800 text-cream-soft hover:bg-navy-700',
-  ghost: 'bg-black/5 text-navy-800 hover:bg-navy-800 hover:text-cream-soft',
+  // No `hover:bg-navy-700` any more: `dark` is a primary variant now, and the
+  // primary block below sets `hover:bg-navy-800`. Two hover backgrounds on one
+  // element resolve by stylesheet order rather than by the order they are
+  // written here, so the pair was a coin toss.
+  dark: 'bg-navy-800 text-white',
+  ghost: 'bg-black/5 text-navy-800 hover:bg-navy-800 hover:text-white',
 }
 
 // badge = the little circle the icon sits in on primary-style buttons.
-// "light" keeps a gold badge in both states (it reads fine on white or navy).
+// "light" and "white" keep a gold badge in both states (it reads fine on either
+// fill, and on the navy the button flips to).
 // "gold" starts navy (so it doesn't disappear into the gold button) and
 // flips to gold on hover, once the button itself has gone navy.
+// "dark" is the mirror of "gold": white on the navy fill, going gold on hover.
 const badgeColors: Record<string, string> = {
   light: 'bg-gold text-navy-800',
+  white: 'bg-gold text-navy-800',
   gold: 'bg-navy-800 text-white group-hover:bg-gold group-hover:text-navy-800',
+  dark: 'bg-white text-navy-800 group-hover:bg-gold group-hover:text-navy-800',
 }
 
 export default function Button({

@@ -21,6 +21,7 @@ import ProvidersPortal from './pages/ProvidersPortal'
 import ProvidersPartnerWithUs from './pages/ProvidersPartnerWithUs'
 import ComingSoon from './pages/ComingSoon'
 import NotFound from './pages/NotFound'
+import { HeroToneProvider } from './components/PageHero/heroTone'
 import { Router, useRoute } from './router/router'
 import { pages, disabledFallback, type PageConfig, type PageKey } from './config/pages'
 import { ScrollTrigger } from './animations/gsap'
@@ -161,7 +162,14 @@ function Site() {
 export default function App() {
   return (
     <Router>
-      <Site />
+      {/* Lets the floating nav know which of the four hero surfaces it is
+          currently sitting on, so its logo and links can carry the right ink
+          while the pill is still transparent. PageHero declares it; Navbar reads
+          it. See components/PageHero/heroTone.tsx for why it is a context and
+          why the provider does not reset on navigation. */}
+      <HeroToneProvider>
+        <Site />
+      </HeroToneProvider>
     </Router>
   )
 }

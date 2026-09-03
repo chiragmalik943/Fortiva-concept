@@ -37,12 +37,15 @@ export default function Hero() {
     >
       {/* ── backdrop ───────────────────────────────────────────────────────
           hero-bg.png is 4801x2701 of very low-contrast arc pattern in the
-          brand's mist blue, so it needs no scrim to keep navy text legible —
-          it only needs to STOP. The mask fades it to nothing across the
-          bottom third of the section, handing off to `.gradient-hero` (the
-          wrapper this section shares with ClipMaskSection) mid-fade. That's
-          what keeps the seam invisible at any viewport height: the join isn't
-          matched, it's dissolved.
+          brand's mist blue, so it needs no scrim to keep navy text legible.
+
+          It used to also FADE. A mask took it to nothing across the bottom
+          third and handed off to `.gradient-hero` — the wrapper this section
+          shares with ClipMaskSection — mid-dissolve, so the seam was invisible
+          at any viewport height. Both that mask and the cream wash that sat
+          under the copy block are gone: the backdrop is painted flat, corner to
+          corner, and the section ends on a hard edge. Same change as the
+          interior heroes; see PageHero.tsx.
 
           object-cover with a top-biased position keeps the arcs' crossing
           point in frame on short/wide viewports instead of centring on empty
@@ -52,16 +55,7 @@ export default function Hero() {
           src={images.heroBg}
           alt=""
           className="h-full w-full object-cover object-[center_35%]"
-          style={{
-            maskImage: 'linear-gradient(180deg, #000 0%, #000 52%, rgba(0,0,0,0.55) 76%, transparent 100%)',
-            WebkitMaskImage:
-              'linear-gradient(180deg, #000 0%, #000 52%, rgba(0,0,0,0.55) 76%, transparent 100%)',
-          }}
         />
-        {/* Barely-there cream wash under the copy block. Not a legibility
-            scrim — it's there so the headline sits on a calmer patch than the
-            arcs would otherwise give it. */}
-        <div className="absolute inset-0 bg-gradient-to-b from-cream/10 via-cream/25 to-transparent" />
       </div>
 
       {/* ── content ───────────────────────────────────────────────────────
@@ -89,16 +83,16 @@ export default function Hero() {
             ("We're building something better.") measures ~1050px, so a 896px
             measure broke it into two lines and the headline read as three lines
             instead of the two the brief specifies. */}
-        <h1 className="max-w-6xl">
+        <h1 className="max-w-6xl text-navy-800">
           <span
             ref={lineOneRef}
-            className="block text-[40px] font-normal leading-[1.4] tracking-tight text-navy-800/80 opacity-0 sm:text-[54px] lg:text-[66px]"
+            className="block text-[40px] font-normal leading-[1.4] tracking-tight opacity-0 sm:text-[54px] lg:text-[66px]"
           >
             Health insurance is broken.
           </span>
           <span
             ref={lineTwoRef}
-            className="block text-[40px] font-bold leading-[1.4] tracking-tight text-navy-800 opacity-0 sm:text-[54px] lg:text-[66px]"
+            className="block text-[40px] font-bold leading-[1.4] tracking-tight opacity-0 sm:text-[54px] lg:text-[66px]"
           >
             We&rsquo;re building something better.
           </span>
@@ -133,7 +127,7 @@ export default function Hero() {
           <Button variant="gold" icon="arrow" size="lg" href="/plans">
             Explore Plans
           </Button>
-          <Button variant="ghost" size="lg" href="/contact">
+          <Button variant="white" size="lg" href="/contact">
             Get a Quote
           </Button>
         </div>

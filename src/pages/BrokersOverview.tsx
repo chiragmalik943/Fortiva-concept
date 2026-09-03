@@ -55,6 +55,7 @@ export default function BrokersOverview() {
   return (
     <>
       <PageHero
+        tone="dark"
         eyebrow="FOR BROKERS"
         titleTop="Your partner in"
         titleBottom="health insurance."
@@ -70,7 +71,7 @@ export default function BrokersOverview() {
             <Button variant="gold" icon="arrow" size="lg" href="/contact">
               Partner with us
             </Button>
-            <Button variant="ghost" size="lg" href="/brokers/portal">
+            <Button variant="white" size="lg" href="/brokers/portal">
               Broker Portal
             </Button>
           </>

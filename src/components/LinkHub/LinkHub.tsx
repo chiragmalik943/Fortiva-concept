@@ -95,7 +95,7 @@ export default function LinkHub({
                     }}
                     className={`corner-smooth block rounded-[12px] px-4 py-3 text-[14.5px] leading-snug transition-colors ${
                       i === active
-                        ? 'bg-navy-800 font-medium text-cream-soft'
+                        ? 'bg-navy-800 font-medium text-white'
                         : 'text-navy-800/55 hover:bg-navy-800/5 hover:text-navy-800'
                     }`}
                   >
@@ -128,7 +128,7 @@ export default function LinkHub({
                         href={item.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group corner-smooth flex h-full flex-col rounded-card border border-navy-800/8 bg-white p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-navy-800/15 hover:shadow-card-soft"
+                        className="group corner-smooth flex h-full flex-col rounded-card border border-navy-800/[0.08] bg-white p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-navy-800/15 hover:shadow-card-soft"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <h4 className="text-[17px] font-semibold leading-snug text-navy-800">

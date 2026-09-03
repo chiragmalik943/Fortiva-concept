@@ -53,12 +53,12 @@ const portalItems: PortalItem[] = [
     icon: Search,
     screen: images.portalScreens[3],
   },
-  {
-    title: 'Update personal information',
-    body: 'Keep your contact details and preferences up to date.',
-    icon: UserCog,
-    screen: images.portalScreens[4],
-  },
+  // {
+  //   title: 'Update personal information',
+  //   body: 'Keep your contact details and preferences up to date.',
+  //   icon: UserCog,
+  //   screen: images.portalScreens[4],
+  // },
   {
     title: 'Get support',
     body: 'Message a Fortiva representative or browse FAQs for quick answers.',
@@ -75,6 +75,7 @@ export default function MembersPortal() {
   return (
     <>
       <PageHero
+        tone="sky"
         eyebrow="MEMBER PORTAL"
         titleTop="Welcome to the"
         titleBottom="Fortiva Member Portal."
@@ -86,10 +87,10 @@ export default function MembersPortal() {
         }
         actions={
           <>
-            <ActionButton variant="gold" icon="arrow" size="lg" href={externalTargets.memberPortal}>
+            <ActionButton variant="dark" icon="arrow" size="lg" href={externalTargets.memberPortal}>
               Access your Member Portal
             </ActionButton>
-            <Button variant="ghost" size="lg" href="/members/app">
+            <Button variant="white" size="lg" href="/members/app">
               Get the app instead
             </Button>
           </>

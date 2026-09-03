@@ -38,6 +38,34 @@ export const images = {
   // reads as the top of the page's gradient rather than as a photograph.
   heroBg: `${import.meta.env.BASE_URL}hero-bg.png`,
 
+  // ── The other three hero backdrops ────────────────────────────────────────
+  //
+  // The same arc pattern as `heroBg`, re-exported in three more surfaces, so an
+  // interior page can open gold, dark or sky instead of mist. PageHero picks one
+  // by its `tone` prop and NOTHING else about the section is hard-coded to a
+  // colour — the surface it dissolves into, the mark's ink, the headline, the
+  // lede and the floating nav's own ink all come from the same token set. See
+  // HERO_TONES in components/PageHero/heroTone.tsx.
+  //
+  // All four carry the pattern at the SAME low contrast the mist one does
+  // (roughly a 3% lightness step between the arcs and the field), which is what
+  // lets the type sit straight on them with no scrim.
+  //
+  // That contract is now the ONLY thing holding the heroes up: PageHero used to
+  // mask the backdrop away across the bottom third of the section and there is no
+  // mask and no wash any more, so each of these is painted flat, corner to
+  // corner, under live type. A replacement with more contrast than a ~3% step
+  // between its lightest and darkest area will need a scrim adding back.
+  //
+  //   gold — #DDAF69, the brand gold. Navy ink.
+  //   dark — #11284B..#0E2445, the brand navy. Light ink.
+  //   sky  — #A9CEDB, the pale blue. Navy ink.
+  //   teal — #0074A6, the logo's own teal. Light ink.
+  heroBgGold: `${import.meta.env.BASE_URL}hero-bg-gold.png`,
+  heroBgDark: `${import.meta.env.BASE_URL}hero-bg-dark.png`,
+  heroBgSky: `${import.meta.env.BASE_URL}hero-bg-sky.png`,
+  heroBgTeal: `${import.meta.env.BASE_URL}hero-bg-teal.png`,
+
   // The Fortiva glyph on its own (no wordmark), used as the mark above the
   // hero headline. Single-colour, so it's tinted through mask-image the same
   // way logo.svg is.
@@ -108,23 +136,33 @@ export const images = {
 
   // About → Powered by values. Left of the card stack.
   //
-  // The one asset here with real TRANSPARENCY, and it needs it: the section is a
-  // cream-to-blue gradient and the subjects stand on it directly. The Fortiva
-  // mark is composited in behind them.
+  // It replaces img-16.png, and its slot changed with it: that section is now a
+  // flat #CCD0D2 grey rather than the cream-to-blue gradient it used to be, so
+  // the asset no longer has to survive a moving background.
   //
-  // EXPECTS: transparent background, mark included, subject full-height. Drawn
-  // `object-contain` into a portrait column, so a square or portrait frame keeps
-  // the mark's petals whole — a wide frame would have them cropped.
-  valuesPortrait: `${import.meta.env.BASE_URL}img-16.png`,
+  // EXPECTS: transparent background (or flattened onto #CCD0D2), the Fortiva mark
+  // composited in behind the subjects, subject full-height. Drawn `object-contain`
+  // into a portrait column, so a square or portrait frame keeps the mark's petals
+  // whole — a wide frame would have them cropped.
+  valuesPortrait: `${import.meta.env.BASE_URL}about-value.png`,
 
-  // For Members → Find a Doctor → Before you go in. Right of the question list,
-  // with the mark composited in.
+  // For Members → Find a Doctor → Before you go in. LEFT of the question list
+  // now, not right, and running the full height of the section with the mark
+  // composited in behind the subject.
   //
-  // EXPECTS: flattened onto WHITE, dissolving to white on its left and at its
-  // foot. It sits on the cool end of a gradient band, and the page renders it
-  // `mix-blend-multiply` so the white takes the gradient's colour exactly —
-  // which is why white specifically, and why no transparency is needed. See the
-  // note on that section in MembersFindDoctor.tsx.
+  // EXPECTS: flattened onto WHITE. It sits on a #CCD0D2 → white ramp and the page
+  // renders it `mix-blend-multiply`, so every white pixel takes the ramp's own
+  // colour exactly — which is why white specifically, and why the asset needs no
+  // transparency and no mask.
+  //
+  // Its PROPORTIONS are part of the layout, so re-crops are not free. The file is
+  // 930 x 933 with its artwork spanning x 11.2%..88.8% — near-square, and
+  // symmetric. It is drawn `h-full w-auto`, so the section's height sets the width
+  // and the artwork's own 11% margin is most of the breathing room on the left;
+  // the section adds 40px (`lg:left-10`) on top. A re-crop that changes the ratio
+  // or moves the artwork off centre changes how far the picture reaches under the
+  // copy — re-measure and adjust there. See the note on that section in
+  // MembersFindDoctor.tsx, which records what the previous 1114 x 933 crop needed.
   doctorTipsPortrait: `${import.meta.env.BASE_URL}img-17.png`,
 
   cardOneBg: `${import.meta.env.BASE_URL}img-card-1-bg.png`,
@@ -306,4 +344,48 @@ export const images = {
   // Generated from public/map.svg, which stays in the repo as the source of
   // truth — see mapStates.ts if the artwork is ever redrawn.
   availabilityMapBase: `${import.meta.env.BASE_URL}map-base.svg`,
+
+  // ── The 2026 colour pass ──────────────────────────────────────────────────
+  //
+  // The gold rule-and-diamond ornament, 1529 x 91, single-path and single-colour
+  // (#D6AC68). Set above and below the closing paragraph on About; it is drawn as
+  // a plain <img> at `w-full`, so it stretches to whatever measure it is given and
+  // its own width is only an aspect ratio.
+  flourish: `${import.meta.env.BASE_URL}flourish.svg`,
+
+  // For Members → Resources → the Plan details + Blog band. A FULL-SECTION
+  // photograph, 1920 x 1080, with the Fortiva lattice already composited in over
+  // its right half, drawn full bleed with the two cards stacked on top of it.
+  //
+  // EXPECTS: the subject on the LEFT third. The cards occupy the right ~46% of the
+  // section at `lg` and up, so anything on that side is behind them.
+  resourcesBg: `${import.meta.env.BASE_URL}resources-bg.png`,
+
+  // ── Two slots for ListBand ────────────────────────────────────────────────
+  //
+  // NEITHER IS IN THE REPO YET. ListBand renders an empty frame without them and
+  // the photographs drop in with no code change.
+  //
+  // Both sit inside a rounded, inset frame on a navy-to-teal gradient — not full
+  // bleed, and not dissolved into anything — so unlike almost everything else in
+  // this file they want an ORDINARY, UN-FADED, OPAQUE photograph. Portrait to
+  // square, 1200 x 1400 is a good target; drawn `object-cover object-center`, so
+  // keep the subject away from all four margins and any crop is safe.
+  //
+  //   employers.png — Plans → Employers → "What employers believe"
+  //
+  // `doctorSearch` below no longer follows that contract. find-doc.png is a
+  // TRANSPARENT CUTOUT with the Fortiva mark composited behind the subject, and
+  // the band it sits in dropped its frame, its shadow and its margins — so that
+  // one is drawn `object-contain` straight onto #A5CDD9, full height, no box.
+  employersBeliefs: `${import.meta.env.BASE_URL}employers.png`,
+  doctorSearch: `${import.meta.env.BASE_URL}find-doc.png`,
+
+  // Plans → Individuals & Families → "FOR families", in <ListBand />'s inset
+  // frame. A square, opaque photograph.
+  //
+  // It replaces `insuranceFamily` (img-4.png) in that one slot, and it is a NEW
+  // key rather than a change to that one because img-4 is also the family card on
+  // the homepage — repointing it would have swapped both.
+  planFamily: `${import.meta.env.BASE_URL}plan-family.png`,
 }

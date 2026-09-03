@@ -65,7 +65,7 @@ export default function ComingSoon({ path }: { path: string }) {
               <li key={item.label}>
                 <Link
                   href={item.href}
-                  className="corner-smooth inline-block rounded-[14px] bg-navy-800/5 px-4 py-2.5 text-[14.5px] font-medium text-navy-800/75 transition-colors hover:bg-navy-800 hover:text-cream-soft"
+                  className="corner-smooth inline-block rounded-[14px] bg-navy-800/5 px-4 py-2.5 text-[14.5px] font-medium text-navy-800/75 transition-colors hover:bg-navy-800 hover:text-white"
                 >
                   {item.label}
                 </Link>

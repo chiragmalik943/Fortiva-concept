@@ -543,7 +543,7 @@ export default function PortalShowcase({
 
                `left-1/2` with no `-translate-x-1/2`: the centring is folded into
                `render`'s `xPercent`, because GSAP owns this transform outright. */
-            className="corner-smooth absolute left-1/2 top-0 aspect-[16/10] h-[calc(100%+40px)] w-auto max-w-[92vw] overflow-hidden rounded-card border border-navy-800/8 bg-navy-900 shadow-card sm:h-[calc(100%+64px)] lg:h-[calc(100%+88px)]"
+            className="corner-smooth absolute left-1/2 top-0 aspect-[16/10] h-[calc(100%+40px)] w-auto max-w-[92vw] overflow-hidden rounded-card border border-navy-800/[0.08] bg-navy-900 shadow-card sm:h-[calc(100%+64px)] lg:h-[calc(100%+88px)]"
           >
             <img
               src={item.screen}

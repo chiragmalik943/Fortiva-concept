@@ -99,6 +99,7 @@ export default function BrokersFaqs() {
   return (
     <>
       <PageHero
+        tone="dark"
         eyebrow="BROKER FAQS"
         titleTop="Six questions, before"
         titleBottom="you write a policy."
@@ -113,7 +114,7 @@ export default function BrokersFaqs() {
             <Button variant="gold" icon="arrow" size="lg" href="/contact">
               Become a Fortiva broker
             </Button>
-            <Button variant="ghost" size="lg" href="/brokers">
+            <Button variant="white" size="lg" href="/brokers">
               Why partner with us
             </Button>
           </>

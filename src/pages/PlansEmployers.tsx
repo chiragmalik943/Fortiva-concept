@@ -1,6 +1,7 @@
 import { Layers, LineChart, MonitorSmartphone, HeartPulse, ScrollText } from 'lucide-react'
 import PageHero from '../components/PageHero/PageHero'
 import FeatureReveal, { type Feature } from '../components/FeatureReveal/FeatureReveal'
+import ListBand from '../components/ListBand/ListBand'
 import Button from '../components/Button'
 import { images } from '../assets/images'
 import { useScrollReveal } from '../hooks/useScrollReveal'
@@ -12,8 +13,8 @@ import { useSplitReveal } from '../hooks/useSplitReveal'
  * Copy is FTVA_Web Copy.odt's "Employers — Sub Navigation" section:
  *
  *   H1 + intro              → PageHero
- *   What employers believe  → the navy beliefs plate
- *   What we deliver         → FeatureReveal, the scroll-in card band (white)
+ *   What employers believe  → <ListBand />, the inset photograph + numbered list
+ *   What we deliver         → FeatureReveal, the scroll-in card band (dark)
  *   Why Fortiva?            → the closing split
  *
  * Structurally the mirror of Individuals & Families — beliefs where that page
@@ -56,9 +57,6 @@ const deliverables: Feature[] = [
 ]
 
 export default function PlansEmployers() {
-  const beliefsHeadingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
-  const beliefsListRef = useScrollReveal<HTMLOListElement>({ y: 26, delay: 0.12 })
-
   const whyHeadingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
   const whyBodyRef = useScrollReveal<HTMLParagraphElement>({ y: 24, delay: 0.1 })
   const whyTailRef = useScrollReveal<HTMLParagraphElement>({ y: 24, delay: 0.2 })
@@ -68,6 +66,7 @@ export default function PlansEmployers() {
   return (
     <>
       <PageHero
+        tone="teal"
         eyebrow="EMPLOYERS"
         titleTop="Health coverage that works"
         titleBottom="for your business."
@@ -84,7 +83,7 @@ export default function PlansEmployers() {
             <Button variant="gold" icon="arrow" size="lg" href="/contact">
               Get a Quote
             </Button>
-            <Button variant="ghost" size="lg" href="/plans/individuals-and-families">
+            <Button variant="white" size="lg" href="/plans/individuals-and-families">
               Covering yourself?
             </Button>
           </>
@@ -92,43 +91,54 @@ export default function PlansEmployers() {
       />
 
       {/* ── What employers believe ────────────────────────────────────────
-          Three convictions, numbered and set large on navy. The doc gives no
-          supporting sentence under any of them, so anything card-shaped would
-          have been three-quarters empty box — a numbered editorial list is the
-          treatment that doesn't need copy it hasn't got. */}
-      <section className="bg-navy-800 px-6 py-24 sm:py-32">
-        <div className="mx-auto max-w-container">
-          <h2
-            ref={beliefsHeadingRef}
-            className="max-w-2xl text-[30px] font-semibold leading-tight text-white opacity-0 sm:text-[38px]"
-          >
-            What <span className="text-gold">employers believe</span>
-          </h2>
+          Three convictions, and the doc gives no supporting sentence under any of
+          them — so anything card-shaped would have been three-quarters empty box.
+          It used to be a numbered editorial list across the full width of a navy
+          plate, which was the treatment that didn't need copy it hadn't got.
 
-          <ol ref={beliefsListRef} className="mt-14 grid gap-10 opacity-0 lg:grid-cols-3 lg:gap-12">
-            {beliefs.map((belief, i) => (
-              <li key={belief} className="border-t border-white/15 pt-7">
-                <span className="text-[13px] font-semibold tracking-[0.14em] text-gold">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <p className="mt-4 text-[20px] leading-[1.45] text-white/85 sm:text-[22px]">
-                  {belief}
-                </p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+          It is <ListBand /> now, the same component "FOR families" uses on Plans →
+          Individuals & Families. These two pages are deliberately a matched pair —
+          beliefs where that page has features, features where it has the family
+          band — and running the shared shape through one component is what makes
+          them read as a pair rather than as two pages that happen to rhyme. The
+          photograph is what the full-width version was missing; see
+          `employersBeliefs` in assets/images.ts for what that slot expects.
+
+          The surface is where the two pages deliberately differ: Individuals &
+          Families runs the component's navy→teal ramp, this one is flat teal. */}
+      <ListBand
+        /* Flat teal, not ListBand's navy→teal ramp. Which means this band and the
+           hero above it are the SAME #0074A6, and with the hero's backdrop no
+           longer fading at its foot the two run together as one teal region with
+           the nav pill at the top of it and the photograph inset near the bottom.
+           That is the composition, not a seam that needs closing — but it is why
+           this page has no visible break until the FeatureReveal below goes navy. */
+        className="bg-[#0074A6]"
+        heading={
+          <>
+            What <span className="text-gold">employers believe</span>
+          </>
+        }
+        items={beliefs}
+        image={images.employersBeliefs}
+        imageAlt="A Fortiva group plan member at work"
+        action={
+          <Button variant="gold" icon="arrow" href="/contact">
+            Talk to our team
+          </Button>
+        }
+      />
 
       {/* ── What we deliver ───────────────────────────────────────────────
           Same treatment as Individuals & Families' five benefits, so the two
           pages still read as a matched pair — copy holds the left, the five
           cards arrive from below one at a time. See FeatureReveal.tsx. */}
       <FeatureReveal
+        tone="dark"
         eyebrow="WHAT WE DELIVER"
         heading={
           <>
-            Benefits your team feels, <span className="text-gold-dark">and your budget can hold</span>
+            Benefits your team feels, <span className="text-gold">and your budget can hold</span>
           </>
         }
         intro={
@@ -150,11 +160,17 @@ export default function PlansEmployers() {
           Closes on the corporate photograph already in the asset set, so the
           page ends on people rather than on another block of type.
 
-          `gradient-cool-in` rather than `gradient-lower`: this is the last section
-          on the page, and a there-and-back ramp spent its second half climbing
-          back to cream for nothing — the footer's navy is what comes next, not
-          more page. One way to the cool end, and hand off. */}
-      <div className="gradient-cool-in">
+          One way down and hand off, rather than a there-and-back ramp: this is
+          the last section on the page, and the footer's navy is what comes next,
+          not more page — so a gradient that climbed back to its starting colour
+          spent its second half undoing itself.
+
+          The ramp is white → #CCD0D2 now. It was `gradient-cool-in`, cream →
+          #C7D2D6, which started on the same cream the section above it ended on;
+          the section above is a navy FeatureReveal now, so there is nothing left
+          for a cream top stop to continue from and white is the cleaner break
+          off it. #CCD0D2 is the same grey About's values band sits on. */}
+      <div className="bg-gradient-to-b from-white to-[#CCD0D2]">
         <section className="px-6 py-24 sm:py-32">
           <div className="mx-auto grid max-w-container items-center gap-12 lg:grid-cols-2 lg:gap-20">
             <div>
