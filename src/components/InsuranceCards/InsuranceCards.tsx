@@ -91,7 +91,7 @@ export default function InsuranceCards() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-900/85 via-navy-900/10 to-transparent" />
 
-                <div className="absolute left-5 top-5 flex h-11 w-11 items-center justify-center rounded-full bg-cream-soft/90">
+                <div className="absolute left-5 top-5 flex h-11 w-11 items-center justify-center rounded-full bg-white/90">
                   <Icon size={19} className="text-navy-800" strokeWidth={2} />
                 </div>
 

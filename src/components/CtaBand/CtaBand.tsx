@@ -65,8 +65,11 @@ const TONES = {
     body: 'text-navy-800/80',
     note: 'text-navy-800/80',
   },
+  /* The `cream` tokens are white now (see tailwind.config.js), so a tinted
+     mid-page band writes its grey literally — same value and same reasoning as
+     StepFlow's `cream` surface. */
   cream: {
-    section: 'bg-cream-soft',
+    section: 'bg-[#CCD0D2]',
     heading: 'text-navy-800',
     accent: 'text-gold-dark',
     body: 'text-navy-800/65',

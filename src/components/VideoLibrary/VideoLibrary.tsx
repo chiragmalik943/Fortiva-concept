@@ -366,7 +366,7 @@ function VideoCard({
         className={`corner-smooth group flex h-full w-full flex-col overflow-hidden rounded-card text-left transition-all duration-300 ease-out ${
           isOpen
             ? 'bg-white shadow-card ring-2 ring-gold'
-            : 'bg-cream-soft shadow-card-soft hover:-translate-y-1 hover:shadow-card'
+            : 'bg-white ring-1 ring-navy-800/[0.08] shadow-card-soft hover:-translate-y-1 hover:shadow-card'
         }`}
       >
         <span className="relative block aspect-[16/9] w-full overflow-hidden">

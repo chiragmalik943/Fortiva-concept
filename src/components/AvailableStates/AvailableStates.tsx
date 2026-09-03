@@ -158,7 +158,7 @@ export default function AvailableStates() {
                   <li key={state.code}>
                     <button
                       {...chipProps(state.code)}
-                      className="fchip fchip--soon corner-smooth flex items-center gap-1.5 rounded-[12px] border border-navy-800/10 bg-cream-soft px-4 py-2 text-[14px] font-medium text-navy-800/65"
+                      className="fchip fchip--soon corner-smooth flex items-center gap-1.5 rounded-[12px] border border-navy-800/10 bg-white px-4 py-2 text-[14px] font-medium text-navy-800/65"
                     >
                       <span
                         className="fchip-swatch h-[6px] w-[6px] shrink-0 rounded-full"

@@ -30,7 +30,7 @@ export default function LinkHub({
   heading,
   intro,
   groups,
-  className = 'bg-cream-soft',
+  className = 'bg-white',
 }: LinkHubProps) {
   const [active, setActive] = useState(0)
   const groupRefs = useRef<(HTMLDivElement | null)[]>([])

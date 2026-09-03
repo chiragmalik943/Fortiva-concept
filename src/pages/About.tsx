@@ -206,10 +206,12 @@ export default function About() {
               superellipse wins — you get a squircle where the layout calls for a
               disc.
 
-              And it is cream below `lg`, white above. White is right where it sits
-              over the photograph; below `lg` the photograph is dropped and a white
-              disc on a white section is invisible — the plate disappeared and took
-              the shape of the section with it. Cream keeps it a plate.
+              And it is white at every width now, with a navy hairline. It used to
+              be `bg-cream lg:bg-white` — cream below `lg`, where the photograph is
+              dropped and a white disc on a white section would be invisible. The
+              `cream` token is white itself now, so that split had stopped meaning
+              anything; the hairline is what keeps the disc a plate where there is
+              no photograph under it.
 
               `shadow-soft` — 60px of blur at 25% navy, pulled in 20px — is the
               site's ambient shadow rather than its card shadow (`shadow-card` is
@@ -218,7 +220,7 @@ export default function About() {
               whole ask. It also does the job the `lg:bg-white` note above works
               around: the disc no longer relies on a colour change to be a plate,
               so it stays one on the white section below `lg` too. */}
-          <div className="mx-auto flex aspect-square w-full max-w-[400px] flex-col items-center justify-center rounded-full bg-cream px-9 text-center shadow-soft sm:max-w-[480px] sm:px-12 lg:mx-0 lg:bg-white">
+          <div className="mx-auto flex aspect-square w-full max-w-[400px] flex-col items-center justify-center rounded-full bg-white px-9 text-center shadow-soft ring-1 ring-navy-800/[0.08] sm:max-w-[480px] sm:px-12 lg:mx-0 lg:ring-0">
             <img
               ref={principlesMarkRef}
               src={images.icon}

@@ -133,9 +133,11 @@ export default function ProvidersPartnerWithUs() {
       />
 
       {/* ── FOR providers ─────────────────────────────────────────────────
-          The doc's four, one lit at a time. `bg-cream-soft` is ScrollSpyList's own
-          default, which puts a tinted plate between the white band above and the
-          navy one below. */}
+          The doc's four, one lit at a time. No surface is passed, so it takes
+          ScrollSpyList's own default — WHITE now, where it used to be a tinted
+          plate between the white band above and the navy one below. The navy band
+          is still the break; if this needs to be a plate again, pass
+          `className="bg-[#CCD0D2]"` the way Find a Doctor does. */}
       <ScrollSpyList
         eyebrow="FOR PROVIDERS"
         heading={

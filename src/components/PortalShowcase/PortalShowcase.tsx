@@ -474,7 +474,7 @@ export default function PortalShowcase({
        a fixed height. */
     <section
       ref={sectionRef}
-      className="bg-cream-soft pt-24 sm:pt-28 pin:flex pin:h-screen pin:flex-col pin:overflow-hidden pin:pt-28"
+      className="bg-[#CCD0D2] pt-24 sm:pt-28 pin:flex pin:h-screen pin:flex-col pin:overflow-hidden pin:pt-28"
     >
       {/* ── the centred copy block ──────────────────────────────────────────── */}
       <div className="px-6">
@@ -562,9 +562,15 @@ export default function PortalShowcase({
       </div>
 
       {/* ── the strip ───────────────────────────────────────────────────────
-          White on the section's cream, flush to its bottom edge, which is what
+          White on the section's grey, flush to its bottom edge, which is what
           makes it read as a bar the carousel is running behind rather than as a
-          row of links that happen to be underneath it. */}
+          row of links that happen to be underneath it.
+
+          This is why the section is one of the nine that KEEPS a grey plate now
+          that the page is white (see tailwind.config.js): the strip is white and
+          the carousel is navy, so both of them are drawn against the section
+          rather than against the page. On white the strip would be white on
+          white and only its top border would survive. */}
       <div className="shrink-0 border-t border-navy-800/10 bg-white">
         <div className="mx-auto max-w-container px-6">
           {/* The active section's own sentence. The reserved height is what stops a

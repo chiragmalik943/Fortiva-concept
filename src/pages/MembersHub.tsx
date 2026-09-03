@@ -114,7 +114,11 @@ export default function MembersHub() {
         }
       />
 
-      <section className="bg-cream-soft px-6 py-24 sm:py-28">
+      {/* One of the nine sections that keeps a grey plate on the now-white page
+          (see tailwind.config.js). It has to: the six cards are `bg-white` with
+          no border and only a shadow ON HOVER, so a white section would leave
+          them invisible until pointed at. */}
+      <section className="bg-[#CCD0D2] px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-container">
           <h2
             ref={headingRef}

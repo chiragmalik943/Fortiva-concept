@@ -58,7 +58,7 @@ export default function FaqAccordion({
   intro,
   action,
   faqs,
-  className = 'bg-cream-soft',
+  className = 'bg-white',
 }: FaqAccordionProps) {
   const [openId, setOpenId] = useState<string | null>(faqs[0]?.id ?? null)
 

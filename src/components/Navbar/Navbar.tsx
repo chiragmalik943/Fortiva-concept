@@ -197,7 +197,7 @@ export default function Navbar() {
      PageHero/heroTone.tsx). navy-800/90 links and the four-colour mark are
      invisible on the navy hero, and the mark's lotus disappears on the gold one.
 
-     The moment the pill goes solid it is cream-soft again, whatever is behind it,
+     The moment the pill goes solid it is white again, whatever is behind it,
      so `solid` collapses straight back to the mist tokens — the ink follows the
      PILL, not the page. Which also means everything below is a plain colour swap
      on a `transition-colors`, with no state to keep in sync. */
@@ -217,7 +217,7 @@ export default function Navbar() {
         <nav
           aria-label="Main"
           className={`relative flex items-center justify-between gap-3 rounded-[28px] corner-smooth px-4 py-3 transition-all duration-500 sm:px-5 ${
-            solid ? 'bg-cream-soft/70 shadow-soft backdrop-blur-[28px]' : 'bg-transparent'
+            solid ? 'bg-white/70 shadow-soft backdrop-blur-[28px]' : 'bg-transparent'
           }`}
         >
           <Link href="/" aria-label="Fortiva home" className="shrink-0">
@@ -290,7 +290,7 @@ export default function Navbar() {
                       // pointer-events + aria-hidden instead keeps the panel
                       // focusable the instant it opens, and still animates on
                       // the way out (which a visibility swap would cut short).
-                      className={`absolute left-1/2 top-full z-10 mt-4 origin-top rounded-[20px] corner-smooth border border-navy-800/5 bg-cream-soft/95 p-2 shadow-soft backdrop-blur-[28px] transition-[opacity,transform] duration-200 ${
+                      className={`absolute left-1/2 top-full z-10 mt-4 origin-top rounded-[20px] corner-smooth border border-navy-800/10 bg-white/95 p-2 shadow-soft backdrop-blur-[28px] transition-[opacity,transform] duration-200 ${
                         twoColumn ? 'w-[460px]' : 'w-[268px]'
                       } ${
                         isOpen
@@ -350,7 +350,7 @@ export default function Navbar() {
         <div
           id="mobile-nav"
           data-lenis-prevent
-          className={`mt-3 origin-top overflow-y-auto rounded-[24px] corner-smooth border border-navy-800/5 bg-cream-soft/95 shadow-soft backdrop-blur-[28px] transition-all duration-300 lg:hidden ${
+          className={`mt-3 origin-top overflow-y-auto rounded-[24px] corner-smooth border border-navy-800/10 bg-white/95 shadow-soft backdrop-blur-[28px] transition-all duration-300 lg:hidden ${
             mobileOpen
               ? 'max-h-[calc(100vh-7.5rem)] scale-100 opacity-100'
               : 'pointer-events-none max-h-0 scale-[0.98] border-transparent opacity-0'

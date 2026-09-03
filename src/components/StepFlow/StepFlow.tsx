@@ -19,9 +19,18 @@ interface StepFlowProps {
   surface?: 'white' | 'cream'
 }
 
+/* `cream` is the page's one opt-in grey plate — the `cream` tokens are white
+   now (see tailwind.config.js), so the grey is written literally here. Two pages
+   ask for it (Providers → Overview, Members → Virtual Care) and it is the only
+   tinted section on either.
+
+   `white`'s idle dot could not follow the token to white: an unlit dot on a
+   white section would be invisible, and the dots are how the section reads as a
+   sequence before it is scrolled. A 15% navy tint is the same "not yet" as the
+   old grey against a surface that is now white. */
 const SURFACES = {
-  white: { section: 'bg-white', ring: 'ring-white', dotIdle: 'bg-cream-soft' },
-  cream: { section: 'bg-cream-soft', ring: 'ring-cream-soft', dotIdle: 'bg-white' },
+  white: { section: 'bg-white', ring: 'ring-white', dotIdle: 'bg-navy-800/15' },
+  cream: { section: 'bg-[#CCD0D2]', ring: 'ring-[#CCD0D2]', dotIdle: 'bg-white' },
 } as const
 
 /**

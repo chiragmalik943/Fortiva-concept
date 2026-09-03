@@ -14,30 +14,43 @@ export default {
           800: '#11284B',
           900: '#0B1B34',
         },
-        /* ── The beige is gone ────────────────────────────────────────────
-           `cream` was #ECEAE1 — the page's own surface and the end stop of
-           every gradient — and `cream.soft` was #F3F5EE, the near-white used
-           for cards, the nav pill and the `light` button. Both are #CCD0D2 now,
-           the same value as `ash`, so there is no beige left in the palette.
+        /* ── Both of these are WHITE now ──────────────────────────────────
+           The history, because the names still say "cream": `cream` was #ECEAE1
+           and `cream.soft` #F3F5EE (a warm off-white for cards, the nav pill and
+           the `light` button); then both became #CCD0D2, the same grey as `ash`.
+           That second step is what made the site read as grey-on-grey — the page
+           itself was #CCD0D2, every card and button was #CCD0D2, and roughly a
+           dozen sections either declared `bg-cream-soft` or declared nothing and
+           inherited the body. Whatever tonal variety the layout had came from the
+           navy, gold and teal plates alone.
 
-           The two NAMES are kept rather than rewritten to `ash` across 42 call
-           sites, and they still mean different things at one value: `cream` is
-           "the page's own surface", `cream-soft` is "a surface sitting on the
-           page". If they ever need to diverge again, they diverge here.
+           So this is the single knob that turns the page white. `cream` is "the
+           page's own surface" and `cream-soft` is "a surface sitting on the page",
+           and at #FFFFFF both are the same thing, which is correct: the page is
+           white and the things on it are white.
 
-           One consequence to know about: a `cream-soft` card on a `cream`
-           section is now exactly the colour of the section, so those cards are
-           separated by their shadow alone rather than by tone. That is the
-           intended result, not an oversight.
+           ── Where the grey went instead ─────────────────────────────────────
+           Grey is now a SECTION colour and nothing else, spent deliberately in
+           nine places: Home's hero ramp and its FAQ → Availability tint band,
+           About's ValuesStack, MembersHub's card grid, Find a Doctor's spy list
+           and the ramp under it, Plans → Employers' closing ramp, PortalShowcase,
+           and StepFlow / CtaBand's opt-in `cream` surface. Every one of those
+           writes #CCD0D2 literally at the point of use, for the reason set out in
+           the `ash` note below — a section must not be able to lose its
+           background because a utility wasn't emitted.
 
-           `cream-soft` was also doing a second, unrelated job — LIGHT INK on
-           navy, in the footer, the ghost button's hover, the FAQ and LinkHub
-           rails and the map tooltip. Grey text on navy is not the same request
-           as a grey surface, so all 12 of those were switched to pure white
-           and none of them read this token any more. */
+           ── The consequence to know about ───────────────────────────────────
+           A white card on a white section has nothing but its shadow, and a few
+           cards had no shadow at all. Those took a `border-navy-800/[0.08]`
+           hairline in the same pass (FeatureReveal, DocumentShelf, VideoLibrary's
+           closed state, FaqExplorer's empty state, Virtual Care's treats card),
+           and `Button`'s `light` and `ghost` variants took a navy ring for the
+           same reason — a white button on a white section needs an edge. If a new
+           white card looks like it is floating in nothing, that hairline is the
+           fix, not a grey fill. */
         cream: {
-          DEFAULT: '#CCD0D2',
-          soft: '#CCD0D2',
+          DEFAULT: '#FFFFFF',
+          soft: '#FFFFFF',
         },
         gold: {
           DEFAULT: '#D5AC67',

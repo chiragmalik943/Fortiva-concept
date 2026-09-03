@@ -179,7 +179,7 @@ export default function MembersVirtualCare() {
           </div>
 
           <div ref={treatsRef} className="opacity-0">
-            <div className="corner-smooth rounded-card bg-cream-soft p-7 sm:p-9">
+            <div className="corner-smooth rounded-card border border-navy-800/[0.08] bg-white p-7 sm:p-9">
               <div className="flex items-center gap-3">
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gold">
                   <Video size={20} strokeWidth={1.75} className="text-navy-800" />
@@ -196,7 +196,7 @@ export default function MembersVirtualCare() {
                 {treats.map((item) => (
                   <li
                     key={item}
-                    className="corner-smooth flex items-center gap-2 rounded-[12px] bg-white px-3.5 py-2 text-[14px] font-medium text-navy-800/80"
+                    className="corner-smooth flex items-center gap-2 rounded-[12px] border border-navy-800/[0.12] bg-white px-3.5 py-2 text-[14px] font-medium text-navy-800/80"
                   >
                     <Thermometer size={14} strokeWidth={2} className="text-gold-dark" />
                     {item}

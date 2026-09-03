@@ -113,8 +113,12 @@ interface FeatureRevealProps {
    different degrees of transparency — as if some cards were letting more of the
    picture through than others.
 
-   Every card is `bg-cream-soft` now. The colour in this section comes from the
-   photograph and the gold badges; the cards are the quiet part. */
+   Every card is WHITE now, with a navy hairline. It was `bg-cream-soft`, which
+   was grey, which on the `light` tone put a grey card on a white section; and
+   white with only a shadow left the cards floating in nothing there. The colour
+   in this section comes from the photograph and the gold badges; the cards are
+   the quiet part. On the `dark` tone the hairline is invisible against navy,
+   which is harmless — the white fill is doing all the work there. */
 
 /* ── The two surfaces ────────────────────────────────────────────────────────
    Four tokens each, and there is deliberately no fifth for the cards: see the
@@ -456,7 +460,7 @@ export default function FeatureReveal({
               <div
                 key={feature.title}
                 ref={(el) => (cardRefs.current[i] = el)}
-                className={`corner-smooth relative flex flex-col rounded-2xl bg-cream-soft p-6 opacity-0 shadow-card-soft sm:p-7 pin:p-4 ${
+                className={`corner-smooth relative flex flex-col rounded-2xl border border-navy-800/[0.08] bg-white p-6 opacity-0 shadow-card-soft sm:p-7 pin:p-4 ${
                   i % 2 === 1 ? 'sm:top-14' : ''
                 }`}
               >

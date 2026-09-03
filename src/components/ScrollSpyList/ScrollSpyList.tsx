@@ -49,7 +49,7 @@ export default function ScrollSpyList({
   intro,
   items,
   action,
-  className = 'bg-cream-soft',
+  className = 'bg-white',
 }: ScrollSpyListProps) {
   const { scopeRef, active, tracking } = useScrollSpyIndex(items.length)
 
@@ -125,8 +125,8 @@ export default function ScrollSpyList({
                 key={item.title}
                 className={`corner-smooth rounded-card border p-7 transition-all duration-500 sm:p-9 lg:opacity-60 pin:p-6 ${
                   lit
-                    ? 'border-navy-800/10 bg-white shadow-card-soft lg:!opacity-100'
-                    : 'border-transparent bg-white/45'
+                    ? 'border-navy-800/15 bg-white shadow-card-soft lg:!opacity-100'
+                    : 'border-navy-800/[0.07] bg-white'
                 }`}
               >
                 <div className="flex items-start gap-5">

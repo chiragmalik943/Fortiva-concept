@@ -79,7 +79,7 @@ export default function DocumentShelf({
             {groups.map(({ title, body, icon: Icon, items }) => (
               <div
                 key={title}
-                className="corner-smooth flex flex-col rounded-card bg-cream-soft p-7 sm:p-8"
+                className="corner-smooth flex flex-col rounded-card border border-navy-800/[0.08] bg-white p-7 sm:p-8"
               >
                 <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold">
                   <Icon size={21} strokeWidth={1.75} className="text-navy-800" />

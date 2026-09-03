@@ -224,7 +224,7 @@ export default function ValuesStack() {
                   <div
                     key={value.title}
                     ref={(el) => (cardRefs.current[i] = el)}
-                    className="corner-smooth absolute inset-x-4 top-0 overflow-hidden rounded-3xl bg-cream-soft p-7 shadow-card sm:inset-x-6 sm:p-8"
+                    className="corner-smooth absolute inset-x-4 top-0 overflow-hidden rounded-3xl bg-white p-7 shadow-card sm:inset-x-6 sm:p-8"
                     style={{ zIndex: i + 1 }}
                   >
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gold">

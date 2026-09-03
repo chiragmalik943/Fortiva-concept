@@ -178,7 +178,7 @@ function CardBody({ card, reversed, bgScaleRef, fgScaleRef }: CardBodyProps) {
   return (
     <div className="relative grid grid-cols-1 shadow-card-soft sm:grid-cols-2 sm:h-[56vh] sm:max-h-[500px] sm:min-h-[400px]">
       <div
-        className={`corner-smooth relative flex flex-col justify-center gap-4 bg-cream-soft px-8 py-10 sm:px-10 sm:py-12 lg:px-14 ${
+        className={`corner-smooth relative flex flex-col justify-center gap-4 bg-white px-8 py-10 sm:px-10 sm:py-12 lg:px-14 ${
           reversed ? 'order-2 sm:order-2' : 'order-2 sm:order-1'
         } ${reversed ? CONTENT_CORNERS_B : CONTENT_CORNERS_A}`}
       >

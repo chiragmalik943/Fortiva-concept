@@ -34,7 +34,7 @@ html.lenis body {
 
 body {
   font-family: 'New Hero', ui-sans-serif, system-ui, sans-serif;
-  background-color: #CCD0D2;
+  background-color: #FFFFFF;
   color: #11284B;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -110,7 +110,7 @@ body {
 
 /* soft ambient gradients, sampled from the reference screenshot */
 .gradient-hero {
-  background: linear-gradient(180deg, #BCCAD1 0%, #D3DCDF 30%, #CFD5D7 60%, #CCD0D2 100%);
+  background: linear-gradient(180deg, #BCCAD1 0%, #D3DCDF 30%, #E6EBED 60%, #FFFFFF 100%);
 }
 
 .gradient-lower {
@@ -143,12 +143,16 @@ body {
    because Plans → Employers uses it for a single self-contained section, where
    a full there-and-back ramp is the right shape. */
 :root {
-  /* Named `--band-cream` when it WAS cream. It is the page's grey now, and the
-     tint above it still lifts a few percent toward the brand's mist blue — so
-     the band reads as a subtle lightening of the grey rather than as a change
-     of temperature off a beige. The name is kept because two files and four
-     rules read it; what it holds is the page surface, whatever that is. */
-  --band-cream: #CCD0D2;
+  /* Named `--band-cream` when it WAS cream, and it went through a grey. The page
+     is WHITE now, so this holds white and the tint above it is what makes the
+     band a band: white → #E3E9EC → white, about an 8% step toward the brand's
+     mist blue. On a grey page that step was a barely-there change of
+     temperature; on white it is the one thing separating these two sections
+     from the rest of the page, which is the whole reason the band exists.
+
+     The name is kept because two files and four rules read it; what it holds is
+     the page surface, whatever that is. */
+  --band-cream: #FFFFFF;
   --band-tint: #E3E9EC;
 }
 

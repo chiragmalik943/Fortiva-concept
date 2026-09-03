@@ -271,7 +271,7 @@ export default function FaqExplorer({
                 onChange={(e) => setQuery(e.target.value)}
                 aria-label="Search the questions and answers"
                 placeholder="Search questions and answers"
-                className="corner-smooth w-full rounded-[14px] border border-navy-800/15 bg-cream-soft py-3 pl-11 pr-11 text-[15px] text-navy-800 transition-colors placeholder:text-navy-800/35 focus:border-navy-800/40 focus:outline-none"
+                className="corner-smooth w-full rounded-[14px] border border-navy-800/20 bg-white py-3 pl-11 pr-11 text-[15px] text-navy-800 transition-colors placeholder:text-navy-800/35 focus:border-navy-800/40 focus:outline-none"
               />
               {query && (
                 <button
@@ -365,7 +365,7 @@ export default function FaqExplorer({
           {/* ── grouped answers ────────────────────────────────────────────── */}
           <div>
             {shown.length === 0 ? (
-              <div className="corner-smooth rounded-card bg-cream-soft p-9 text-center">
+              <div className="corner-smooth rounded-card border border-navy-800/[0.08] bg-white p-9 text-center">
                 <h3 className="text-[20px] font-semibold text-navy-800">
                   Nothing matches &ldquo;{query.trim()}&rdquo;
                 </h3>
@@ -424,7 +424,7 @@ export default function FaqExplorer({
                                   {faq.q}
                                 </span>
                               </span>
-                              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cream-soft">
+                              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-navy-800/15 bg-white">
                                 <Plus
                                   size={16}
                                   className="text-navy-800 transition-transform duration-300"

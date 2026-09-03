@@ -47,7 +47,7 @@ export default function FAQ() {
                   <span className="text-[16px] font-medium text-navy-800 sm:text-[17px]">
                     {item.q}
                   </span>
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white shadow-sm">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-navy-800/15 bg-white shadow-sm">
                     <Plus
                       size={16}
                       className="text-navy-800 transition-transform duration-300"

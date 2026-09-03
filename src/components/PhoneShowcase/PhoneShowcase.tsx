@@ -140,7 +140,7 @@ export default function PhoneShowcase({
        a window too short to pin. */
     <section
       ref={scopeRef}
-      className="bg-cream-soft px-6 py-24 sm:py-28 pin:flex pin:h-screen pin:items-center pin:pb-10 pin:pt-24"
+      className="bg-white px-6 py-24 sm:py-28 pin:flex pin:h-screen pin:items-center pin:pb-10 pin:pt-24"
     >
       {/* Three children, placed three ways. Stacked in source order under `lg`
           (heading, device, list); heading across the top of a two-column

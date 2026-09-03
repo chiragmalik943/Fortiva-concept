@@ -112,8 +112,11 @@ export default function BrokersOverview() {
 
       {/* ── Why work with us? ─────────────────────────────────────────────
           The doc's market sentence is the intro and its three bolded phrases are
-          the items. `bg-cream-soft` is ScrollSpyList's own default, which puts a
-          tinted plate between two white ones. */}
+          the items. No surface is passed, so it takes ScrollSpyList's own
+          default — WHITE now, where it used to be a tinted plate between the two
+          white image bands. The page's rhythm comes from those bands alternating
+          their photograph left and right; if this ever needs to be a plate again,
+          pass `className="bg-[#CCD0D2]"` the way Find a Doctor does. */}
       <ScrollSpyList
         eyebrow="WHY WORK WITH US"
         heading={

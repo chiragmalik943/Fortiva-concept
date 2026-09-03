@@ -124,7 +124,7 @@ export default function StayConnected() {
         </div>
 
         <div ref={cardRef} className="opacity-0">
-          <div className="corner-smooth rounded-card bg-cream-soft p-7 shadow-card-soft sm:p-9">
+          <div className="corner-smooth rounded-card bg-white p-7 shadow-card-soft sm:p-9">
             {submitted ? (
               <div role="status" aria-live="polite" className="flex flex-col items-start gap-4 py-6">
                 <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold">

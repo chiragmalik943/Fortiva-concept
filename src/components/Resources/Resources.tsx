@@ -55,7 +55,7 @@ function ResourceCard({ item, delay }: { item: (typeof resources)[number]; delay
           </span>
 
           <div className="absolute inset-0 flex scale-95 items-center justify-center opacity-0 transition-all duration-500 ease-out group-hover:scale-100 group-hover:opacity-100">
-            <span className="corner-smooth inline-flex items-center gap-3 rounded-[16px] bg-cream-soft px-6 py-2.5 text-[15px] font-semibold text-navy-800 shadow-sm">
+            <span className="corner-smooth inline-flex items-center gap-3 rounded-[16px] bg-white px-6 py-2.5 text-[15px] font-semibold text-navy-800 shadow-sm">
               {item.cta}
             </span>
           </div>

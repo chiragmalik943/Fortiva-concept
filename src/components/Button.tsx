@@ -32,13 +32,17 @@ const iconMap = { arrow: ArrowRight, arrowUpRight: ArrowUpRight, plus: Plus }
 const PRIMARY_VARIANTS: ButtonProps['variant'][] = ['light', 'white', 'gold', 'dark']
 
 const baseColors: Record<NonNullable<ButtonProps['variant']>, string> = {
-  light: 'bg-cream-soft text-navy-800 shadow-sm',
-  // `white`, next to a `light` that is already nearly white, because #F3F5EE is
-  // NOT white: it is the site's warm off-white, mixed to sit on cream. On the
-  // gold, teal, navy and sky hero surfaces that warmth reads as a dirty panel,
-  // and the brief for all four asks for a white button with navy text. So the two
-  // coexist — `light` on cream and white page sections, `white` on a saturated
-  // one — and neither is a substitute for the other.
+  // Both `light` and `white` are white fills now, and the difference between
+  // them is the RING. `light` was #F3F5EE and then #CCD0D2 — a grey button, which
+  // is what it was doing on white sections. White with a navy hairline is the
+  // same control without the grey: on a white page the ring is the only thing
+  // giving the button an edge, and 10% navy is enough to draw one without
+  // reading as an outlined button.
+  light: 'bg-white text-navy-800 shadow-sm ring-1 ring-inset ring-navy-800/10',
+  // `white` keeps NO ring, and that is the whole reason the two still coexist:
+  // it is for the gold, teal, navy and sky surfaces, where the saturated field
+  // supplies the edge and a navy hairline just muddies it. `light` on light
+  // sections, `white` on saturated ones — neither is a substitute for the other.
   white: 'bg-white text-navy-800 shadow-sm',
   gold: 'bg-gold text-navy-800',
   // No `hover:bg-navy-700` any more: `dark` is a primary variant now, and the
@@ -46,7 +50,15 @@ const baseColors: Record<NonNullable<ButtonProps['variant']>, string> = {
   // element resolve by stylesheet order rather than by the order they are
   // written here, so the pair was a coin toss.
   dark: 'bg-navy-800 text-white',
-  ghost: 'bg-black/5 text-navy-800 hover:bg-navy-800 hover:text-white',
+  // TRANSPARENT, not white — the one variant that must not carry a fill.
+  // It was `bg-black/5`, which on a white page renders as a grey pill, and on
+  // gold as a dirty patch of gold. Transparent plus a navy hairline is the same
+  // secondary control on every surface it is actually used on: the mist hero,
+  // white sections, and the gold closing band (where it pairs with a white
+  // `light` button — a white ghost there would have made the pair two identical
+  // white buttons). Filling it white instead would break exactly that pairing.
+  ghost:
+    'bg-transparent text-navy-800 ring-1 ring-inset ring-navy-800/20 hover:bg-navy-800 hover:text-white hover:ring-navy-800',
 }
 
 // badge = the little circle the icon sits in on primary-style buttons.
