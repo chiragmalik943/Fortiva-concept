@@ -227,8 +227,17 @@ export default function MembersFindDoctor() {
                   <span className="flex-1 truncate text-[15.5px] text-navy-800/50">
                     Name, specialty or ZIP code
                   </span>
-                  <span className="corner-smooth flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] bg-gold text-navy-800 transition-transform duration-300 group-hover:-rotate-45">
-                    <ArrowRight size={19} strokeWidth={2.25} />
+                  {/* The rotation is on the ARROW, not on this badge. It used to be
+                      on the span, which turned the gold square 45deg with it — the
+                      badge became a diamond on hover. Every other badged control on
+                      the site (see Button.tsx) holds the square still and spins only
+                      the glyph inside it, which is the gesture this was after. */}
+                  <span className="corner-smooth flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] bg-gold text-navy-800">
+                    <ArrowRight
+                      size={19}
+                      strokeWidth={2.25}
+                      className="transition-transform duration-300 group-hover:-rotate-45"
+                    />
                   </span>
                 </a>
 
@@ -286,66 +295,68 @@ export default function MembersFindDoctor() {
       {/* ── Tips for talking to your doctor ────────────────────────────────
           See the PLACEHOLDER note above `askPrompts`.
 
-          ── The photograph is bounded to the container's left half ────────────
-          It was `absolute inset-y-0 left-10` at `h-full w-auto`: exactly as tall
-          as the section, and as wide as its own ratio made it. Two things were
-          wrong with that, and the second is why it drifted.
+          ── The photograph is a framed plate, not a backdrop ─────────────────
+          Same treatment as the photograph in "What employers believe" on Plans →
+          Employers — `corner-smooth relative aspect-square overflow-hidden
+          rounded-card shadow-card`, which is ListBand's own frame (see
+          ListBand.tsx). Two pictures on this site are inset plates in a
+          two-column band and they should look like the same thing.
 
-          The width was derived from the SECTION'S HEIGHT — a near-square asset at
-          832px tall is 829px wide — while the copy's position was derived from a
-          centred 1360px container. So the two were measured against different
-          things: at 1440px the artwork reached 776px against a copy starting at
-          668px, a 108px overlap, and at 1920px the container moved right and the
-          overlap vanished on its own. Same code, different answer per viewport.
+          It got there from the opposite end. It used to be `absolute inset-0` with
+          `object-contain` and `mix-blend-multiply`: a decorative layer sitting
+          BEHIND the copy, sized so it could not cross the halfway line, its white
+          pixels taking the section's own ramp colour so the subject appeared to
+          float with no frame at all. Every part of that was in service of not
+          having a frame. Now that it has one, all of it comes out:
 
-          Both now live in the same `max-w-container px-6`, and the picture is
-          `w-1/2 object-contain` inside it. `contain` is what makes it safe rather
-          than just narrower: the box is half the container, and the picture is
-          scaled to FIT that box, so no section height can push the artwork across
-          the halfway line. The copy takes the other half. They cannot overlap at
-          any width, and there is no number here tuned to one viewport.
+          • `mix-blend-multiply` is GONE, and that is the change that matters. The
+            asset is flattened onto white, so multiply made its white field take
+            the ramp — which would have tinted the card's own surface and dissolved
+            the edges the radius and the shadow are there to draw. Left alone, that
+            white field simply IS the plate. (It also means this frame no longer
+            depends on the surface under it being light, which multiply did.)
+          • The absolute layer is gone with it. The picture is a real grid cell
+            now, so the guarantee that it cannot reach the copy comes from
+            `lg:grid-cols-2` rather than from arithmetic, and the section no longer
+            needs `relative overflow-hidden` to contain it — which it must not
+            have anyway, or it would clip the shadow.
 
-          ── What that costs, stated plainly ──────────────────────────────────
-          The picture is no longer the full height of the section. At 1440px the
-          box is 656 x 832 and this asset is near-square, so it renders 656 x 658
-          and `object-left` centres it vertically — about 87px of ramp above and
-          below. That is unavoidable: a square picture at the section's full height
-          would be as wide as the section is tall, and there is no arrangement
-          where a 830px picture and a readable question list both fit inside 1312px
-          without one crossing the other. Height was the thing to give up.
+          ── What `object-cover` costs here, stated plainly ───────────────────
+          ListBand's asset is a full-bleed photograph; this one is a cutout subject
+          on white with the lotus behind it and its own wide margins. So the plate
+          reads as a white card with a figure in it rather than as a photograph
+          filling a frame, and `cover` into a square trims 8% off each side of a
+          1114 x 933 asset — which eats white margin only: the artwork itself spans
+          11.2%..88.8%, so the petals stay whole. Both of those are why the frame
+          is `aspect-square` rather than the 4:3 ListBand uses below `lg`: square
+          is the ratio closest to the asset's own, so it crops least.
 
-          The left margin comes from the layout rather than an offset: the
-          container's own `px-6` plus the asset's internal 11.2%, which puts the
-          artwork about 137px in from the window edge at 1440px — where the
-          explicit `left-10` used to put it.
-
-          ── Why it can still sit on the ramp with no mask ─────────────────────
-          The asset is a photograph FLATTENED ONTO WHITE, and `mix-blend-multiply`
-          turns every white pixel into the section's own colour exactly — soft
-          edges included — so it needs no mask and no frame. Multiply only works
-          while the surface is LIGHT: this one ramps #CCD0D2 → white, so it holds.
-          On navy the photograph would go black. The copy container is `relative`
-          so it stacks above the absolutely positioned picture.
-
-          `lg` and up only. Below that the picture is dropped, which is where it
-          started: behind a single column it sits behind the questions, and the
-          questions are the one thing on this page that has to stay legible. */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#CCD0D2] to-white">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 hidden select-none lg:block"
-        >
-          <div className="mx-auto h-full max-w-container px-6">
-            <img
-              src={images.doctorTipsPortrait}
-              alt=""
-              className="h-full w-1/2 select-none object-contain object-left mix-blend-multiply"
-            />
+          `lg` and up only, as before. Below that the picture is dropped rather
+          than stacked above the copy — the questions are the one thing on this
+          page that has to stay legible, and nothing here competes with them. */}
+      <section className="bg-gradient-to-b from-[#CCD0D2] to-white">
+        {/* 0.9 / 1.1, not two equal halves. The copy column carries the
+              three-across "worth bringing" row at the bottom, and that row is
+              drawn with its labels wrapping to TWO lines — see the note on
+              `bringWithYou` below. An even split gives the copy 624px here, which
+              is 32px less than the `lg:w-1/2` it had when the picture was an
+              absolute layer, and those 32px are exactly what tips "Your full
+              medical history" onto a third line. Weighting the split gives the
+              copy ~690px, comfortably clear of that, and the plate is still a
+              565px square. Whichever way this is tuned, the copy is the side that
+              has a measurement to satisfy. */}
+        <div className="mx-auto grid max-w-container items-center gap-12 px-6 py-24 sm:py-28 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14">
+          <div aria-hidden="true" className="hidden select-none lg:block">
+            <div className="corner-smooth relative aspect-square overflow-hidden rounded-card shadow-card">
+              <img
+                src={images.doctorTipsPortrait}
+                alt=""
+                className="absolute inset-0 h-full w-full select-none object-cover object-center"
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="relative mx-auto max-w-container px-6 py-24 sm:py-28">
-          <div className="lg:ml-auto lg:w-1/2">
+          <div>
             <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
               BEFORE YOU GO IN
             </span>

@@ -61,17 +61,28 @@ const baseColors: Record<NonNullable<ButtonProps['variant']>, string> = {
     'bg-transparent text-navy-800 ring-1 ring-inset ring-navy-800/20 hover:bg-navy-800 hover:text-white hover:ring-navy-800',
 }
 
-// badge = the little circle the icon sits in on primary-style buttons.
-// "light" and "white" keep a gold badge in both states (it reads fine on either
-// fill, and on the navy the button flips to).
-// "gold" starts navy (so it doesn't disappear into the gold button) and
-// flips to gold on hover, once the button itself has gone navy.
-// "dark" is the mirror of "gold": white on the navy fill, going gold on hover.
+// badge = the little square the icon sits in on primary-style buttons.
+//
+// Three of the four are GOLD in both states — "light", "white" and now "dark".
+// Gold reads on a white fill, on a navy fill, and on the navy every one of them
+// flips to, so there is no state where it needs to change to stay visible.
+//
+// "dark" used to start WHITE and go gold on hover, as the mirror of "gold"'s
+// navy-then-gold. That made the About hero's primary button a navy pill with a
+// white square in it, which read as a gap in the button rather than as a badge —
+// and it made "dark" the only always-navy variant whose badge was not the brand
+// colour. It is gold from the start now, matching "light" and "white". The hover
+// gesture is untouched and is the same one those two make: the badge crosses to
+// the leading edge, the arrow spins -45deg, the button scales.
+//
+// "gold" is the one that still has to change, and for a reason the others don't
+// share: a gold badge on a gold button is a shape with no edges. It starts navy
+// and goes gold once the button itself has gone navy.
 const badgeColors: Record<string, string> = {
   light: 'bg-gold text-navy-800',
   white: 'bg-gold text-navy-800',
   gold: 'bg-navy-800 text-white group-hover:bg-gold group-hover:text-navy-800',
-  dark: 'bg-white text-navy-800 group-hover:bg-gold group-hover:text-navy-800',
+  dark: 'bg-gold text-navy-800',
 }
 
 export default function Button({
