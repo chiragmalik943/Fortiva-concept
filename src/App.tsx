@@ -3,6 +3,7 @@ import Navbar from './components/Navbar/Navbar'
 import Footer from './components/Footer/Footer'
 import Home from './pages/Home'
 import About from './pages/About'
+import Plans from './pages/Plans'
 import PlansIndividuals from './pages/PlansIndividuals'
 import PlansEmployers from './pages/PlansEmployers'
 import MembersHub from './pages/MembersHub'
@@ -19,6 +20,9 @@ import BrokersPortal from './pages/BrokersPortal'
 import ProvidersOverview from './pages/ProvidersOverview'
 import ProvidersPortal from './pages/ProvidersPortal'
 import ProvidersPartnerWithUs from './pages/ProvidersPartnerWithUs'
+import AvailableStatesPage from './pages/AvailableStatesPage'
+import Careers from './pages/Careers'
+import Contact from './pages/Contact'
 import ComingSoon from './pages/ComingSoon'
 import NotFound from './pages/NotFound'
 import { HeroToneProvider } from './components/PageHero/heroTone'
@@ -46,6 +50,12 @@ import { useLenis, scrollPageTo, scrollPageToTop } from './hooks/useLenis'
 const pageComponents: Partial<Record<PageKey, () => JSX.Element>> = {
   home: Home,
   about: About,
+
+  // Plans — the section index and both audience pages. `/plans` is a real
+  // destination even though the nav renders it as a dropdown trigger: the footer
+  // links it, every "Explore Plans" button on the site points at it, and so does
+  // anyone who trims the URL. Same arrangement For Members uses.
+  plans: Plans,
   plansIndividuals: PlansIndividuals,
   plansEmployers: PlansEmployers,
 
@@ -75,6 +85,14 @@ const pageComponents: Partial<Record<PageKey, () => JSX.Element>> = {
   providers: ProvidersOverview,
   providersPortal: ProvidersPortal,
   providersPartnerWithUs: ProvidersPartnerWithUs,
+
+  // Footer destinations. `availableStates` renders `AvailableStatesPage` rather
+  // than `AvailableStates` — the latter is the map COMPONENT, which this page
+  // mounts along with a hero and a rollout band. The names are deliberately
+  // different so an import can't quietly resolve to the wrong one.
+  availableStates: AvailableStatesPage,
+  careers: Careers,
+  contact: Contact,
 }
 
 /**

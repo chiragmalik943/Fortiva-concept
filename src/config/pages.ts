@@ -63,8 +63,8 @@ export const pages = {
   home: { enabled: true, route: '/' },
   about: { enabled: true, route: '/about' },
 
-  /* Plans — the two audience pages are built; the section index isn't. */
-  plans: { enabled: false, route: '/plans' },
+  /* Plans — the section index and both audience pages. */
+  plans: { enabled: true, route: '/plans' },
   plansIndividuals: { enabled: true, route: '/plans/individuals-and-families' },
   plansEmployers: { enabled: true, route: '/plans/employers' },
 
@@ -89,10 +89,13 @@ export const pages = {
   providersPortal: { enabled: true, route: '/providers/portal' },
   providersPartnerWithUs: { enabled: true, route: '/providers/partner-with-us' },
 
-  /* Footer-only and in-page CTA destinations — not built yet. */
-  availableStates: { enabled: false, route: '/available-states' },
-  careers: { enabled: false, route: '/careers' },
-  contact: { enabled: false, route: '/contact' },
+  /* Footer-only and in-page CTA destinations. The three that stay off are the
+     three the copy doc has no words for: a blog with no articles, and two legal
+     pages nobody but counsel can write. `components/Blog/Blog.tsx` is in the
+     repo, unimported, for the day real articles exist. */
+  availableStates: { enabled: true, route: '/available-states' },
+  careers: { enabled: true, route: '/careers' },
+  contact: { enabled: true, route: '/contact' },
   blog: { enabled: false, route: '/blog' },
   terms: { enabled: false, route: '/terms' },
   privacy: { enabled: false, route: '/privacy' },

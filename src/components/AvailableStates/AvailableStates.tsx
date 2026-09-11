@@ -1,4 +1,4 @@
-import { PointerEvent, useState } from 'react'
+import { PointerEvent, ReactNode, useState } from 'react'
 import { Check } from 'lucide-react'
 import { availabilityStates } from '../../content/site'
 import { MAP_FILLS } from './mapStates'
@@ -43,7 +43,34 @@ function readableOn(hex: string) {
 // one piece of state (`active`), so pointing at either side lights up both. They
 // share a palette too: both take their colour from MAP_FILLS, i.e. from
 // public/map.svg, so the chips read as the map's legend and can't drift from it.
-export default function AvailableStates() {
+interface AvailableStatesProps {
+  /**
+   * All three default to the homepage's own wording, so `<AvailableStates />`
+   * with no props is exactly the band this component has always been.
+   *
+   * They exist for the Available States PAGE, which mounts this same component
+   * under a hero that already carries the copy doc's H1 and its one paragraph.
+   * Without an override the page said "Where we're available" twice and printed
+   * the same paragraph twice, forty pixels apart. Overriding beats forking:
+   * the map, the chips and the two-way highlight stay in one file, and the six
+   * states stay read from one list in content/site.ts.
+   */
+  eyebrow?: string
+  heading?: ReactNode
+  intro?: ReactNode
+}
+
+export default function AvailableStates({
+  eyebrow = 'AVAILABILITY',
+  heading = 'Where we\u2019re available',
+  intro = (
+    <>
+      Fortiva is starting strong in North Carolina, with plans to expand across the southeast
+      and eventually nationwide. Our goal is simple: bring affordable, member-first health
+      coverage to communities that need it most.
+    </>
+  ),
+}: AvailableStatesProps = {}) {
   const headingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
   const bodyRef = useScrollReveal<HTMLDivElement>({ y: 24, delay: 0.1 })
   const mapRef = useScrollReveal<HTMLDivElement>({ y: 32, scale: 0.97, delay: 0.15 })
@@ -112,21 +139,17 @@ export default function AvailableStates() {
       <div className="mx-auto grid max-w-container items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div>
           <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-            AVAILABILITY
+            {eyebrow}
           </span>
           <h2
             ref={headingRef}
             className="mt-5 text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
           >
-            Where we&rsquo;re available
+            {heading}
           </h2>
 
           <div ref={bodyRef} className="opacity-0">
-            <p className="mt-6 max-w-md text-[15.5px] leading-relaxed text-navy-800/60">
-              Fortiva is starting strong in North Carolina, with plans to expand across the
-              southeast and eventually nationwide. Our goal is simple: bring affordable,
-              member-first health coverage to communities that need it most.
-            </p>
+            <p className="mt-6 max-w-md text-[15.5px] leading-relaxed text-navy-800/60">{intro}</p>
 
             <div className="fchips mt-9" data-focus={active ? 'true' : 'false'}>
               <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-navy-800/50">

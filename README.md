@@ -74,6 +74,15 @@ The `enabled: true` set currently matches, exactly, the pages that have a
 component in `src/pages`. Routes that are switched on but not built yet fall back
 to `ComingSoon` the same way they always did, so enabling a route early is safe.
 
+Three routes are still switched **off**, and they are exactly the three the copy
+doc has no words for: `/blog`, `/terms` and `/privacy`. The doc supplies no
+article titles and no legal text, and neither is content this build should invent
+— a "coming soon" is the honest answer until they exist.
+`components/Blog/Blog.tsx` stays in the repo, unimported, for the day real
+articles land. `/brokers/portal` is also off, at the client's request; its page
+(`pages/BrokersPortal.tsx`) is built and wired into `App.tsx`, so it is a
+one-word edit here to bring back.
+
 ## Where the copy comes from
 
 All page copy is from the client's `FTVA_Web Copy.odt`. The doc's own "Home"
@@ -721,6 +730,98 @@ contrast doesn't resolve the obvious way: white on gold measures 2.1:1, under th
 full navy and the rest of the line is held at 70%, with body copy at 80% for
 4.7:1. Same rule in `CtaBand`'s gold tone, and it's why every For Members page
 closes on gold: light → gold → navy is now the site's closing signature.
+
+## Plans, and the three footer pages
+
+Four pages landed together, completing every route in the IA that the copy doc
+supplies words for: the Plans **section index**, and the three footer
+destinations — Available States, Careers and Contact.
+
+| Route | Page | Set-piece |
+|---|---|---|
+| `/plans` | Plans index | `PlanCatalog` — sticky rail + four product panels |
+| `/available-states` | Available States | the homepage's own `AvailableStates` map |
+| `/careers` | Careers | `FeatureReveal` — the five values as cards |
+| `/contact` | Contact | three audience cards + `StayConnected` |
+
+Copy is `FTVA_Web Copy.odt`'s "Plans", "Available States — Footer",
+"Careers — Footer" and "Contact — Footer" sections, complete. The one condensed
+field is `bestFor` on each of the four plans, which lifts the audience clause out
+of the paragraph it already sits in; the one thing the doc never supplies is a
+careers listing URL, which ships as `externalTargets.careersBoard = '#'` and
+behaves like the other five placeholder destinations.
+
+### One new component, and what it is not
+
+`components/PlanCatalog` is the only new section component. It is the same
+silhouette as `ScrollSpyList` — sticky column naming what you are reading, tall
+panels beside it, one of them lit — and deliberately not that component:
+`SpyItem` is one sentence, where each plan panel carries a subhead, a paragraph
+and two labelled lists. `ScrollSpyList` also **pins**, which is only honest while
+a section fits inside the viewport; these panels run 420–520px each. So this one
+*sticks* rather than pins, and its rail is navigation (four plan names, each a
+jump to its panel through `scrollPageTo`) rather than a readout. Its active index
+is one ScrollTrigger per panel banded on the middle of the viewport, not
+`useScrollSpyIndex`'s section-wide progress — that hook's even split is right for
+short, equal items and would light panel three while panel two is still under the
+reading line here.
+
+### Everything else is a component that already existed
+
+`PageHero`, `FeatureReveal`, `StepFlow`, `CtaBand`, `StayConnected` and
+`AvailableStates` do the rest of the work across the four pages. One of them
+needed a small, additive change:
+
+- **`AvailableStates` takes optional `eyebrow` / `heading` / `intro`**, all
+  defaulting to the homepage's own wording, so `<AvailableStates />` with no props
+  is the band it has always been. The Available States page mounts the same
+  component under a hero that already carries the doc's H1 and its one paragraph —
+  without the override the page said "Where we're available" twice and printed the
+  same paragraph forty pixels below itself. Overriding beats forking: the map, the
+  chips and the two-way highlight stay in one file, and the six states stay read
+  from one list in `content/site.ts`.
+
+`FeatureReveal`'s `image` is simply left off on Plans and Careers. That was
+already optional; passing nothing gives a flat surface and a centred copy column,
+which is the layout it falls back to.
+
+Contact renders the three audiences from `contactAudiences` — the same array the
+footer reads, not a copy of it. Six of its seven values are still `[Insert …]`
+placeholders, and the day the real ones land they have to appear in both places or
+the site contradicts itself.
+
+### No photographs on any of the four
+
+Same rule and same reason as the For Members pages: no image on this site is
+reused anywhere, and these four arrived with no assets of their own. Borrowing one
+would have broken that on the first section. They are built from type, the grey
+plate, the navy `FeatureReveal` and the gold close — a coherent look rather than a
+compromise, and an obvious slot when real photography exists.
+
+### The five values are on two pages, in two shapes
+
+About runs them through `ValuesStack` (the pinned card stack beside a photograph);
+Careers runs them through `FeatureReveal`. Two reasons it is not the same
+component twice: `ValuesStack` draws `about-value.png`, and mounting it on Careers
+would put that photograph on two pages — and the doc's Careers wording is not the
+About wording. Three of the five are rewritten into a passive, company-facing
+voice there ("The status quo is challenged", "Members are given clarity") where
+About addresses the member directly. Both are reproduced as written.
+
+### Hero tones
+
+Each of the four opens on a different surface, which spends all five tones rather
+than repeating one:
+
+| Page | Tone | Why |
+|---|---|---|
+| `/plans` | `dark` | Its two children are both `teal`, so section index → child reads navy → teal rather than as three shades of one field. |
+| `/available-states` | `sky` | The section under it is the map, drawn in `map.svg`'s own inks; the pale blue is the quietest hero that will not fight it. |
+| `/careers` | `teal` | It sits next to About in the footer nav, and About is `gold`. |
+| `/contact` | `mist` | The neutral. Every other tone belongs to a section; this page serves all three audiences at once. |
+
+Verified at 1440x900 and 390x844 on all four: no horizontal overflow, no console
+errors, and `tsc -b && vite build` clean.
 
 ## If something needs adjusting
 

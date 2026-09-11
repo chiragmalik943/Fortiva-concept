@@ -529,6 +529,12 @@ export const externalTargets = {
   appStore: '#', // PLACEHOLDER — Apple App Store listing
   playStore: '#', // PLACEHOLDER — Google Play listing
 
+  /* Careers asks for "Explore opportunities" three times and the doc names no
+     listing system at all — there is no ATS, job board or careers subdomain
+     anywhere in it. One entry rather than three, because unlike the provider
+     portal's trio these are the same destination said three ways. */
+  careersBoard: '#', // PLACEHOLDER — careers / open roles listing
+
   /* The provider portal, and its two deep links. Three entries rather than one
      because the copy doc asks for three distinct buttons — "Provider Portal",
      "Submit a Claim" and "Check Insurance Status" — and on a real portal those
