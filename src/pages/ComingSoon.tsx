@@ -33,7 +33,6 @@ export default function ComingSoon({ path }: { path: string }) {
           "Broker Portal"), and only a construction where the label is the
           OBJECT stays grammatical across all of them. */}
       <PageHero
-        eyebrow="COMING SOON"
         titleTop={<>We&rsquo;re still building</>}
         titleBottom={`${label}.`}
         lede={

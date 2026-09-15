@@ -1,7 +1,7 @@
-import { Clock, Lock, Pill, RefreshCw, Thermometer, Timer, Video, Wallet } from 'lucide-react'
+import { Clock, Lock, RefreshCw, Timer, Wallet } from 'lucide-react'
 import PageHero from '../components/PageHero/PageHero'
 import StepFlow, { type Step } from '../components/StepFlow/StepFlow'
-import StatBand, { type Stat } from '../components/StatBand/StatBand'
+import StatCircles, { type CircleStat } from '../components/StatCircles/StatCircles'
 import FeatureReveal from '../components/FeatureReveal/FeatureReveal'
 import { type Feature } from '../components/featureTypes'
 import CtaBand from '../components/CtaBand/CtaBand'
@@ -18,15 +18,15 @@ import { useSplitReveal } from '../hooks/useSplitReveal'
  * Copy is FTVA_Web Copy.odt's "Virtual Care — Sub Navigation", complete:
  *
  *   H1                        → PageHero
- *   Virtual care made simple  → the split band, with the treatable-conditions card
+ *   Virtual care made simple  → the photo band, copy held in its right half
  *   MyLiveDoc + How It Works  → StepFlow
- *   Why virtual care? + stats → StatBand, footnotes included
+ *   Why virtual care? + stats → StatCircles, footnotes included
  *   Key benefits              → FeatureReveal, the scroll-in card band
  *   Get started               → CtaBand
  *
  * ── The footnotes ship with the numbers ─────────────────────────────────────
  * All three figures are other people's published research and the doc cites each
- * one. Those citations are in StatBand, in the same section as the numbers, with
+ * one. Those citations are in StatCircles, in the same section as the numbers, with
  * live links — a "95% satisfaction" claim with the source dropped for layout
  * reasons is a different claim from the one the client actually made.
  */
@@ -63,20 +63,11 @@ const benefits: Feature[] = [
   },
 ]
 
-// Doc: "MyLiveDoc providers are there to treat allergies, cold and flu symptoms,
-// skin rashes, minor infections, handle medication refills and more!"
-const treats = [
-  'Allergies',
-  'Cold and flu symptoms',
-  'Skin rashes',
-  'Minor infections',
-  'Medication refills',
-]
-
-const stats: Stat[] = [
+const stats: CircleStat[] = [
   {
     value: 80,
     suffix: '%',
+    image: images.virtualCareStats[0],
     body: (
       <>
         According to the{' '}
@@ -96,12 +87,14 @@ const stats: Stat[] = [
     value: 30,
     suffix: '%',
     marker: '*',
+    image: images.virtualCareStats[1],
     body: 'Virtual care visits can reduce ER visit lengths of stays by up to 30%, saving patients hundreds of dollars.',
   },
   {
     value: 95,
     suffix: '%',
     marker: '**',
+    image: images.virtualCareStats[2],
     body: 'Patients report a 95% satisfaction rate when they use virtual care.',
   },
 ]
@@ -112,13 +105,11 @@ const footnoteLink =
 export default function MembersVirtualCare() {
   const simpleHeadingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
   const simpleBodyRef = useScrollReveal<HTMLDivElement>({ y: 24, delay: 0.12 })
-  const treatsRef = useScrollReveal<HTMLDivElement>({ y: 34, delay: 0.18 })
 
   return (
     <>
       <PageHero
         tone="sky"
-        eyebrow="VIRTUAL CARE"
         titleTop="Care that comes"
         titleBottom="to you."
         lede={
@@ -140,31 +131,69 @@ export default function MembersVirtualCare() {
       />
 
       {/* ── Virtual care made simple ───────────────────────────────────────
-          The doc's two paragraphs on the left; on the right, the conditions it
-          names MyLiveDoc providers treat, as a card. Those five things are the
-          most concretely useful sentence on the whole page and were buried mid-
-          paragraph — pulled out, they answer "is this for what I've got?" at a
-          glance. Nothing was added to the list; "and more" is the doc's own. */}
-      <section className="bg-white px-6 py-24 sm:py-28">
-        <div className="mx-auto grid max-w-container items-start gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-20">
-          <div>
-            <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-              HOW IT FEELS
-            </span>
+          A photograph across the whole section, the copy held in its right half.
+
+          ── What came off, and what that costs ──────────────────────────────
+          The right column used to be a card listing the five conditions the doc
+          names MyLiveDoc providers as treating ("Allergies, cold and flu
+          symptoms, skin rashes, minor infections, medication refills and more").
+          The card is gone at the client's request and that list came off the page
+          with it — it is the only copy in this section that is not in the two
+          paragraphs below, so if it is wanted back it needs a slot of its own
+          rather than a smaller version of the same card.
+
+          The emergency carve-out did NOT come off with it. It was the one line in
+          that card that was never a layout decision, so it sits under the button
+          instead. Still not the client's wording — see the TODO below.
+
+          ── NO SCRIM, and that is what sets the inks ────────────────────────
+          The delivered photograph is LIGHT — the subject sits in the left third
+          and the right two thirds is a near-white wall with the lotus over it.
+          Which means the ramp this section used to carry could not simply be
+          deleted: white copy on white wall is not low-contrast, it is invisible.
+
+          So the section inverted instead. It is a light band now — navy heading
+          with the dark gold accent, navy body, and `bg-white` as the field behind
+          the picture rather than navy. That is the same pair of decisions the
+          provider-search band on Find a Doctor makes, and for the same reason:
+          the photograph decides which way the ink runs, not the other way round.
+
+          The copy sits in the right half, which is where the wall is. If the
+          photograph is ever replaced with a darker one, this has to go back to
+          white type and something has to hold it off the picture. */}
+      <section className="relative isolate overflow-hidden bg-white px-6 py-28 sm:py-36 lg:min-h-[820px] lg:py-44">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 select-none">
+          {/* `onError` kept from when this slot shipped ahead of its
+              photograph: without it a missing file draws the browser's
+              broken-image glyph in the corner of the section. It costs nothing
+              now that the file is here, and it is what the band falls back to if
+              the asset is ever swapped for one that 404s. */}
+          <img
+            src={images.virtualCareSimple}
+            alt=""
+            onError={(e) => {
+              e.currentTarget.style.display = 'none'
+            }}
+            className="h-full w-full object-cover object-center"
+          />
+        </div>
+
+        <div className="mx-auto flex max-w-container justify-end">
+          <div className="w-full lg:max-w-[560px]">
             <h2
               ref={simpleHeadingRef}
-              className="mt-5 max-w-xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
+              className="text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
             >
               Virtual care made <span className="text-gold-dark">simple</span>
             </h2>
             <div ref={simpleBodyRef} className="opacity-0">
-              <p className="mt-7 max-w-xl text-[16.5px] leading-[1.65] text-navy-800/75 sm:text-[17.5px]">
+              <p className="mt-7 text-[16.5px] leading-[1.65] text-navy-800/80 sm:text-[17.5px]">
                 Virtual care gives you access to licensed providers from the comfort of your
                 home. No waiting rooms, no travel. Whether you&rsquo;re managing a minor illness
                 or need quick advice, virtual visits through MyLiveDoc make health care more
                 convenient and affordable.
               </p>
-              <p className="mt-5 max-w-xl text-[15.5px] leading-relaxed text-navy-800/60">
+              <p className="mt-5 text-[15.5px] leading-relaxed text-navy-800/65">
                 MyLiveDoc is a secure, HIPAA-compliant telehealth platform that connects you
                 with licensed health care providers. Through easy-to-use video visits, you can
                 get care for common conditions, request prescriptions and receive follow-up
@@ -175,44 +204,12 @@ export default function MembersVirtualCare() {
                   Start a visit
                 </ActionButton>
               </div>
-            </div>
-          </div>
-
-          <div ref={treatsRef} className="opacity-0">
-            <div className="corner-smooth rounded-card border border-navy-800/[0.08] bg-white p-7 sm:p-9">
-              <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gold">
-                  <Video size={20} strokeWidth={1.75} className="text-navy-800" />
-                </span>
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-navy-800/45">
-                    MyLiveDoc
-                  </p>
-                  <h3 className="text-[17px] font-semibold text-navy-800">Treated on a video visit</h3>
-                </div>
-              </div>
-
-              <ul className="mt-7 flex flex-wrap gap-2">
-                {treats.map((item) => (
-                  <li
-                    key={item}
-                    className="corner-smooth flex items-center gap-2 rounded-[12px] border border-navy-800/[0.12] bg-white px-3.5 py-2 text-[14px] font-medium text-navy-800/80"
-                  >
-                    <Thermometer size={14} strokeWidth={2} className="text-gold-dark" />
-                    {item}
-                  </li>
-                ))}
-                <li className="corner-smooth flex items-center gap-2 rounded-[12px] border border-navy-800/[0.12] px-3.5 py-2 text-[14px] font-medium text-navy-800/55">
-                  <Pill size={14} strokeWidth={2} />
-                  and more
-                </li>
-              </ul>
 
               {/* ADDED — not in the copy doc. TODO(client): a telehealth page
                   without an emergency carve-out is the one omission here worth
                   flagging rather than reproducing, so a plain, unbranded line
                   stands in. Legal should confirm the exact wording. */}
-              <p className="mt-7 border-t border-navy-800/10 pt-5 text-[13.5px] leading-relaxed text-navy-800/50">
+              <p className="mt-9 border-t border-navy-800/15 pt-6 text-[13.5px] leading-relaxed text-navy-800/55">
                 Not for emergencies. If it&rsquo;s urgent, call 911 or go to the nearest emergency
                 room.
               </p>
@@ -223,7 +220,6 @@ export default function MembersVirtualCare() {
 
       <StepFlow
         surface="cream"
-        eyebrow="HOW IT WORKS"
         heading={
           <>
             Four steps, <span className="text-gold-dark">start to prescription</span>
@@ -238,14 +234,23 @@ export default function MembersVirtualCare() {
         }
       />
 
-      <StatBand
-        eyebrow="WHY VIRTUAL CARE"
+      {/* ── Why virtual care? ──────────────────────────────────────────────
+          The doc's three figures, in discs rather than in the ruled three-column
+          band they used to sit in (StatBand, which this page was the only caller
+          of). Same numbers, same sentences, same citations — see StatCircles.tsx
+          for how the sequence is built and what the photographs it expects are.
+
+          The footnotes are not decoration. Every figure here is somebody else's
+          published research, and the copy doc cites all of it — so the citations
+          ship with the numbers, in the same section, rather than being dropped
+          because they are inconvenient to lay out. */}
+      <StatCircles
         heading={
           <>
-            The world is moving quickly. <span className="text-gold">Your care can too.</span>
+            <span className="text-gold">Why</span> virtual care?
           </>
         }
-        intro="Virtual care helps you keep up with your health and well-being while keeping up with work, school, family, friends and whatever else life throws your way."
+        intro="The world is moving quickly. Virtual care helps you keep up with your health and well-being while keeping up with work, school, family, friends and whatever else life throws your way."
         stats={stats}
         footnotes={[
           <>
@@ -287,10 +292,32 @@ export default function MembersVirtualCare() {
           cards already say (they apply to every visit, at no extra cost) and
           the buttons are the two the rest of the page already uses. */}
       <FeatureReveal
-        eyebrow="KEY BENEFITS"
+        /* DARK, because the photograph behind this one is dark.
+           FeatureReveal draws its backdrop full bleed with no mask and no scrim
+           (see the note above the component), so the copy is read straight off
+           the picture and the picture is what decides the ink. `img-14.png` has
+           no dissolve in its bottom-left corner — which is exactly where the
+           heading, the lead and the buttons sit — so on the light tone every one
+           of them was navy on a navy sweater.
+
+           Three things move together here, and none of them is optional:
+           • the heading's accent is `text-gold` rather than `text-gold-dark`.
+             The dark gold was mixed for light plates and measures 2.6:1 on navy.
+           • the secondary button is `white`, not `ghost`. Ghost is a navy
+             hairline around navy text — invisible on anything dark.
+           • below `lg` the photograph is not drawn at all, so the tone's own
+             navy surface is what the copy sits on there. That is why this is a
+             tone rather than a handful of text-white classes: the mobile layout
+             has to stay legible too, and it has no photograph to be legible
+             against.
+
+           If the asset is ever re-exported with the dissolve this slot's note in
+           assets/images.ts asks for, this goes back to the light tone and all
+           three of the above go back with it. */
+        tone="dark"
         heading={
           <>
-            What you get from a <span className="text-gold-dark">virtual visit</span>
+            Key benefits of <span className="text-gold">virtual care</span>
           </>
         }
         intro={
@@ -308,7 +335,7 @@ export default function MembersVirtualCare() {
             <ActionButton variant="gold" icon="arrow" href={externalTargets.myLiveDoc}>
               Start a visit
             </ActionButton>
-            <Button variant="ghost" href="/members/faqs">
+            <Button variant="white" href="/members/faqs">
               Read the FAQs
             </Button>
           </>
@@ -319,7 +346,15 @@ export default function MembersVirtualCare() {
         tone="gold"
         heading={
           <>
-            Get started with <span className="text-navy-800">MyLiveDoc</span>
+            {/* The inks are the reverse of `tone: 'gold'`'s default, which paints
+                the line white and leaves the accent to the caller. White on gold
+                measures 2.1:1 against navy's 7.0:1, so the long half takes the
+                navy and the product name takes the white — the same exception,
+                and the same arithmetic, as the closing bands on Resources and
+                Find a Doctor. */}
+            <span className="text-navy-800">
+              Get started with <span className="text-white">MyLiveDoc.</span>
+            </span>
           </>
         }
         body="Sign in to your member portal and pick a time. Most common conditions can be seen the same day."
@@ -328,9 +363,6 @@ export default function MembersVirtualCare() {
             <ActionButton variant="light" icon="arrow" size="lg" href={externalTargets.myLiveDoc}>
               Schedule an appointment
             </ActionButton>
-            <Button variant="ghost" size="lg" href="/members/portal">
-              Member Portal
-            </Button>
           </>
         }
       />

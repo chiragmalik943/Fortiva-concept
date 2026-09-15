@@ -159,7 +159,6 @@ export default function Contact() {
   return (
     <>
       <PageHero
-        eyebrow="CONTACT"
         titleTop="Talk to a person."
         titleBottom="Whoever you are."
         lede={

@@ -3,7 +3,6 @@ import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
 
 interface CtaBandProps {
-  eyebrow?: string
   heading: ReactNode
   body?: ReactNode
   actions?: ReactNode
@@ -78,7 +77,6 @@ const TONES = {
 } as const
 
 export default function CtaBand({
-  eyebrow,
   heading,
   body,
   actions,
@@ -92,20 +90,9 @@ export default function CtaBand({
   return (
     <section className={`px-6 py-24 text-center sm:py-28 ${t.section}`}>
       <div className="mx-auto max-w-3xl">
-        {eyebrow && (
-          <span
-            className={`inline-block rounded-full px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] ${
-              tone === 'navy' ? 'bg-white/10 text-white/70' : 'bg-navy-800/[0.08] text-navy-800/85'
-            }`}
-          >
-            {eyebrow}
-          </span>
-        )}
         <h2
           ref={headingRef}
-          className={`text-[30px] font-semibold leading-tight opacity-0 sm:text-[38px] ${t.heading} ${
-            eyebrow ? 'mt-5' : ''
-          }`}
+          className={`text-[30px] font-semibold leading-tight opacity-0 sm:text-[38px] ${t.heading}`}
         >
           {heading}
         </h2>

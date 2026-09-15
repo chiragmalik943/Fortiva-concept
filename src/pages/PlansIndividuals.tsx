@@ -67,7 +67,6 @@ export default function PlansIndividuals() {
     <>
       <PageHero
         tone="teal"
-        eyebrow="INDIVIDUALS & FAMILIES"
         titleTop="Health coverage that works"
         titleBottom="for real life."
         lede={
@@ -97,7 +96,6 @@ export default function PlansIndividuals() {
           See FeatureReveal.tsx for why the section isn't pinned. */}
       <FeatureReveal
         tone="dark"
-        eyebrow="FOR INDIVIDUALS"
         heading={
           <>
             Coverage built around <span className="text-gold">one person</span>

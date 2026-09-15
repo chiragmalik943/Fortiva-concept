@@ -1,6 +1,6 @@
-import { BarChart3, CreditCard, FileText, LifeBuoy, Lock, Search, Smartphone, UserCog } from 'lucide-react'
+import { LifeBuoy, Lock, Smartphone } from 'lucide-react'
 import PageHero from '../components/PageHero/PageHero'
-import PortalShowcase, { type PortalItem } from '../components/PortalShowcase/PortalShowcase'
+import PortalCarousel, { type CarouselCard } from '../components/PortalCarousel/PortalCarousel'
 import CtaBand from '../components/CtaBand/CtaBand'
 import Button from '../components/Button'
 import ActionButton from '../components/ActionButton'
@@ -15,55 +15,53 @@ import { useSplitReveal } from '../hooks/useSplitReveal'
  * Copy is FTVA_Web Copy.odt's "Member Portal — Sub Navigation":
  *
  *   H1 + intro                 → PageHero
- *   Your portal (six items)    → PortalShowcase
+ *   Your portal (six items)    → PortalCarousel
  *   Why use the Member Portal? → the two-up band
  *   Access your Member Portal  → CtaBand
  *
- * The six items are the tabs under one large window rather than a grid of cards,
- * and the screenshot slides from one to the next as you scroll — the same
- * treatment the sibling app page gives its five bullets, so the pair reads as one
- * idea on two devices. See PortalShowcase.
+ * ── All six are back ────────────────────────────────────────────────────────
+ * The six items used to be tabs under one large screenshot window
+ * (PortalShowcase, which still runs the Broker and Provider portals), and that
+ * window needed a real capture per item — so "Update personal information" sat
+ * commented out for want of `portal-scr-5.png` and the section shipped five of
+ * the doc's six.
  *
- * Six is the most any page asks of that component, and it is what its tablist was
- * sized for: on a phone the strip scrolls sideways rather than cramming six
- * labels into 390px.
+ * The carousel needs an icon rather than a screenshot, and all six icons were
+ * delivered, so the list below is the copy doc's own again. See PortalCarousel.
  */
-const portalItems: PortalItem[] = [
+// In the doc's order, which is also the order the icons are listed in
+// `portalCardIcons` — see the mapping note there, because the delivered file
+// numbers are NOT this order.
+const portalCards: CarouselCard[] = [
   {
     title: 'View your plan details',
     body: 'Check your benefits, coverage limits and deductible in seconds.',
-    icon: FileText,
-    screen: images.portalScreens[0],
+    icon: images.portalCardIcons[0],
   },
   {
     title: 'Track claims and payments',
     body: 'Monitor claim status and review your payment history with ease.',
-    icon: BarChart3,
-    screen: images.portalScreens[1],
+    icon: images.portalCardIcons[1],
   },
   {
     title: 'Download digital ID cards',
     body: 'Access your ID card instantly — no more waiting for mail.',
-    icon: CreditCard,
-    screen: images.portalScreens[2],
+    icon: images.portalCardIcons[2],
   },
   {
     title: 'Find care fast',
     body: 'Search for in-network doctors, specialists and facilities near you.',
-    icon: Search,
-    screen: images.portalScreens[3],
+    icon: images.portalCardIcons[3],
   },
-  // {
-  //   title: 'Update personal information',
-  //   body: 'Keep your contact details and preferences up to date.',
-  //   icon: UserCog,
-  //   screen: images.portalScreens[4],
-  // },
+  {
+    title: 'Update personal information',
+    body: 'Keep your contact details and preferences up to date.',
+    icon: images.portalCardIcons[4],
+  },
   {
     title: 'Get support',
     body: 'Message a Fortiva representative or browse FAQs for quick answers.',
-    icon: LifeBuoy,
-    screen: images.portalScreens[5],
+    icon: images.portalCardIcons[5],
   },
 ]
 
@@ -76,7 +74,6 @@ export default function MembersPortal() {
     <>
       <PageHero
         tone="sky"
-        eyebrow="MEMBER PORTAL"
         titleTop="Welcome to the"
         titleBottom="Fortiva Member Portal."
         lede={
@@ -97,20 +94,19 @@ export default function MembersPortal() {
         }
       />
 
-      <PortalShowcase
-        eyebrow="YOUR PORTAL"
+      <PortalCarousel
         heading={
           <>
-            Six things waiting <span className="text-gold-dark">when you sign in</span>
+            Your <span className="text-gold-dark">portal</span>
           </>
         }
-        intro="The portal is designed to give you control and convenience — here is what each of its six sections holds."
-        items={portalItems}
-        action={
-          <ActionButton variant="gold" icon="arrow" href={externalTargets.memberPortal}>
-            Access your Member Portal
-          </ActionButton>
+        intro={
+          <>
+            The portal is designed to give you control and convenience. Here&rsquo;s what
+            you&rsquo;ll find:
+          </>
         }
+        cards={portalCards}
       />
 
       {/* ── Why use the Member Portal? ─────────────────────────────────────
@@ -121,12 +117,9 @@ export default function MembersPortal() {
       <section className="bg-white px-6 py-24 sm:py-28">
         <div className="mx-auto grid max-w-container items-center gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-20">
           <div>
-            <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-              WHY USE IT
-            </span>
             <h2
               ref={whyHeadingRef}
-              className="mt-5 max-w-xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
+              className="max-w-xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
             >
               Managing your coverage{' '}
               <span className="text-gold-dark">shouldn&rsquo;t be complicated</span>
@@ -186,7 +179,7 @@ export default function MembersPortal() {
             <ActionButton variant="light" icon="arrow" size="lg" href={externalTargets.memberPortal}>
               Access your Member Portal
             </ActionButton>
-            <Button variant="ghost" size="lg" href="/members/faqs">
+            <Button variant="dark" size="lg" href="/members/faqs">
               Read the FAQs
             </Button>
           </>

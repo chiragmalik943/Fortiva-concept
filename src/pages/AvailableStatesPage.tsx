@@ -67,7 +67,6 @@ export default function AvailableStatesPage() {
     <>
       <PageHero
         tone="sky"
-        eyebrow="AVAILABLE STATES"
         titleTop={<>Where we&rsquo;re</>}
         titleBottom="available."
         lede={
@@ -101,7 +100,6 @@ export default function AvailableStatesPage() {
           on those props in AvailableStates.tsx. */}
       <div className="bg-white">
         <AvailableStates
-          eyebrow="THE MAP"
           heading={
             <>
               Six states, <span className="text-gold-dark">and counting</span>
@@ -119,12 +117,9 @@ export default function AvailableStatesPage() {
       <section className="bg-[#CCD0D2] px-6 py-24 sm:py-28">
         <div className="mx-auto grid max-w-container items-start gap-14 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-20">
           <div>
-            <span className="inline-block rounded-full bg-navy-800/[0.08] px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-              THE ROLLOUT
-            </span>
             <h2
               ref={rolloutHeadingRef}
-              className="mt-5 max-w-md text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
+              className="max-w-md text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
             >
               One state at a time, <span className="text-gold-dark">on purpose</span>
             </h2>
@@ -223,7 +218,7 @@ export default function AvailableStatesPage() {
             <Button variant="light" icon="arrow" size="lg" href="/contact">
               Stay connected
             </Button>
-            <Button variant="ghost" size="lg" href="/plans">
+            <Button variant="dark" size="lg" href="/plans">
               Explore Plans
             </Button>
           </>

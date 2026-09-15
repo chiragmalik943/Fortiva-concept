@@ -13,7 +13,6 @@ import { type Feature } from '../featureTypes'
 export type { Feature }
 
 interface FeatureRevealProps {
-  eyebrow?: string
   heading: ReactNode
   /** Short lead under the heading. Optional — the column reads fine without it. */
   intro?: ReactNode
@@ -38,7 +37,7 @@ interface FeatureRevealProps {
    *   'light' — white plate, navy type. The default, and what the section was.
    *   'dark'  — navy plate, light type. THE CARDS DO NOT CHANGE.
    *
-   * That last part is the whole design of the dark variant: the eyebrow, the
+   * That last part is the whole design of the dark variant: the
    * heading and the lead invert, and the five cards stay cream-soft with gold
    * badges and navy type exactly as they are on white. They are the section's
    * figure — the thing that arrives — and inverting them too would have left a
@@ -78,7 +77,7 @@ interface FeatureRevealProps {
  * over what comes next.
  *
  * `pin:pt-24` rather than symmetric padding, because the nav pill floats over the
- * page: centring the content in the full viewport put the eyebrow underneath it on
+ * page: centring the content in the full viewport put the heading underneath it on
  * shorter windows.
  *
  * The trimming and the pinning are gated on the SAME query. If CSS trimmed at one
@@ -132,13 +131,11 @@ interface FeatureRevealProps {
 const TONES = {
   light: {
     surface: 'bg-white',
-    eyebrow: 'bg-navy-800/5 text-navy-800/70',
     heading: 'text-navy-800',
     intro: 'text-navy-800/70',
   },
   dark: {
     surface: 'bg-navy-800',
-    eyebrow: 'bg-white/10 text-white/75',
     heading: 'text-white',
     intro: 'text-white/70',
   },
@@ -204,7 +201,6 @@ const END_AT = 0.55
 */
 
 export default function FeatureReveal({
-  eyebrow,
   heading,
   intro,
   features,
@@ -378,18 +374,9 @@ export default function FeatureReveal({
       >
         {/* ── the half that is there when you arrive ─────────────────────── */}
         <div ref={copyRef}>
-          {eyebrow && (
-            <span
-              className={`inline-block rounded-full px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] ${t.eyebrow}`}
-            >
-              {eyebrow}
-            </span>
-          )}
           <h2
             ref={headingRef}
-            className={`max-w-xl text-[30px] font-semibold leading-tight opacity-0 sm:text-[38px] ${t.heading} ${
-              eyebrow ? 'mt-5 pin:mt-4' : ''
-            }`}
+            className={`max-w-xl text-[30px] font-semibold leading-tight opacity-0 sm:text-[38px] ${t.heading}`}
           >
             {heading}
           </h2>

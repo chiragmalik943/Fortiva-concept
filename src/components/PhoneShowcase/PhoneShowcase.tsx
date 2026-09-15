@@ -15,7 +15,6 @@ export interface AppFeature {
 }
 
 interface PhoneShowcaseProps {
-  eyebrow?: string
   heading: ReactNode
   intro?: ReactNode
   features: AppFeature[]
@@ -46,9 +45,9 @@ interface PhoneShowcaseProps {
  * assets/images.ts carries the export note.
  *
  * ── The heading sits INSIDE the right column, and that is the whole trick ────
- * Measuring the mock turned up something easy to miss: the eyebrow, the heading
+ * Measuring the mock turned up something easy to miss: the heading
  * and the intro all start at the same x as the list's rail, while the device runs
- * from just under the eyebrow down to past the last list item. The device is not
+ * from just under the heading down to past the last list item. The device is not
  * beside the LIST — it is beside the entire right-hand column.
  *
  * That is why the mock's phone looks so much bigger than a heading-above-the-grid
@@ -119,7 +118,6 @@ interface PhoneShowcaseProps {
  * viewport would leave no room for the list it exists to illustrate.
  */
 export default function PhoneShowcase({
-  eyebrow,
   heading,
   intro,
   features,
@@ -135,7 +133,7 @@ export default function PhoneShowcase({
        (animations/pinnedSequence.ts owns the query, and useScrollSpyIndex reads
        the same one). `pin:pt-24` rather than symmetric padding, because the nav
        pill floats over the page and centring in the full viewport tucks the
-       eyebrow underneath it. `pin:static` retires the sticky phone: inside a
+       heading underneath it. `pin:static` retires the sticky phone: inside a
        pinned section the whole thing is already held still. All of it is inert on
        a window too short to pin. */
     <section
@@ -150,16 +148,9 @@ export default function PhoneShowcase({
       <div className="mx-auto grid w-full max-w-container gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-x-20 lg:gap-y-16 pin:grid-cols-[auto_minmax(0,36rem)] pin:justify-center pin:gap-x-40 pin:gap-y-5">
         {/* ── heading block ──────────────────────────────────────────── */}
         <div className="lg:col-span-2 lg:row-start-1 pin:col-span-1 pin:col-start-2 pin:row-start-1 pin:self-end">
-          {eyebrow && (
-            <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-              {eyebrow}
-            </span>
-          )}
           <h2
             ref={headingRef}
-            className={`max-w-2xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px] pin:text-[34px] ${
-              eyebrow ? 'mt-5 pin:mt-3' : ''
-            }`}
+            className="max-w-2xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px] pin:text-[34px]"
           >
             {heading}
           </h2>

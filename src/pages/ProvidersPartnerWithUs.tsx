@@ -69,7 +69,6 @@ export default function ProvidersPartnerWithUs() {
   return (
     <>
       <PageHero
-        eyebrow="PARTNER WITH US"
         titleTop="Why partner"
         titleBottom="with Fortiva?"
         lede={
@@ -101,7 +100,6 @@ export default function ProvidersPartnerWithUs() {
           ImageBands to sit that way (the Provider Portal's is on the left), so
           the section reads as its own rather than as the same band again. */}
       <ImageBand
-        eyebrow="WHY PARTNER WITH FORTIVA"
         heading={
           <>
             A movement to make care{' '}
@@ -139,7 +137,6 @@ export default function ProvidersPartnerWithUs() {
           is still the break; if this needs to be a plate again, pass
           `className="bg-[#CCD0D2]"` the way Find a Doctor does. */}
       <ScrollSpyList
-        eyebrow="FOR PROVIDERS"
         heading={
           <>
             By working with Fortiva, <span className="text-gold-dark">you gain</span>
@@ -165,7 +162,6 @@ export default function ProvidersPartnerWithUs() {
           is safe here because a gold CtaBand follows — see the rule in
           CtaBand.tsx about never handing the navy footer a navy band. */}
       <QuoteBand
-        eyebrow="TOGETHER"
         quote={<>Together, we can rewrite the rules of health insurance.</>}
         body="Creating a future where care is simple, fair and empowering for everyone."
       />
@@ -183,7 +179,7 @@ export default function ProvidersPartnerWithUs() {
             <Button variant="light" icon="arrow" size="lg" href="/contact">
               Partner with us
             </Button>
-            <Button variant="ghost" size="lg" href="/providers/portal">
+            <Button variant="dark" size="lg" href="/providers/portal">
               Provider Portal
             </Button>
           </>

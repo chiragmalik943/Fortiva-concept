@@ -91,7 +91,6 @@ export default function Careers() {
     <>
       <PageHero
         tone="teal"
-        eyebrow="CAREERS"
         titleTop="Join the movement."
         titleBottom="Work for Fortiva."
         lede={
@@ -133,7 +132,6 @@ export default function Careers() {
           pages that already use it, so the pin budget and the two-column stagger
           are exactly the ones documented in README.md. */}
       <FeatureReveal
-        eyebrow="OUR CORE VALUES"
         heading={
           <>
             Five values, and every decision{' '}
@@ -161,12 +159,9 @@ export default function Careers() {
       <section className="bg-[#CCD0D2] px-6 py-24 sm:py-32">
         <div className="mx-auto grid max-w-container items-center gap-14 lg:grid-cols-2 lg:gap-20">
           <div>
-            <span className="inline-block rounded-full bg-navy-800/[0.08] px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-              WHY FORTIVA
-            </span>
             <h2
               ref={joinHeadingRef}
-              className="mt-5 max-w-xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
+              className="max-w-xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
             >
               Join the <span className="text-gold-dark">movement</span>
             </h2>
@@ -226,7 +221,6 @@ export default function Careers() {
 
       <CtaBand
         tone="gold"
-        eyebrow="OPEN ROLES"
         heading={
           <>
             Your health. Your power. <span className="text-navy-800">Our revolution.</span>
@@ -243,7 +237,7 @@ export default function Careers() {
             >
               Explore opportunities
             </ActionButton>
-            <Button variant="ghost" size="lg" href="/contact">
+            <Button variant="dark" size="lg" href="/contact">
               Get in touch
             </Button>
           </>

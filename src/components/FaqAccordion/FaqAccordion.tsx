@@ -15,7 +15,6 @@ export interface AccordionFaq {
 }
 
 interface FaqAccordionProps {
-  eyebrow?: string
   heading: ReactNode
   intro?: ReactNode
   /** Rendered under the intro in the sticky column. */
@@ -53,7 +52,6 @@ interface FaqAccordionProps {
  * collapses and the content spills.
  */
 export default function FaqAccordion({
-  eyebrow,
   heading,
   intro,
   action,
@@ -70,16 +68,9 @@ export default function FaqAccordion({
     <section className={`px-6 py-24 sm:py-28 ${className}`}>
       <div className="mx-auto grid max-w-container gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-20">
         <div className="lg:sticky lg:top-32 lg:self-start">
-          {eyebrow && (
-            <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-              {eyebrow}
-            </span>
-          )}
           <h2
             ref={headingRef}
-            className={`max-w-md text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px] ${
-              eyebrow ? 'mt-5' : ''
-            }`}
+            className="max-w-md text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
           >
             {heading}
           </h2>

@@ -44,24 +44,11 @@ function readableOn(hex: string) {
 // share a palette too: both take their colour from MAP_FILLS, i.e. from
 // public/map.svg, so the chips read as the map's legend and can't drift from it.
 interface AvailableStatesProps {
-  /**
-   * All three default to the homepage's own wording, so `<AvailableStates />`
-   * with no props is exactly the band this component has always been.
-   *
-   * They exist for the Available States PAGE, which mounts this same component
-   * under a hero that already carries the copy doc's H1 and its one paragraph.
-   * Without an override the page said "Where we're available" twice and printed
-   * the same paragraph twice, forty pixels apart. Overriding beats forking:
-   * the map, the chips and the two-way highlight stay in one file, and the six
-   * states stay read from one list in content/site.ts.
-   */
-  eyebrow?: string
   heading?: ReactNode
   intro?: ReactNode
 }
 
 export default function AvailableStates({
-  eyebrow = 'AVAILABILITY',
   heading = 'Where we\u2019re available',
   intro = (
     <>
@@ -138,12 +125,9 @@ export default function AvailableStates({
           more room, permanently, rather than only while someone is hovering. */}
       <div className="mx-auto grid max-w-container items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div>
-          <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-            {eyebrow}
-          </span>
           <h2
             ref={headingRef}
-            className="mt-5 text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
+            className="text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
           >
             {heading}
           </h2>

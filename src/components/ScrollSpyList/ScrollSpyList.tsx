@@ -11,12 +11,25 @@ export interface SpyItem {
 }
 
 interface ScrollSpyListProps {
-  eyebrow?: string
   heading: ReactNode
   intro?: ReactNode
   items: SpyItem[]
   action?: ReactNode
+  /**
+   * The "01 / 03" readout under the lead. On by default: it is what ties the
+   * sticky column to the scrolling one, and without it the left half has no sign
+   * that anything is being tracked. A caller turns it off when the section is
+   * meant to read as three statements rather than as a sequence being walked.
+   */
+  counter?: boolean
   className?: string
+  /**
+   * Which way the type runs. 'light' (the default) is navy type for a pale
+   * surface; 'dark' is white type, for a caller that overrides `className` with
+   * a saturated one. The PANELS are white either way — see the note in the
+   * render on why they do not invert with the rest.
+   */
+  tone?: 'light' | 'dark'
 }
 
 /**
@@ -44,13 +57,15 @@ interface ScrollSpyListProps {
  * the item at once, and a phone isn't.
  */
 export default function ScrollSpyList({
-  eyebrow,
   heading,
   intro,
   items,
   action,
+  counter = true,
   className = 'bg-white',
+  tone = 'light',
 }: ScrollSpyListProps) {
+  const dark = tone === 'dark'
   const { scopeRef, active, tracking } = useScrollSpyIndex(items.length)
 
   const headingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
@@ -69,7 +84,7 @@ export default function ScrollSpyList({
        that is, fixed — section there is nothing left for it to stick to, and the
        whole section is already held still. `pin:pt-24` rather than symmetric
        padding, because the nav pill floats over the page and centring in the full
-       viewport tucks the eyebrow under it. All of this is inert on a window too
+       viewport tucks the heading under it. All of this is inert on a window too
        short to pin, so the fallback keeps exactly the layout this section had. */
     <section
       ref={scopeRef}
@@ -77,15 +92,10 @@ export default function ScrollSpyList({
     >
       <div className="mx-auto grid w-full max-w-container gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-20">
         <div className="lg:sticky lg:top-32 lg:self-start pin:static pin:self-center">
-          {eyebrow && (
-            <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-              {eyebrow}
-            </span>
-          )}
           <h2
             ref={headingRef}
-            className={`max-w-md text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px] ${
-              eyebrow ? 'mt-5' : ''
+            className={`max-w-md text-[30px] font-semibold leading-tight opacity-0 sm:text-[38px] ${
+              dark ? 'text-white' : 'text-navy-800'
             }`}
           >
             {heading}
@@ -93,18 +103,34 @@ export default function ScrollSpyList({
 
           <div ref={introRef} className="opacity-0">
             {intro && (
-              <p className="mt-6 max-w-sm text-[16px] leading-relaxed text-navy-800/65">{intro}</p>
+              <p
+                className={`mt-6 max-w-sm text-[16px] leading-relaxed ${
+                  dark ? 'text-white/70' : 'text-navy-800/65'
+                }`}
+              >
+                {intro}
+              </p>
             )}
 
             {/* Reads out which panel is lit — the counter is what makes the
                 sticky column feel connected to the scrolling one. Hidden under
                 lg, where nothing is being tracked. */}
-            <div className="mt-9 hidden items-center gap-3 lg:flex">
-              <span className="text-[34px] font-semibold leading-none text-navy-800">
+            <div className={`mt-9 hidden items-center gap-3 ${counter ? 'lg:flex' : ''}`}>
+              <span
+                className={`text-[34px] font-semibold leading-none ${
+                  dark ? 'text-white' : 'text-navy-800'
+                }`}
+              >
                 {String(active + 1).padStart(2, '0')}
               </span>
-              <span className="text-[14px] text-navy-800/40">/ {String(items.length).padStart(2, '0')}</span>
-              <span className="ml-2 h-[2px] w-16 overflow-hidden rounded-full bg-navy-800/10">
+              <span className={`text-[14px] ${dark ? 'text-white/45' : 'text-navy-800/40'}`}>
+                / {String(items.length).padStart(2, '0')}
+              </span>
+              <span
+                className={`ml-2 h-[2px] w-16 overflow-hidden rounded-full ${
+                  dark ? 'bg-white/20' : 'bg-navy-800/10'
+                }`}
+              >
                 <span
                   className="block h-full rounded-full bg-gold transition-[width] duration-500 ease-out"
                   style={{ width: `${((active + 1) / items.length) * 100}%` }}
@@ -123,7 +149,16 @@ export default function ScrollSpyList({
             return (
               <li
                 key={item.title}
-                className={`corner-smooth rounded-card border p-7 transition-all duration-500 sm:p-9 lg:opacity-60 pin:p-6 ${
+                /* The panels are WHITE on a dark surface too, rather than
+                   inverting with the rest of the section: they are the thing
+                   being read, and a lit panel has to be unambiguously the lit
+                   one — which a translucent card on a gradient cannot be, since
+                   its own contrast changes as the ramp moves under it. Only the
+                   dim goes: 60% of white on navy is dark enough to stop being
+                   readable at all, so an unlit panel holds 75% there. */
+                className={`corner-smooth rounded-card border p-7 transition-all duration-500 sm:p-9 pin:p-6 ${
+                  dark ? 'lg:opacity-75' : 'lg:opacity-60'
+                } ${
                   lit
                     ? 'border-navy-800/15 bg-white shadow-card-soft lg:!opacity-100'
                     : 'border-navy-800/[0.07] bg-white'

@@ -99,7 +99,6 @@ export default function ProvidersOverview() {
   return (
     <>
       <PageHero
-        eyebrow="FOR PROVIDERS"
         titleTop="Here for you"
         titleBottom="and your patients."
         lede={
@@ -126,7 +125,6 @@ export default function ProvidersOverview() {
           from this band is not to be sold the idea but to place the company: who
           is behind the card their patient just handed over. */}
       <ImageBand
-        eyebrow="WHO YOUR PATIENTS ARE COVERED BY"
         heading={
           <>
             Value-based plans designed{' '}
@@ -165,7 +163,6 @@ export default function ProvidersOverview() {
           full-bleed picture is what separates this section from the band above
           it. */}
       <FeatureReveal
-        eyebrow="OUR COMMITMENT TO PROVIDERS"
         heading={
           <>
             We know <br /><span className="text-gold-dark">your time matters</span>
@@ -192,7 +189,6 @@ export default function ProvidersOverview() {
           has. `surface="cream"` makes this the page's tinted plate — see the note
           on the section above for why it is this one and not that one. */}
       <StepFlow
-        eyebrow="AT THE FRONT DESK"
         heading={
           <>
             What to know when a <span className="text-gold-dark">Fortiva member visits</span>
@@ -219,7 +215,6 @@ export default function ProvidersOverview() {
           follows it — a navy band must never be the last thing before the navy
           footer. */}
       <QuoteBand
-        eyebrow="WHY FORTIVA"
         quote={
           <>
             Traditional carriers often prioritize profits over people. Fortiva is different.
@@ -242,7 +237,7 @@ export default function ProvidersOverview() {
             <Button variant="light" icon="arrow" size="lg" href="/contact">
               Contact us
             </Button>
-            <Button variant="ghost" size="lg" href="/providers/partner-with-us">
+            <Button variant="dark" size="lg" href="/providers/partner-with-us">
               Partner with us
             </Button>
           </>

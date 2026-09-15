@@ -66,7 +66,6 @@ export default function About() {
     <>
       <PageHero
         tone="gold"
-        eyebrow="ABOUT FORTIVA"
         titleTop="We put people first."
         titleBottom="Not premiums."
         lede={
@@ -173,7 +172,7 @@ export default function About() {
           ── Where the heading went ────────────────────────────────────────
           "Guided by principles" is `sr-only`. The plate carries the mark where a
           label would go, which is what the layout was drawn with, and a small-caps
-          eyebrow floating above a disc had nothing to align to. The heading stays
+          chip floating above a disc had nothing to align to. The heading stays
           in the document so the page's outline still matches the copy doc's five
           sections — it is just not painted.
 

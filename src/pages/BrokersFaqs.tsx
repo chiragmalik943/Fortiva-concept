@@ -100,7 +100,6 @@ export default function BrokersFaqs() {
     <>
       <PageHero
         tone="dark"
-        eyebrow="BROKER FAQS"
         titleTop="Six questions, before"
         titleBottom="you write a policy."
         lede={
@@ -122,7 +121,6 @@ export default function BrokersFaqs() {
       />
 
       <FaqAccordion
-        eyebrow="BROKER FAQS"
         heading={
           <>
             The questions we get <span className="text-gold-dark">most often</span>
@@ -150,7 +148,7 @@ export default function BrokersFaqs() {
             <Button variant="light" icon="arrow" size="lg" href="/contact">
               Become a Fortiva broker
             </Button>
-            <Button variant="ghost" size="lg" href="/brokers/resources">
+            <Button variant="dark" size="lg" href="/brokers/resources">
               Broker resources
             </Button>
           </>

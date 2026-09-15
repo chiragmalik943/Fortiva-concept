@@ -30,7 +30,6 @@ export interface PlanProduct {
 }
 
 interface PlanCatalogProps {
-  eyebrow?: string
   heading: ReactNode
   intro?: ReactNode
   plans: PlanProduct[]
@@ -78,7 +77,6 @@ interface PlanCatalogProps {
  * (~360px) does not clear one panel.
  */
 export default function PlanCatalog({
-  eyebrow,
   heading,
   intro,
   plans,
@@ -139,16 +137,9 @@ export default function PlanCatalog({
     <section className="bg-[#CCD0D2] px-6 py-24 sm:py-28">
       <div className="mx-auto grid max-w-container gap-12 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-16 xl:gap-20">
         <div className="lg:sticky lg:top-32 lg:self-start">
-          {eyebrow && (
-            <span className="inline-block rounded-full bg-navy-800/[0.08] px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-              {eyebrow}
-            </span>
-          )}
           <h2
             ref={headingRef}
-            className={`max-w-md text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px] ${
-              eyebrow ? 'mt-5' : ''
-            }`}
+            className="max-w-md text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
           >
             {heading}
           </h2>

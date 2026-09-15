@@ -67,7 +67,6 @@ export default function PlansEmployers() {
     <>
       <PageHero
         tone="teal"
-        eyebrow="EMPLOYERS"
         titleTop="Health coverage that works"
         titleBottom="for your business."
         lede={
@@ -135,7 +134,6 @@ export default function PlansEmployers() {
           cards arrive from below one at a time. See FeatureReveal.tsx. */}
       <FeatureReveal
         tone="dark"
-        eyebrow="WHAT WE DELIVER"
         heading={
           <>
             Benefits your team feels, <span className="text-gold">and your budget can hold</span>
@@ -160,18 +158,15 @@ export default function PlansEmployers() {
           Closes on the corporate photograph already in the asset set, so the
           page ends on people rather than on another block of type.
 
-          One way down and hand off, rather than a there-and-back ramp: this is
-          the last section on the page, and the footer's navy is what comes next,
-          not more page — so a gradient that climbed back to its starting colour
-          spent its second half undoing itself.
-
-          The ramp is white → #CCD0D2 now. It was `gradient-cool-in`, cream →
-          #C7D2D6, which started on the same cream the section above it ended on;
-          the section above is a navy FeatureReveal now, so there is nothing left
-          for a cream top stop to continue from and white is the cleaner break
-          off it. #CCD0D2 is the same grey About's values band sits on. */}
-      <div className="bg-gradient-to-b from-white to-[#CCD0D2]">
-        <section className="px-6 py-24 sm:py-32">
+          FLAT WHITE, and the photograph carries no shadow. It was a white →
+          #CCD0D2 ramp with a soft-shadowed plate on it, which is a card floating
+          over a tint — two devices doing the same job of separating the picture
+          from the page. On white with no shadow the photograph's own edges are
+          the only edge in the section, and the page hands off to the footer's
+          navy on a clean break rather than on a grey that was climbing toward
+          it. */}
+      <div className="bg-white">
+        <section className="px-6 py-28 sm:py-36">
           <div className="mx-auto grid max-w-container items-center gap-12 lg:grid-cols-2 lg:gap-20">
             <div>
               <h2
@@ -207,7 +202,7 @@ export default function PlansEmployers() {
             </div>
 
             <div ref={whyImageRef} className="opacity-0">
-              <div className="corner-smooth relative aspect-[4/3] overflow-hidden rounded-card shadow-card-soft">
+              <div className="corner-smooth relative aspect-[4/3] overflow-hidden rounded-card">
                 <img
                   src={images.insuranceCorporate}
                   alt="A Fortiva group plan member at work"

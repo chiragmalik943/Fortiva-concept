@@ -403,9 +403,9 @@ chunky border at one size and a hairline at another.
 
 ### The heading sits inside the right column
 
-The measurement that mattered most: in the mock the eyebrow, heading and intro all
+The measurement that mattered most: in the mock the heading and intro both
 start at the same x as the list's rail, while the device runs from just under the
-eyebrow to past the last list item. **The device is beside the whole right-hand
+heading to past the last list item. **The device is beside the whole right-hand
 column, not just the list.** That is why the mock's phone looks so much bigger than a
 heading-above-the-grid layout can make it — it has the section's full height to
 occupy rather than the list's share of it.
@@ -503,7 +503,7 @@ pinned than in the fallback, not smaller.
 Two details that are easy to get wrong:
 
 - **`pin:pt-24`, not symmetric padding.** The nav pill is `fixed` and floats over
-  the page. Centring content in the full viewport tucked the eyebrow underneath it
+  the page. Centring content in the full viewport tucked the heading underneath it
   on shorter windows; the asymmetric top padding is nav clearance.
 - **`pin:overflow-hidden` on FeatureReveal.** Its cards start their travel below
   their slots. Inside a pinned — that is, `position: fixed` — section, that
@@ -772,7 +772,7 @@ reading line here.
 `AvailableStates` do the rest of the work across the four pages. One of them
 needed a small, additive change:
 
-- **`AvailableStates` takes optional `eyebrow` / `heading` / `intro`**, all
+- **`AvailableStates` takes optional `heading` / `intro`**, both
   defaulting to the homepage's own wording, so `<AvailableStates />` with no props
   is the band it has always been. The Available States page mounts the same
   component under a hero that already carries the doc's H1 and its one paragraph —

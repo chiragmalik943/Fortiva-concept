@@ -93,7 +93,6 @@ export default function MembersHub() {
   return (
     <>
       <PageHero
-        eyebrow="FOR MEMBERS"
         titleTop="Everything your plan does,"
         titleBottom="in one place."
         lede={
@@ -148,7 +147,7 @@ export default function MembersHub() {
             <Button variant="light" icon="arrow" size="lg" href="/contact">
               Contact us
             </Button>
-            <Button variant="ghost" size="lg" href="/plans">
+            <Button variant="dark" size="lg" href="/plans">
               Explore Plans
             </Button>
           </>

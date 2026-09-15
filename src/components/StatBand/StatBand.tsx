@@ -14,7 +14,6 @@ export interface Stat {
 }
 
 interface StatBandProps {
-  eyebrow?: string
   heading: ReactNode
   intro?: ReactNode
   stats: Stat[]
@@ -39,7 +38,7 @@ interface StatBandProps {
  * with the numbers, in the same section, rather than being dropped because they
  * are inconvenient to lay out.
  */
-export default function StatBand({ eyebrow, heading, intro, stats, footnotes }: StatBandProps) {
+export default function StatBand({ heading, intro, stats, footnotes }: StatBandProps) {
   const valueRefs = useRef<(HTMLSpanElement | null)[]>([])
   const gridRef = useRef<HTMLDivElement>(null)
 
@@ -79,16 +78,9 @@ export default function StatBand({ eyebrow, heading, intro, stats, footnotes }: 
   return (
     <section className="bg-navy-800 px-6 py-24 sm:py-28">
       <div className="mx-auto max-w-container">
-        {eyebrow && (
-          <span className="inline-block rounded-full bg-white/10 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-white/70">
-            {eyebrow}
-          </span>
-        )}
         <h2
           ref={headingRef}
-          className={`max-w-2xl text-[30px] font-semibold leading-tight text-white opacity-0 sm:text-[38px] ${
-            eyebrow ? 'mt-5' : ''
-          }`}
+          className="max-w-2xl text-[30px] font-semibold leading-tight text-white opacity-0 sm:text-[38px]"
         >
           {heading}
         </h2>

@@ -27,7 +27,6 @@ export default function MembersFaqs() {
     <>
       <PageHero
         tone="sky"
-        eyebrow="FAQS"
         titleTop="Answers, without"
         titleBottom="the fine print."
         lede={
@@ -50,7 +49,6 @@ export default function MembersFaqs() {
       />
 
       <FaqExplorer
-        eyebrow="MEMBER FAQS"
         heading={
           <>
             Everything we get asked, <span className="text-gold-dark">in one place</span>
@@ -85,7 +83,7 @@ export default function MembersFaqs() {
             <Button variant="light" icon="arrow" size="lg" href="/contact">
               Contact us
             </Button>
-            <Button variant="ghost" size="lg" href={`tel:${REACH_PHONE.replace(/[^\d+]/g, '')}`}>
+            <Button variant="dark" size="lg" href={`tel:${REACH_PHONE.replace(/[^\d+]/g, '')}`}>
               Call REACH on {REACH_PHONE}
             </Button>
           </>

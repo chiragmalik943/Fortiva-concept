@@ -3,7 +3,6 @@ import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
 
 interface ListBandProps {
-  eyebrow?: string
   heading: ReactNode
   /** One short lead under the heading. Optional — several callers have none. */
   intro?: ReactNode
@@ -76,7 +75,6 @@ interface ListBandProps {
  * happens to be under it.
  */
 export default function ListBand({
-  eyebrow,
   heading,
   intro,
   items,
@@ -95,7 +93,7 @@ export default function ListBand({
   const dark = tone === 'dark'
 
   return (
-    <section className={`px-6 py-20 sm:py-24 ${className}`}>
+    <section className={`px-6 py-28 sm:py-36 ${className}`}>
       <div className="mx-auto grid max-w-container items-center gap-12 lg:grid-cols-2 lg:gap-16">
         {/* Ordered by `order`, not by writing the two halves twice. The copy
             column is always second in the DOM, so a screen reader and a phone
@@ -126,21 +124,12 @@ export default function ListBand({
         </div>
 
         <div className={imageSide === 'right' ? 'lg:order-1' : 'lg:order-2'}>
-          {eyebrow && (
-            <span
-              className={`inline-block rounded-full px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] ${
-                dark ? 'bg-white/10 text-white/75' : 'bg-navy-800/5 text-navy-800/70'
-              }`}
-            >
-              {eyebrow}
-            </span>
-          )}
 
           <h2
             ref={headingRef}
             className={`text-[30px] font-semibold leading-tight opacity-0 sm:text-[38px] ${
               dark ? 'text-white' : 'text-navy-800'
-            } ${eyebrow ? 'mt-5' : ''}`}
+            }`}
           >
             {heading}
           </h2>

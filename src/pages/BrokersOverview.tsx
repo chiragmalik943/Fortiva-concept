@@ -1,6 +1,7 @@
 import { Cpu, HeartHandshake, Layers } from 'lucide-react'
 import PageHero from '../components/PageHero/PageHero'
 import ImageBand from '../components/ImageBand/ImageBand'
+import ForSequence, { type ForStage } from '../components/ForSequence/ForSequence'
 import ScrollSpyList, { type SpyItem } from '../components/ScrollSpyList/ScrollSpyList'
 import QuoteBand from '../components/QuoteBand/QuoteBand'
 import CtaBand from '../components/CtaBand/CtaBand'
@@ -14,7 +15,7 @@ import { images } from '../assets/images'
  * Navigation". Its five headings map to this page one-for-one:
  *
  *   H1: Your Partner in Health Insurance      → PageHero
- *   FOR you. FOR your clients. FOR change.    → the opening ImageBand
+ *   FOR you. FOR your clients. FOR change.    → ForSequence, one stage each
  *   Why work with us?                         → ScrollSpyList, the three offers
  *   FOR the future of health insurance        → the second ImageBand
  *   Fortiva’s promise                         → QuoteBand
@@ -31,6 +32,65 @@ import { images } from '../assets/images'
  * gives its three reasons, which is the only other three-item list on the site.
  */
 
+/* ── The three FOR stages ───────────────────────────────────────────────────
+   The doc gives this section ONE heading — "FOR you. FOR your clients. FOR
+   change." — and one paragraph under it, the mission paragraph. Split into three
+   stages, that paragraph belongs to the third: it is about what Fortiva is
+   changing, and it is reproduced here word for word.
+
+   DRAFTED, NOT CLIENT COPY: the paragraphs on stages one and two. Both are
+   assembled from phrases the doc already uses elsewhere on this page — "Your
+   partner in health insurance" and the three bolded offers under "Why work with
+   us?" ("Affordable, multi-tier plans", "Flexible options for real-life
+   budgets", "Member-first experience", "Transparent pricing, personalized
+   solutions and no surprises", "Technology-driven tools"), plus its
+   "underserviced individuals and small businesses" — so nothing here asserts
+   anything the client has not already said in writing. They are short on purpose:
+   they can be replaced wholesale with the client's own two paragraphs without
+   anything else in the section needing to change.
+
+   Stage order is the order the line names them, which is also the order of
+   `brokerForStages` in assets/images.ts. */
+const forStages: ForStage[] = [
+  {
+    word: 'you.',
+    body: (
+      <>
+        Your partner in health insurance, not one more carrier on the sheet. Affordable,
+        multi-tier plans, transparent pricing and technology-driven tools &mdash; so quoting,
+        enrolment and everything that follows is easier to place.
+      </>
+    ),
+    image: images.brokerForStages[0],
+    imageAlt: 'A Fortiva broker at work',
+  },
+  {
+    word: 'your clients.',
+    body: (
+      <>
+        A member-first experience: transparent pricing, personalized solutions and no
+        surprises. Flexible options for real-life budgets, built for the individuals and small
+        businesses this market has underserved.
+      </>
+    ),
+    image: images.brokerForStages[1],
+    imageAlt: 'A Fortiva member at work in their business',
+  },
+  {
+    word: 'change.',
+    body: (
+      <>
+        At Fortiva, we&rsquo;re rewriting the rules of health insurance. Our mission is simple
+        yet bold: to put people &mdash; not premiums &mdash; at the center of care. We exist to
+        disrupt an industry built on complexity and cost, delivering transparent, affordable
+        coverage rooted in value-based care.
+      </>
+    ),
+    image: images.brokerForStages[2],
+    imageAlt: 'A family covered by a Fortiva plan',
+  },
+]
+
 // The doc's three, verbatim: bolded phrase, then its line. Icons are ours; the
 // doc names none.
 const offers: SpyItem[] = [
@@ -46,7 +106,7 @@ const offers: SpyItem[] = [
   },
   {
     title: 'Technology-driven tools',
-    body: 'Agentic AI for seamless quoting, enrollment and proactive care.',
+    body: 'Seamless quoting, enrolment and proactive care.',
     icon: Cpu,
   },
 ]
@@ -56,7 +116,6 @@ export default function BrokersOverview() {
     <>
       <PageHero
         tone="dark"
-        eyebrow="FOR BROKERS"
         titleTop="Your partner in"
         titleBottom="health insurance."
         lede={
@@ -78,31 +137,15 @@ export default function BrokersOverview() {
         }
       />
 
-      {/* ── FOR you. FOR your clients. FOR change. ────────────────────────
-          The mission paragraph, which is the same argument the About page makes
-          to a different reader — so it gets the same white plate About opens on,
-          and a photograph rather than the pull-quote treatment About uses. A
-          broker arriving here has already been sold the idea; what they need next
-          is the sense of a company they would be comfortable representing. */}
-      <ImageBand
-        eyebrow="WHO YOU’D BE REPRESENTING"
-        heading={
-          <>
-            <span className="text-gold-dark">FOR</span> you.{' '}
-            <span className="text-gold-dark">FOR</span> your clients.{' '}
-            <span className="text-gold-dark">FOR</span> change.
-          </>
-        }
-        body={
-          <p>
-            At Fortiva, we&rsquo;re rewriting the rules of health insurance. Our mission is
-            simple yet bold: to put people &mdash; not premiums &mdash; at the center of care.
-            We exist to disrupt an industry built on complexity and cost, delivering
-            transparent, affordable coverage rooted in value-based care.
-          </p>
-        }
-        image={images.brokerPartner}
-        imageAlt="A Fortiva broker meeting a client"
+      {/* ── FOR you. FOR your clients. FOR change. ───────────────────────
+          The page's opening line, given a stage per audience. It was one
+          ImageBand — a single photograph and the mission paragraph beside it —
+          which meant a heading naming three readers was illustrated by one
+          picture and answered by one paragraph about the third of them. See
+          ForSequence.tsx for how the three are walked, and `forStages` above for
+          which paragraph is the client's and which two are drafted. */}
+      <ForSequence
+        stages={forStages}
         action={
           <Button variant="gold" icon="arrow" href="/plans">
             See the plans you&rsquo;d be selling
@@ -118,38 +161,42 @@ export default function BrokersOverview() {
           their photograph left and right; if this ever needs to be a plate again,
           pass `className="bg-[#CCD0D2]"` the way Find a Doctor does. */}
       <ScrollSpyList
-        eyebrow="WHY WORK WITH US"
         heading={
           <>
-            Built for the market <span className="text-gold-dark">you sell into</span>
+            <span className="text-gold-dark">Why</span> work with us?
           </>
         }
         intro="Fortiva is designed for today’s market realities: rising Affordable Care Act premiums, and underserviced individuals and small businesses seeking flexibility. By partnering with us, you’ll offer:"
         items={offers}
-        action={
-          <Button variant="gold" icon="arrow" href="/brokers/faqs">
-            How partnering works
-          </Button>
-        }
+        /* No counter and no button. The section is the doc's three offers and
+           nothing else now: a readout counting three statements implied a
+           sequence to walk, and the button was a third call to a different page
+           on a screen that already has the hero's two. */
+        counter={false}
       />
 
       {/* ── FOR the future of health insurance ────────────────────────────
-          Photograph on the LEFT this time. The two ImageBands on this page mirror
-          each other rather than repeating: alternating the picture is what stops
-          a page with two of the same section reading as a template. */}
+          Photograph on the LEFT, which used to be about mirroring the ImageBand
+          above it. That band is the pinned FOR sequence now and this is the
+          page's only one — so the side is simply the side that does not repeat
+          the sequence's own composition, where the card sits left over a
+          full-bleed picture. */}
       <ImageBand
-        eyebrow="FOR THE FUTURE"
         heading={
           <>
             <span className="text-gold-dark">FOR</span> the future of health insurance
           </>
         }
+        /* The doc runs this as one paragraph opening on its sharpest sentence,
+           which then had three more sentences leaning on it. Lifted out as the
+           section's subheading it is the claim, and what follows is the support
+           for it — the same sentence doing more work in the same words. */
+        subheading={<>We&rsquo;re not just another carrier &mdash; we&rsquo;re a trusted disruptor.</>}
         body={
           <p>
-            We&rsquo;re not just another carrier &mdash; we&rsquo;re a trusted disruptor. Our
-            approach combines innovation and humanity to create health coverage that&rsquo;s
-            simple, fair and empowering. With Fortiva, you&rsquo;ll be part of a movement that
-            prioritizes clarity, care and confidence.
+            Our approach combines innovation and humanity to create health coverage
+            that&rsquo;s simple, fair and empowering. With Fortiva, you&rsquo;ll be part of a
+            movement that prioritizes clarity, care and confidence.
           </p>
         }
         imageSide="left"
@@ -158,29 +205,58 @@ export default function BrokersOverview() {
       />
 
       {/* ── Fortiva’s promise ─────────────────────────────────────────────
-          The page's one dark plate, and it is safe here because a gold CtaBand
-          follows it — see the note in QuoteBand.tsx about never closing a page on
-          navy. */}
+          GOLD now, not the dark plate it shipped as, with the flourish above and
+          below the words and the page's own call inside the frame. Two things
+          follow from the colour and are worth knowing before it is changed back:
+
+          • The quotation marks are gone. A line set inside an ornamental frame is
+            already presented as a quotation; the marks on top of that were the
+            same idea said twice.
+          • The closing CtaBand below is CREAM. It is the gold band every other
+            page closes on, and two gold sections with a seam between them read as
+            one slab with a gap in it — so the page now runs gold, grey, then the
+            footer's navy. If this band ever goes back to navy, that CtaBand
+            should go back to gold with it.
+
+          Worth flagging rather than fixing here: this band and the one under it
+          now both say "Partner with us" and both point at /contact, about 200px
+          apart. The doc gives the promise no button at all, so the one here is
+          the client's design decision — but the pair is a duplicate, and if one
+          of them goes it should be the CtaBand. */}
       <QuoteBand
-        eyebrow="FORTIVA’S PROMISE"
-        quote={<>&ldquo;FOR the member. Always.&rdquo;</>}
+        tone="gold"
+        label="Fortiva’s promise"
+        quote={
+          <>
+            FOR the member. <span className="text-white">Always.</span>
+          </>
+        }
         body="Every decision starts and ends with the member in mind. We challenge legacy norms, lead with integrity and innovate relentlessly — so you can deliver better outcomes for every client."
+        action={
+          <Button variant="white" icon="arrow" size="lg" href="/contact">
+            Partner with us
+          </Button>
+        }
       />
 
       <CtaBand
-        tone="gold"
+        /* Cream, not gold — see the note on the promise band above. The accent
+           ink moves with the surface: `cream` paints the heading navy and leaves
+           the accent to the caller, so the second half takes the dark gold that
+           reads on a light plate rather than the navy it took on gold. */
+        tone="cream"
         heading={
           <>
-            Ready to write Fortiva? <span className="text-navy-800">Partner with us.</span>
+            Ready to write Fortiva? <span className="text-gold-dark">Partner with us.</span>
           </>
         }
         body="Tell us about your book of business and our broker team will take it from there — appointment, onboarding and your first quote."
         actions={
           <>
-            <Button variant="light" icon="arrow" size="lg" href="/contact">
+            <Button variant="gold" icon="arrow" size="lg" href="/contact">
               Partner with us
             </Button>
-            <Button variant="ghost" size="lg" href="/brokers/resources">
+            <Button variant="dark" size="lg" href="/brokers/resources">
               Broker resources
             </Button>
           </>

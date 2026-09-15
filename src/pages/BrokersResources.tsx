@@ -178,7 +178,6 @@ export default function BrokersResources() {
     <>
       <PageHero
         tone="dark"
-        eyebrow="BROKER RESOURCES"
         titleTop="Everything you need"
         titleBottom="to sell Fortiva."
         lede={
@@ -201,7 +200,6 @@ export default function BrokersResources() {
 
       <VideoLibrary
         id="videos"
-        eyebrow="VIDEOS"
         heading={
           <>
             Get up to speed <span className="text-gold-dark">fast</span>
@@ -212,7 +210,6 @@ export default function BrokersResources() {
       />
 
       <DocumentShelf
-        eyebrow="PLAN DOCUMENTS"
         heading={
           <>
             The latest paperwork, <span className="text-gold-dark">all in one place</span>
@@ -235,7 +232,6 @@ export default function BrokersResources() {
           ran out — and the page still closes on the gold CTA below, so this is a
           hand-off rather than the ask itself. */}
       <ImageBand
-        eyebrow="NEED HELP?"
         heading={
           <>
             Our broker support team <span className="text-gold-dark">is here for you</span>
@@ -275,7 +271,7 @@ export default function BrokersResources() {
             <Button variant="light" icon="arrow" size="lg" href="/brokers/faqs">
               Read the broker FAQs
             </Button>
-            <Button variant="ghost" size="lg" href="/contact">
+            <Button variant="dark" size="lg" href="/contact">
               Contact us
             </Button>
           </>

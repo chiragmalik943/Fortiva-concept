@@ -124,7 +124,6 @@ export default function MembersFindDoctor() {
     <>
       <PageHero
         tone="sky"
-        eyebrow="FIND A DOCTOR"
         titleTop={<>It&rsquo;s now simpler than ever to</>}
         titleBottom="find a doctor."
         lede={
@@ -155,7 +154,7 @@ export default function MembersFindDoctor() {
           ── It was a centred band on navy ─────────────────────────────────────
           Now it is a photograph on the left and the whole entry on the right, on
           #A5CDD9. Which means every ink in here inverted: the band used to be the
-          page's dark plate and is now its palest, so the eyebrow, the heading,
+          page's dark plate and is now its palest, so the heading,
           the lead and the three provider kinds are all navy where they were
           white.
 
@@ -193,14 +192,11 @@ export default function MembersFindDoctor() {
 
           <div className="flex flex-col justify-center px-6 py-20 sm:py-24 lg:px-12">
             <div className="max-w-xl">
-              <span className="inline-block rounded-full bg-white/55 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/85">
-                PROVIDER SEARCH
-              </span>
               <h2
                 ref={searchHeadingRef}
-                className="mt-5 text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
+                className="text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
               >
-                Search the <span className="text-gold-dark">Fortiva network</span>
+                Search the <span className="text-white">Fortiva network</span>
               </h2>
 
               <div ref={searchBodyRef} className="opacity-0">
@@ -258,29 +254,28 @@ export default function MembersFindDoctor() {
         </div>
       </section>
 
-      {/* ── #CCD0D2, then #CCD0D2 → white ──────────────────────────────────
-          These two sections used to share one cream → blue → cream sweep, cut in
-          half so the cool peak landed exactly on the seam between them
-          (`gradient-cool-in` here, `-out` below). The peak is now the START: this
-          section is a flat plate at #CCD0D2 and the one below it ramps from that
-          same grey to white.
+      {/* ── Navy → teal, then white ────────────────────────────────────────
+          This section was a flat #CCD0D2 plate and the one below it ramped from
+          that same grey to white. It is the page's DARK plate now — #12284B down
+          to the logo's own #0074A6 — which is what makes it the moment on the
+          page rather than one more pale band between two others.
 
-          Which keeps what the split ramp was for and drops what it cost. The seam
-          between two sections of different, changing heights is still exactly on
-          colour — because the first section no longer changes colour at all — and
-          the page arrives at the grey in one step off the light blue band above
-          rather than climbing to it across a whole spy list.
+          Two things moved with it:
 
-          The ramp ends on WHITE rather than the site's cream. Cream is what the
-          older two-part band handed back to, but nothing on this page picks cream
-          up any more: what follows the tips section is the gold CTA band, so the
-          ramp's only job is to get off the grey. */}
+          • The spy list runs `tone="dark"`. Its heading, lead and counter are
+            white; its panels stay white, for the reason recorded in
+            ScrollSpyList.tsx. The heading's accent is `text-gold` rather than
+            `text-gold-dark` — the dark gold was mixed for light plates and
+            measures 2.6:1 on navy.
+          • The tips section below is FLAT WHITE. Its ramp started on the grey
+            this section used to be, and there is no grey left for it to continue
+            from; starting white is the clean break off the teal. */}
       <ScrollSpyList
-        className="bg-[#CCD0D2]"
-        eyebrow="WHY IN-NETWORK"
+        className="bg-gradient-to-b from-[#12284B] to-[#0074A6]"
+        tone="dark"
         heading={
           <>
-            Why choose an <span className="text-gold-dark">in-network doctor?</span>
+            Why choose an <span className="text-gold">in-network doctor?</span>
           </>
         }
         intro="Three things change the moment a provider is inside the network — what you pay, who you see, and how much of the admin lands on you."
@@ -334,7 +329,7 @@ export default function MembersFindDoctor() {
           `lg` and up only, as before. Below that the picture is dropped rather
           than stacked above the copy — the questions are the one thing on this
           page that has to stay legible, and nothing here competes with them. */}
-      <section className="bg-gradient-to-b from-[#CCD0D2] to-white">
+      <section className="bg-white">
         {/* 0.9 / 1.1, not two equal halves. The copy column carries the
               three-across "worth bringing" row at the bottom, and that row is
               drawn with its labels wrapping to TWO lines — see the note on
@@ -345,7 +340,7 @@ export default function MembersFindDoctor() {
               copy ~690px, comfortably clear of that, and the plate is still a
               565px square. Whichever way this is tuned, the copy is the side that
               has a measurement to satisfy. */}
-        <div className="mx-auto grid max-w-container items-center gap-12 px-6 py-24 sm:py-28 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14">
+        <div className="mx-auto grid max-w-container items-center gap-12 px-6 py-28 sm:py-36 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14">
           <div aria-hidden="true" className="hidden select-none lg:block">
             <div className="corner-smooth relative aspect-square overflow-hidden rounded-card shadow-card">
               <img
@@ -357,9 +352,6 @@ export default function MembersFindDoctor() {
           </div>
 
           <div>
-            <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-              BEFORE YOU GO IN
-            </span>
 
             {/* Two explicit lines. The break after "talking" is the drawn one,
                 and letting it fall where the measure happens to put it would have
@@ -371,7 +363,7 @@ export default function MembersFindDoctor() {
                 used to sit over a photograph and the lighter weight kept it from
                 competing with the subject. It has its own column now, so there is
                 nothing to defer to: the weight is the section's own. */}
-            <h2 className="mt-5 text-[30px] font-bold leading-[1.28] text-navy-800 sm:text-[44px]">
+            <h2 className="text-[30px] font-bold leading-[1.28] text-navy-800 sm:text-[44px]">
               <span ref={tipsHeadingRef} className="block opacity-0">
                 <span className="text-gold-dark">Tips</span> for talking
               </span>
@@ -464,7 +456,7 @@ export default function MembersFindDoctor() {
             <ActionButton variant="light" icon="arrow" size="lg" href={externalTargets.providerDirectory}>
               Find a Doctor
             </ActionButton>
-            <Button variant="ghost" size="lg" href="/contact">
+            <Button variant="dark" size="lg" href="/contact">
               Contact us
             </Button>
           </>

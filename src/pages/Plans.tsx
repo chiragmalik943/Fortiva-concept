@@ -254,7 +254,6 @@ export default function Plans() {
     <>
       <PageHero
         tone="dark"
-        eyebrow="PLANS"
         titleTop="Plans built"
         titleBottom="for real life."
         lede={
@@ -327,7 +326,6 @@ export default function Plans() {
       </section>
 
       <PlanCatalog
-        eyebrow="THE PLANS"
         heading={
           <>
             Four plans, and what <span className="text-gold-dark">each one covers</span>
@@ -390,7 +388,6 @@ export default function Plans() {
           REACH_PHONE in content/site.ts. It belongs here and nowhere else. */}
       <StepFlow
         surface="cream"
-        eyebrow="ENROLLMENT"
         heading={
           <>
             Enrollment made <span className="text-gold-dark">simple</span>
@@ -430,7 +427,6 @@ export default function Plans() {
           itself: the timeline is built from `features.length`. */}
       <FeatureReveal
         tone="dark"
-        eyebrow="WHY FORTIVA"
         heading={
           <>
             Why Fortiva plans are <span className="text-gold">different</span>
@@ -458,7 +454,7 @@ export default function Plans() {
             <Button variant="light" icon="arrow" size="lg" href="/contact">
               Get a Quote
             </Button>
-            <Button variant="ghost" size="lg" href="/plans/employers">
+            <Button variant="dark" size="lg" href="/plans/employers">
               Covering a team?
             </Button>
           </>

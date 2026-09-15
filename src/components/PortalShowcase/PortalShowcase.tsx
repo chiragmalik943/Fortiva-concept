@@ -25,7 +25,6 @@ export interface PortalItem {
 }
 
 interface PortalShowcaseProps {
-  eyebrow?: string
   heading: ReactNode
   intro?: ReactNode
   items: PortalItem[]
@@ -183,7 +182,6 @@ const settleProgress = (i: number, count: number) =>
   (i * (SLIDE + DWELL) + DWELL / 2) / timelineUnits(count)
 
 export default function PortalShowcase({
-  eyebrow,
   heading,
   intro,
   items,
@@ -467,7 +465,7 @@ export default function PortalShowcase({
        the variant). Pinned, the section becomes a viewport-tall flex column:
        header, then the carousel taking whatever is left, then the strip on the
        bottom edge. `pin:pt-28` rather than symmetric padding, for two reasons:
-       the floating nav pill ends at y=94 and an eyebrow at the top of a pinned
+       the floating nav pill ends at y=94 and a heading at the top of a pinned
        section would sit underneath it, and there is no bottom padding to balance
        against anyway — the strip IS the bottom. All of it is inert on a window
        too short to pin, where the section is a normal block and the carousel gets
@@ -479,16 +477,9 @@ export default function PortalShowcase({
       {/* ── the centred copy block ──────────────────────────────────────────── */}
       <div className="px-6">
         <div className="mx-auto max-w-2xl text-center">
-          {eyebrow && (
-            <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-              {eyebrow}
-            </span>
-          )}
           <h2
             ref={headingRef}
-            className={`text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px] pin:text-[32px] ${
-              eyebrow ? 'mt-5 pin:mt-4' : ''
-            }`}
+            className="text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px] pin:text-[32px]"
           >
             {heading}
           </h2>

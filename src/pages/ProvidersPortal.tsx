@@ -59,7 +59,6 @@ export default function ProvidersPortal() {
   return (
     <>
       <PageHero
-        eyebrow="PROVIDER PORTAL"
         titleTop="Welcome to the"
         titleBottom="Fortiva Provider Portal."
         lede={
@@ -99,7 +98,6 @@ export default function ProvidersPortal() {
           link that silently goes nowhere. */}
       <div id="submit-a-claim">
         <PortalShowcase
-          eyebrow="INSIDE THE PORTAL"
           heading={
             <>
               Two jobs, <span className="text-gold-dark">done in one place</span>
@@ -136,7 +134,6 @@ export default function ProvidersPortal() {
           than adding a capability. Nothing here claims anything the portal
           sections do not. */}
       <ImageBand
-        eyebrow="YOUR ADMINISTRATIVE DAY"
         heading={
           <>
             Less time on paperwork, <span className="text-gold-dark">more time on patients</span>
@@ -182,7 +179,7 @@ export default function ProvidersPortal() {
             >
               Log in to the portal
             </ActionButton>
-            <Button variant="ghost" size="lg" href="/contact">
+            <Button variant="dark" size="lg" href="/contact">
               Request access
             </Button>
           </>

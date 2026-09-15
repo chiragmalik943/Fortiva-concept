@@ -76,7 +76,7 @@ const DARK_STEP = 0.04
  * against the viewport while they arrive.
  *
  * == Why the stack moved off centre =========================================
- * It used to be a centred column: eyebrow, heading and stack down the middle of
+ * It used to be a centred column: heading and stack down the middle of
  * an otherwise empty cream band. That worked when this section was on the
  * homepage and had a photograph above and below it to sit between. On About it
  * follows a white two-column band and precedes a two-column closing band, and a
@@ -203,12 +203,9 @@ export default function ValuesStack() {
 
           <div className="flex h-full flex-col items-center justify-center px-6 lg:px-10">
             <div className="mb-11 text-center">
-              <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-                OUR VALUES
-              </span>
               <h2
                 ref={headingRef}
-                className="mt-5 text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[42px]"
+                className="text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[42px]"
               >
                 Powered by values
               </h2>

@@ -7,7 +7,6 @@ import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
 
 interface LinkHubProps {
-  eyebrow?: string
   heading: ReactNode
   intro?: ReactNode
   groups: ExpertResourceGroup[]
@@ -26,7 +25,6 @@ interface LinkHubProps {
  * `rel="noopener noreferrer"` on every one, since they all open in a new tab.
  */
 export default function LinkHub({
-  eyebrow,
   heading,
   intro,
   groups,
@@ -59,16 +57,9 @@ export default function LinkHub({
   return (
     <section className={`px-6 py-24 sm:py-28 ${className}`}>
       <div className="mx-auto max-w-container">
-        {eyebrow && (
-          <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-            {eyebrow}
-          </span>
-        )}
         <h2
           ref={headingRef}
-          className={`max-w-2xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px] ${
-            eyebrow ? 'mt-5' : ''
-          }`}
+          className="max-w-2xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
         >
           {heading}
         </h2>

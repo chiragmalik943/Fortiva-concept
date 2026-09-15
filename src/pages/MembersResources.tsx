@@ -164,7 +164,6 @@ export default function MembersResources() {
     <>
       <PageHero
         tone="sky"
-        eyebrow="RESOURCES"
         titleTop="Meeting you where you are"
         titleBottom="with quality resources."
         lede={
@@ -194,7 +193,6 @@ export default function MembersResources() {
           this section is still placeholder data. */}
       <VideoLibrary
         id="videos"
-        eyebrow="VIDEOS"
         heading={
           <>
             Watch and learn <span className="text-gold-dark">what your plan can do</span>
@@ -295,7 +293,6 @@ export default function MembersResources() {
 
       <LinkHub
         className="bg-white"
-        eyebrow="EXPERT RESOURCES"
         heading={
           <>
             Learn more about <span className="text-gold-dark">staying healthy</span>
@@ -309,7 +306,15 @@ export default function MembersResources() {
         tone="gold"
         heading={
           <>
-            Still looking for <span className="text-navy-800">something?</span>
+            {/* The inks are the reverse of `tone: 'gold'`'s default, which paints
+                the line white and leaves the accent to the caller: the question
+                is the word that should carry, and white on gold measures 2.1:1
+                against navy's 7.0:1 — so the long half takes the navy and the
+                one word takes the white. Same exception, and the same reasoning,
+                as the closing band on Find a Doctor. */}
+            <span className="text-navy-800">
+              Still looking for <span className="text-white">something?</span>
+            </span>
           </>
         }
         body="The FAQs cover coverage, claims and enrolment. If yours isn't there, the member team will answer it directly."
@@ -318,7 +323,7 @@ export default function MembersResources() {
             <Button variant="light" icon="arrow" size="lg" href="/members/faqs">
               Read the FAQs
             </Button>
-            <Button variant="ghost" size="lg" href="/contact">
+            <Button variant="dark" size="lg" href="/contact">
               Contact us
             </Button>
           </>

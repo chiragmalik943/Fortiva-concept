@@ -78,9 +78,66 @@ const gettingStarted: Step[] = [
 ]
 
 const stores = [
-  { label: 'Apple App Store', sub: 'iPhone and iPad', href: externalTargets.appStore, icon: Apple },
-  { label: 'Google Play', sub: 'Android', href: externalTargets.playStore, icon: Smartphone },
+  { label: 'Apple App Store', sub: 'iPhone & iPad', href: externalTargets.appStore, icon: Apple },
+  {
+    label: 'Google Play Store',
+    sub: 'Android Devices',
+    href: externalTargets.playStore,
+    icon: Smartphone,
+  },
 ]
+
+/**
+ * One store button, and the SAME one in both places it appears on this page —
+ * the hero and "Getting started is easy". They used to be a navy pair in the
+ * second section and a generic "Download now" pill in the hero, which meant the
+ * page asked for the download twice in two different shapes.
+ *
+ * Navy is the hero's own primary ink (`tone: 'sky'` pairs a dark primary with a
+ * white secondary — see heroTone.tsx), so a pair of navy store buttons is the
+ * hero's primary control twice rather than a primary and a secondary. That is
+ * the intent: there is no second thing being asked for here, only two stores.
+ *
+ * `pending` is the not-yet-live case. Neither listing exists, so the button is
+ * drawn as normal, says so on hover and does nothing on click — see
+ * `isPlaceholderHref` in content/site.ts.
+ */
+function StoreButton({
+  label,
+  sub,
+  href,
+  icon: Icon,
+  size = 'default',
+}: (typeof stores)[number] & { size?: 'default' | 'lg' }) {
+  const pending = isPlaceholderHref(href)
+  const isLg = size === 'lg'
+  return (
+    <a
+      href={href}
+      target={pending ? undefined : '_blank'}
+      rel="noopener noreferrer"
+      title={pending ? 'Not connected yet — awaiting the store listing' : undefined}
+      onClick={(e) => {
+        if (pending) e.preventDefault()
+      }}
+      className={`corner-smooth flex items-center gap-4 bg-navy-800 text-left transition-transform duration-300 hover:scale-[1.03] active:scale-[0.98] ${
+        isLg ? 'rounded-[20px] px-6 py-3.5' : 'rounded-[16px] px-5 py-4'
+      } ${pending ? 'cursor-not-allowed' : ''}`}
+    >
+      <Icon size={isLg ? 27 : 24} strokeWidth={1.7} className="shrink-0 text-gold" />
+      <span className="min-w-0">
+        <span
+          className={`block truncate font-semibold text-white ${isLg ? 'text-base' : 'text-[15px]'}`}
+        >
+          {label}
+        </span>
+        <span className={`block text-white/50 ${isLg ? 'text-[13px]' : 'text-[12.5px]'}`}>
+          {sub}
+        </span>
+      </span>
+    </a>
+  )
+}
 
 export default function MembersApp() {
   const storeRef = useScrollReveal<HTMLDivElement>({ y: 26, delay: 0.1 })
@@ -89,29 +146,23 @@ export default function MembersApp() {
     <>
       <PageHero
         tone="sky"
-        eyebrow="FORTIVA APP"
-        titleTop="Your health coverage,"
-        titleBottom="simplified."
+        /* One sentence across two lines, and the weight break is the accent —
+           PageHero sets `titleTop` in regular and `titleBottom` in bold, so
+           "Fortiva App" carries without needing a second colour. */
+        titleTop="Download the"
+        titleBottom="Fortiva App"
         lede={
           <>
-            The Fortiva App puts everything you need to manage your plan right at your
-            fingertips &mdash; your cover, your claims, your ID card and a way to reach us.
+            Your health coverage, simplified. The Fortiva App puts everything you need to
+            manage your plan right at your fingertips.
           </>
         }
-        actions={
-          <>
-            <ActionButton variant="dark" icon="arrow" size="lg" href={externalTargets.appStore}>
-              Download now
-            </ActionButton>
-            <Button variant="white" size="lg" href="/members/portal">
-              Prefer the browser?
-            </Button>
-          </>
-        }
+        actions={stores.map((store) => (
+          <StoreButton key={store.label} {...store} size="lg" />
+        ))}
       />
 
       <PhoneShowcase
-        eyebrow="IN THE APP"
         heading={
           <>
             Five things you can do <span className="text-gold-dark">from your pocket</span>
@@ -123,7 +174,6 @@ export default function MembersApp() {
 
       <StepFlow
         surface="white"
-        eyebrow="GETTING STARTED"
         heading={
           <>
             Three steps and <span className="text-gold-dark">you&rsquo;re in</span>
@@ -133,32 +183,9 @@ export default function MembersApp() {
         steps={gettingStarted}
         action={
           <div ref={storeRef} className="grid w-full gap-4 opacity-0 sm:max-w-lg sm:grid-cols-2">
-            {stores.map(({ label, sub, href, icon: Icon }) => {
-              const pending = isPlaceholderHref(href)
-              return (
-                <a
-                  key={label}
-                  href={href}
-                  target={pending ? undefined : '_blank'}
-                  rel="noopener noreferrer"
-                  title={pending ? 'Not connected yet — awaiting the store listing' : undefined}
-                  onClick={(e) => {
-                    if (pending) e.preventDefault()
-                  }}
-                  className={`corner-smooth flex items-center gap-4 rounded-[16px] bg-navy-800 px-5 py-4 text-left transition-transform duration-300 hover:scale-[1.02] ${
-                    pending ? 'cursor-not-allowed' : ''
-                  }`}
-                >
-                  <Icon size={24} strokeWidth={1.7} className="shrink-0 text-gold" />
-                  <span className="min-w-0">
-                    <span className="block truncate text-[15px] font-semibold text-white">
-                      {label}
-                    </span>
-                    <span className="block text-[12.5px] text-white/50">{sub}</span>
-                  </span>
-                </a>
-              )
-            })}
+            {stores.map((store) => (
+              <StoreButton key={store.label} {...store} />
+            ))}
           </div>
         }
       />
@@ -181,7 +208,7 @@ export default function MembersApp() {
             <ActionButton variant="light" icon="arrow" size="lg" href={externalTargets.appStore}>
               Download now
             </ActionButton>
-            <Button variant="ghost" size="lg" href="/members/portal">
+            <Button variant="dark" size="lg" href="/members/portal">
               Member Portal
             </Button>
           </>

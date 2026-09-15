@@ -48,7 +48,6 @@ export interface HeroToneTokens {
    * trick is not available to the four-colour logo; see Logo.tsx.)
    */
   mark: string | null
-  eyebrow: string
   /** Which Logo the floating nav needs while it is still transparent. */
   navLogo: 'dark' | 'light' | 'ink'
   /** Nav link ink while transparent, and its hover. */
@@ -78,7 +77,6 @@ export const HERO_TONES: Record<HeroTone, HeroToneTokens> = {
     title: 'text-navy-800',
     lede: 'text-navy-800',
     mark: null,
-    eyebrow: 'bg-navy-800/[0.08] text-navy-800/75',
     navLogo: 'dark',
     navInk: 'text-navy-800/90',
     navInkHover: 'hover:text-navy-800',
@@ -101,7 +99,6 @@ export const HERO_TONES: Record<HeroTone, HeroToneTokens> = {
     title: 'text-navy-800',
     lede: 'text-navy-800/90',
     mark: 'bg-white',
-    eyebrow: 'bg-navy-800/10 text-navy-800/80',
     /* `ink`, not `dark`. The four-colour logo is 11 gold paths out of 42 — the
        whole lotus — and those go invisible on this field. The monochrome navy
        mark keeps the artwork whole; see Logo.tsx. */
@@ -121,7 +118,6 @@ export const HERO_TONES: Record<HeroTone, HeroToneTokens> = {
     title: 'text-white',
     lede: 'text-white/80',
     mark: 'bg-white',
-    eyebrow: 'bg-white/10 text-white/75',
     navLogo: 'light',
     navInk: 'text-white/85',
     navInkHover: 'hover:text-white',
@@ -131,22 +127,13 @@ export const HERO_TONES: Record<HeroTone, HeroToneTokens> = {
   },
 
   /* Pale enough that the four-colour nav logo reads on it unchanged — all four of
-     its inks are darker than #A9CEDB — so the nav keeps the brand mark as drawn.
-
-     ── The eyebrow chip carries white, and the other four tones do not ─────────
-     Every other tone tints its chip with its own INK at 8-10%, which works
-     wherever ink and field are far apart. On this one they are not: navy at 8%
-     over #A9CEDB lands on #9DC3D0, about a 4% step off the field, and the chip
-     was invisible. White at 55% goes the other way to #D2E6EC — a comparable step
-     in the opposite direction, so it reads as the same soft pill rather than as a
-     harder one. */
+     its inks are darker than #A9CEDB — so the nav keeps the brand mark as drawn. */
   sky: {
     surface: 'bg-[#A9CEDB]',
     backdrop: images.heroBgSky,
     title: 'text-navy-800',
     lede: 'text-navy-800/90',
     mark: 'bg-white',
-    eyebrow: 'bg-white/55 text-navy-800/85',
     navLogo: 'dark',
     navInk: 'text-navy-800/90',
     navInkHover: 'hover:text-navy-800',
@@ -165,7 +152,6 @@ export const HERO_TONES: Record<HeroTone, HeroToneTokens> = {
     title: 'text-white',
     lede: 'text-white/85',
     mark: 'bg-gold',
-    eyebrow: 'bg-white/15 text-white/80',
     navLogo: 'light',
     navInk: 'text-white/85',
     navInkHover: 'hover:text-white',

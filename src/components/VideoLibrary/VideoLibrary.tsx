@@ -34,7 +34,6 @@ export interface VideoItem {
 }
 
 interface VideoLibraryProps {
-  eyebrow?: string
   heading: ReactNode
   intro?: ReactNode
   videos: VideoItem[]
@@ -95,7 +94,6 @@ const WASHES = [
 ]
 
 export default function VideoLibrary({
-  eyebrow,
   heading,
   intro,
   videos,
@@ -214,16 +212,9 @@ export default function VideoLibrary({
   return (
     <section id={id} className={`scroll-mt-32 px-6 py-24 sm:py-28 ${className}`}>
       <div className="mx-auto max-w-container">
-        {eyebrow && (
-          <span className="inline-block rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-            {eyebrow}
-          </span>
-        )}
         <h2
           ref={headingRef}
-          className={`max-w-2xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px] ${
-            eyebrow ? 'mt-5' : ''
-          }`}
+          className="max-w-2xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
         >
           {heading}
         </h2>

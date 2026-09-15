@@ -7,8 +7,6 @@ import { HERO_TONES, type HeroTone, useDeclareHeroTone } from './heroTone'
 export type { HeroTone }
 
 interface PageHeroProps {
-  /** Small caps label above the mark — usually the page's own nav label. */
-  eyebrow?: string
   /** Set in regular; the setup half of the headline. */
   titleTop: ReactNode
   /** Set in bold; the payoff half. Rendered on its own line. */
@@ -21,7 +19,7 @@ interface PageHeroProps {
    * section shipped with.
    *
    * A tone is a complete set: backdrop, the surface it dissolves into, the mark's
-   * ink, the eyebrow chip, both halves of the headline, the lede, and the
+   * ink, both halves of the headline, the lede, and the
    * floating nav's own logo and link ink. See HERO_TONES in heroTone.tsx.
    *
    * The one thing it does NOT own is the buttons, because those are passed in as
@@ -64,7 +62,6 @@ const MARK_SIZE = 'h-16 w-[50px] sm:h-[84px] sm:w-[66px]'
  * to one file rather than to nineteen.
  */
 export default function PageHero({
-  eyebrow,
   titleTop,
   titleBottom,
   lede,
@@ -84,7 +81,20 @@ export default function PageHero({
 
   return (
     <section
-      className={`relative flex min-h-[72vh] flex-col items-center justify-center overflow-hidden px-6 pb-24 pt-36 text-center sm:pb-28 sm:pt-40 ${t.surface}`}
+      /* FULL VIEWPORT from `lg`, 72vh below it. The interior heroes used to be
+         72vh everywhere, on the reasoning that an inner page should reach its
+         content sooner than the homepage does — but that left every one of them
+         ending a little way up the screen, so the first thing a desktop visitor
+         saw was a hero with the top of the next section already pushing into it.
+         They are the homepage's height now and the page below them starts below
+         the fold, which is the composition the homepage has always had.
+
+         `min-h-screen` rather than `h-screen`: the padding and the content still
+         set the height wherever they need more than a screen, so a long lede or a
+         wrapped headline grows the section instead of overflowing it. Under `lg`
+         it stays 72vh — a phone screen is mostly vertical and a full-height hero
+         there is a whole scroll before anything is said. */
+      className={`relative flex min-h-[72vh] flex-col items-center justify-center overflow-hidden px-6 pb-24 pt-36 text-center sm:pb-28 sm:pt-40 lg:min-h-screen ${t.surface}`}
     >
       {/* The backdrop, edge to edge. `object-cover` with a top-biased position
           keeps the arcs' crossing point in frame on short, wide viewports rather
@@ -126,13 +136,6 @@ export default function PageHero({
               aria-hidden="true"
               className="block h-16 w-auto sm:h-[84px]"
             />
-          )}
-          {eyebrow && (
-            <span
-              className={`mt-5 inline-block rounded-full px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] ${t.eyebrow}`}
-            >
-              {eyebrow}
-            </span>
           )}
         </div>
 

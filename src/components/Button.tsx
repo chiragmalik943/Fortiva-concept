@@ -80,7 +80,14 @@ const baseColors: Record<NonNullable<ButtonProps['variant']>, string> = {
 // and goes gold once the button itself has gone navy.
 const badgeColors: Record<string, string> = {
   light: 'bg-gold text-navy-800',
-  white: 'bg-gold text-navy-800',
+  // NAVY, where the other three white-pill variants take gold. `white` is the
+  // variant for saturated fields — gold, teal, navy, sky — and on a GOLD field a
+  // gold badge on a white pill is the brand colour twice within 8px of itself,
+  // with the pill the only thing separating them. Navy is the ink the pill's own
+  // label already carries, so the badge reads as part of the button rather than
+  // as a swatch of the section behind it. Nothing used `white` with an icon
+  // before the gold promise band did, so this changes one button.
+  white: 'bg-navy-800 text-white',
   gold: 'bg-navy-800 text-white group-hover:bg-gold group-hover:text-navy-800',
   dark: 'bg-gold text-navy-800',
 }

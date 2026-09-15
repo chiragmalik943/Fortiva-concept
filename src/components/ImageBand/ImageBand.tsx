@@ -3,8 +3,14 @@ import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
 
 interface ImageBandProps {
-  eyebrow?: string
   heading: ReactNode
+  /**
+   * One line between the heading and the body, set larger than the body and in
+   * full-strength ink. For a caller whose copy opens on a claim the rest of the
+   * paragraph exists to support — lifting it out is what makes it read as the
+   * claim rather than as the paragraph's first sentence.
+   */
+  subheading?: ReactNode
   /** One or more paragraphs. Passed as nodes so a caller can emphasise inline. */
   body: ReactNode
   /** A short list under the body — three or four points, no more. */
@@ -69,8 +75,8 @@ interface ImageBandProps {
  * tells you a new section has started, which is the job the old cream plate did.
  */
 export default function ImageBand({
-  eyebrow,
   heading,
+  subheading,
   body,
   points,
   action,
@@ -120,22 +126,24 @@ export default function ImageBand({
             onLeft ? 'lg:ml-auto lg:pl-14 xl:pl-20' : 'lg:mr-auto lg:pr-14 xl:pr-20'
           }`}
         >
-          {eyebrow && (
-            <span className="inline-block self-start rounded-full bg-navy-800/5 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-navy-800/70">
-              {eyebrow}
-            </span>
-          )}
           <h2
             ref={headingRef}
-            className={`text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px] ${
-              eyebrow ? 'mt-5' : ''
-            }`}
+            className="text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
           >
             {heading}
           </h2>
 
           <div ref={bodyRef} className="opacity-0">
-            <div className="mt-7 flex flex-col gap-5 text-[16.5px] leading-[1.65] text-navy-800/75 sm:text-[17.5px]">
+            {subheading && (
+              <p className="mt-6 max-w-xl text-[19px] font-semibold leading-[1.45] text-navy-800 sm:text-[21px]">
+                {subheading}
+              </p>
+            )}
+            <div
+              className={`flex flex-col gap-5 text-[16.5px] leading-[1.65] text-navy-800/75 sm:text-[17.5px] ${
+                subheading ? 'mt-5' : 'mt-7'
+              }`}
+            >
               {body}
             </div>
 

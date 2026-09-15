@@ -353,6 +353,88 @@ export const images = {
   // its own width is only an aspect ratio.
   flourish: `${import.meta.env.BASE_URL}flourish.svg`,
 
+  // For Members → Member Portal → "Your portal". The six line icons inside the
+  // carousel cards, IN CARD ORDER — which is not the order the files arrived in.
+  //
+  // The delivered names (FTVA_For Members_Card Icon-1..6) carry spaces and say
+  // nothing about which card they belong to, and their numbering is not the
+  // running order: the CLAIM document is file 1 and card 2, the ID card is file 6
+  // and card 3. So they were renamed `portal-icn-N.png` and are listed here in
+  // the order the cards run, which is the only order any caller cares about:
+  //
+  //   1. View your plan details      ← portal-icn-4  (document + magnifier)
+  //   2. Track claims and payments   ← portal-icn-1  (CLAIM document + tick)
+  //   3. Download digital ID cards   ← portal-icn-6  (ID card + lotus)
+  //   4. Find care fast              ← portal-icn-5  (heart + cross)
+  //   5. Update personal information ← portal-icn-3  (window + refresh)
+  //   6. Get support                 ← portal-icn-2  (phone + headset)
+  //
+  // EXPECTS: navy (#12284B) line art on a TRANSPARENT background, roughly square,
+  // ~800px. They are drawn as plain <img> at a fixed height and they sit on both
+  // the grey resting card and the gold hover one, so anything with a white field
+  // baked in will show its own rectangle on the gold.
+  portalCardIcons: [4, 1, 6, 5, 3, 2].map(
+    (n) => `${import.meta.env.BASE_URL}portal-icn-${n}.png`,
+  ),
+
+  // For Brokers → Broker Overview → the pinned "FOR" sequence, in stage order:
+  // FOR you, FOR your clients, FOR change.
+  //
+  // EXPECTS: a full-bleed LANDSCAPE photograph, 1920 x 1080, with the lotus
+  // lattice already composited over its LEFT THIRD — which is where the white
+  // copy card sits, so the lattice reads as the card's surround rather than as a
+  // pattern over the subject. The three delivered files carry exactly that
+  // treatment and are the reference for any replacement. The subject belongs in
+  // the right two thirds; `object-cover` crops from the sides on a tall window.
+  brokerForStages: [
+    `${import.meta.env.BASE_URL}for-you.png`,
+    `${import.meta.env.BASE_URL}for-clients.png`,
+    `${import.meta.env.BASE_URL}for-change.png`,
+  ],
+
+  // For Members → Virtual Care → "Why virtual care?". The three photographs
+  // inside the discs, IN CARD ORDER — which is not the order the files are
+  // numbered in, the same trap `portalCardIcons` above carries:
+  //
+  //   1. 80%  — up to 80% of primary care handled virtually ← virtual-care-stat-2
+  //             (a doctor on a video call, which is the visit being described)
+  //   2. 30%  — ER visit lengths                            ← virtual-care-stat-1
+  //             (the EMERGENCY sign; this one fixes the order on its own)
+  //   3. 95%  — satisfaction                                ← virtual-care-stat-3
+  //             (someone smiling at their phone)
+  //
+  // Taken from the client's own design for this section, where the ER photograph
+  // is the middle disc. Left in file order the ER shot would have illustrated the
+  // primary-care number.
+  //
+  // EXPECTS: a finished disc — square, ~1080px, the subject already cropped to a
+  // CIRCLE with transparent corners, and already toned in the brand blue, dark
+  // enough in the middle for the gold numeral and the white sentence over it.
+  // StatCircles draws these untouched: it clips to a circle and puts type on top,
+  // and nothing in the code tints, dims or fades them any more. An ordinary
+  // untreated photograph dropped into one of these slots will be the only
+  // full-colour disc in a row of three blue ones.
+  virtualCareStats: [2, 1, 3].map(
+    (n) => `${import.meta.env.BASE_URL}virtual-care-stat-${n}.png`,
+  ),
+
+  // For Members → Virtual Care → "Virtual care made simple". A FULL-SECTION
+  // photograph, drawn full bleed under a navy scrim with the copy held in the
+  // right half.
+  //
+  // EXPECTS: a LANDSCAPE photograph, 1920 x 1080, that is LIGHT on its right two
+  // thirds — the delivered asset is a subject in the left third against a pale
+  // wall, with the lotus composited over them. There is no scrim over it any
+  // more, so that pale right side IS the surface the copy is read on, and the
+  // section's type is navy because of it. A darker replacement needs the inks
+  // turned back to white and something put between them and the picture; see the
+  // note on that section in pages/MembersVirtualCare.tsx.
+  //
+  // Drawn `object-cover object-center` into a band ~820px tall on a 1440px
+  // window, so it is cropped from the sides: keep the subject well left of centre
+  // and nothing important in the right 45%, which is behind the copy.
+  virtualCareSimple: `${import.meta.env.BASE_URL}virtual-care-bg.png`,
+
   // For Members → Resources → the Plan details + Blog band. A FULL-SECTION
   // photograph, 1920 x 1080, with the Fortiva lattice already composited in over
   // its right half, drawn full bleed with the two cards stacked on top of it.

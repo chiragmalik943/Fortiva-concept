@@ -60,7 +60,6 @@ export default function BrokersPortal() {
           to three lines and buried the name of the thing. */}
       <PageHero
         tone="dark"
-        eyebrow="BROKER PORTAL"
         titleTop="The Fortiva"
         titleBottom="Broker Portal."
         lede={
@@ -82,7 +81,6 @@ export default function BrokersPortal() {
       />
 
       <PortalShowcase
-        eyebrow="INSIDE THE PORTAL"
         heading={
           <>
             A secure hub <span className="text-gold-dark">where you can</span>
@@ -102,7 +100,6 @@ export default function BrokersPortal() {
           page answers the question the showcase raises — what it is like to work
           in day to day — with a photograph rather than another screen. */}
       <ImageBand
-        eyebrow="YOUR COMMAND CENTER"
         heading={
           <>
             More than a dashboard, <span className="text-gold-dark">start to finish</span>
@@ -148,7 +145,7 @@ export default function BrokersPortal() {
             >
               Log in to your Portal
             </ActionButton>
-            <Button variant="ghost" size="lg" href="/contact">
+            <Button variant="dark" size="lg" href="/contact">
               Request access
             </Button>
           </>
