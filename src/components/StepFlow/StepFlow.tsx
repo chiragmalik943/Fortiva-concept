@@ -1,5 +1,11 @@
-import { ReactNode, useEffect, useRef, useState } from 'react'
-import { gsap, prefersReducedMotion } from '../../animations/gsap'
+import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { gsap, ScrollTrigger, prefersReducedMotion } from '../../animations/gsap'
+import {
+  MOBILE_QUERY,
+  PIN_QUERY,
+  UNPINNED_QUERY,
+  pinDistance,
+} from '../../animations/pinnedSequence'
 import { useScrollReveal } from '../../hooks/useScrollReveal'
 import { useSplitReveal } from '../../hooks/useSplitReveal'
 
@@ -45,12 +51,31 @@ const SURFACES = {
  * sequence rather than just numbering it.
  *
  * ── The one interesting decision ─────────────────────────────────────────────
- * The fill is a GSAP scrub (continuous, 60fps, no React involved) but the dots
- * are React state, and the state only ever holds an integer: how many dots the
- * fill has passed. `onUpdate` fires on every scroll frame, so it derives that
+ * The fill is written by GSAP (continuous, 60fps, no React involved) but the
+ * dots are React state, and the state only ever holds an integer: how many dots
+ * the fill has passed. `onUpdate` fires on every scroll frame, so it derives that
  * integer and returns the previous value unchanged when it hasn't moved, which
  * makes React bail out of the re-render. A four-step flow therefore re-renders
  * four times across its whole scroll range instead of a few hundred.
+ *
+ * ── A section WITH illustrations pins itself; one without does not ──────────
+ * Unillustrated, this is a rail that fills as it goes past — it wants no more
+ * scroll than its own passage through the viewport, and `Plans` and `Providers →
+ * Overview` still get exactly that.
+ *
+ * Illustrated, that passage is far too short. The whole sequence ran across the
+ * ~410px between `top 78%` and `top 32%`, so by the time the fourth picture
+ * arrived the section was most of the way off the top of the screen and nobody
+ * had seen it. So when any step carries an image the section PINS: it holds still
+ * at the top of the viewport while `pinDistance` worth of scroll drives the fill,
+ * and it releases once the rail is full. Every step gets `PX_PER_STEP` to itself
+ * — including the last, which is the beat where all four pictures are up and
+ * nothing is still arriving — and only then does the page carry on.
+ *
+ * The `pin:` variants throughout are what make that possible: pinning an element
+ * taller than the viewport clips its bottom, so they trim the section to the
+ * screen it is about to occupy. All of them are inert on a window too short to
+ * pin, where the section keeps the unpinned behaviour above.
  *
  * Mobile drops the rail entirely rather than rotating it: a vertical rail has to
  * thread between items whose heights vary with their copy, which means measuring
@@ -149,6 +174,7 @@ export default function StepFlow({
 }: StepFlowProps) {
   const s = SURFACES[surface]
   const hasImages = steps.some((step) => step.image)
+  const sectionRef = useRef<HTMLElement>(null)
   const railRef = useRef<HTMLDivElement>(null)
   const fillRef = useRef<HTMLDivElement>(null)
   const [reached, setReached] = useState(0)
@@ -166,47 +192,89 @@ export default function StepFlow({
     })
   }, [steps])
 
-  useEffect(() => {
+  /* ── useLayoutEffect, and it is not a preference ─────────────────────────
+     `pin: true` makes ScrollTrigger wrap this section in a `.pin-spacer` — it
+     inserts a parent between the section and the parent React put it in. A
+     passive `useEffect` cleanup runs after React has already detached nodes, so
+     on a route change React calls removeChild on a node whose real parent is now
+     the spacer, throws, and takes the whole tree down with it. The note at the
+     top of animations/pinnedSequence.ts records that in full; every pinning call
+     site on this site uses a layout effect for it. */
+  useLayoutEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+
     if (prefersReducedMotion) {
       setReached(steps.length)
       gsap.set(fillRef.current, { scaleX: 1 })
       return
     }
 
-    const mm = gsap.matchMedia()
+    /** Draw the rail to `progress` and light however many dots it has passed. */
+    const advance = (progress: number) => {
+      gsap.set(fillRef.current, { scaleX: progress })
+      const next = Math.min(steps.length, Math.ceil(progress * steps.length))
+      setReached((prev) => (prev === next ? prev : next))
+    }
 
-    mm.add('(min-width: 1024px)', () => {
-      gsap.fromTo(
-        fillRef.current,
-        { scaleX: 0 },
-        {
-          scaleX: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: railRef.current,
-            start: 'top 78%',
-            end: 'top 32%',
-            scrub: 0.4,
-            onUpdate: (self) => {
-              const next = Math.min(steps.length, Math.ceil(self.progress * steps.length))
-              setReached((prev) => (prev === next ? prev : next))
-            },
-          },
-        },
-      )
-    })
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia()
 
-    // No rail below lg, so every dot is simply lit.
-    mm.add('(max-width: 1023.98px)', () => {
-      setReached(steps.length)
-    })
+      // ── PINNED: illustrated, and a window with room to hold the section ──
+      if (hasImages) {
+        mm.add(PIN_QUERY, () => {
+          ScrollTrigger.create({
+            trigger: section,
+            start: 'top top',
+            end: `+=${pinDistance(steps.length)}`,
+            pin: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => advance(self.progress),
+          })
 
-    return () => mm.revert()
-  }, [steps.length])
+          return () => advance(0)
+        })
+      }
+
+      // ── UNPINNED: the rail fills as the section goes past ────────────────
+      // The behaviour this section shipped with, and still the right one for a
+      // caller with no pictures to wait for — or for a window too short to pin,
+      // where pinning would clip the section's own foot.
+      mm.add(hasImages ? UNPINNED_QUERY : '(min-width: 1024px)', () => {
+        /* No `scrub` any more, and nothing is lost by it. The fill used to be a
+           tween that ScrollTrigger scrubbed, which smoothed it by 0.4s; it is
+           written directly from `progress` now, and Lenis has already smoothed
+           the scroll this reads. `matchMedia` kills the trigger itself when the
+           query stops matching, so the cleanup only has to put the rail back. */
+        ScrollTrigger.create({
+          trigger: railRef.current,
+          start: 'top 78%',
+          end: 'top 32%',
+          onUpdate: (self) => advance(self.progress),
+        })
+
+        return () => advance(0)
+      })
+
+      // No rail below lg, so every dot is simply lit.
+      mm.add(MOBILE_QUERY, () => {
+        setReached(steps.length)
+        gsap.set(fillRef.current, { scaleX: 1 })
+      })
+    }, section)
+
+    return () => ctx.revert()
+  }, [steps.length, hasImages])
 
   return (
-    <section className={`px-6 py-24 sm:py-28 ${s.section}`}>
-      <div className="mx-auto max-w-container">
+    <section
+      ref={sectionRef}
+      className={`px-6 py-24 sm:py-28 ${s.section} ${
+        hasImages ? 'pin:flex pin:h-screen pin:items-center pin:overflow-hidden pin:pb-10 pin:pt-24' : ''
+      }`}
+    >
+      <div className="mx-auto w-full max-w-container">
         <h2
           ref={headingRef}
           className="max-w-2xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
@@ -226,7 +294,7 @@ export default function StepFlow({
              height is fixed so that four pictures of four proportions line up
              along it, and `hidden lg:flex` because below `lg` each one goes back
              inside its own step. */
-          <div aria-hidden="true" className="mt-16 hidden h-[170px] gap-8 lg:flex">
+          <div aria-hidden="true" className="mt-16 hidden h-[170px] gap-8 lg:flex pin:mt-10 pin:h-[150px]">
             {steps.map((step, i) => (
               <div key={step.title} className="flex flex-1 items-end">
                 <Illustration image={step.image} lit={i < reached} />
@@ -235,7 +303,7 @@ export default function StepFlow({
           </div>
         )}
 
-        <div ref={railRef} className={`relative ${hasImages ? 'mt-10 lg:mt-8' : 'mt-16'}`}>
+        <div ref={railRef} className={`relative ${hasImages ? 'mt-10 lg:mt-8 pin:mt-7' : 'mt-16'}`}>
           {/* The rail and its fill sit behind the dots — `top` is half the dot's
               height, so the line meets each dot's centre. */}
           <div
@@ -283,7 +351,7 @@ export default function StepFlow({
           </ol>
         </div>
 
-        {action && <div className="mt-14 flex flex-wrap gap-3">{action}</div>}
+        {action && <div className="mt-14 flex flex-wrap gap-3 pin:mt-9">{action}</div>}
       </div>
     </section>
   )
