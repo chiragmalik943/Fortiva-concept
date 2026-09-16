@@ -66,14 +66,17 @@ const gettingStarted: Step[] = [
   {
     title: 'Open your store',
     body: 'Apple users go to the App Store, Android users to Google Play.',
+    image: images.appSteps[0],
   },
   {
     title: 'Search “Fortiva”',
     body: 'Download the app and it will be ready the moment it finishes installing.',
+    image: images.appSteps[1],
   },
   {
     title: 'Log in or sign up',
     body: 'Use your member credentials to reach your personalized health insurance dashboard.',
+    image: images.appSteps[2],
   },
 ]
 

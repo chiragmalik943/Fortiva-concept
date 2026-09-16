@@ -353,6 +353,51 @@ export const images = {
   // its own width is only an aspect ratio.
   flourish: `${import.meta.env.BASE_URL}flourish.svg`,
 
+  // ── The two StepFlow illustration sets ──────────────────────────────────
+  //
+  // One animation per step, IN STEP ORDER — which is not the order the files
+  // were numbered in on Virtual Care: the prescription animation is file 3 and
+  // belongs to step 04 ("Get care"), the two-phone consultation is file 4 and
+  // belongs to step 03 ("Connect with a provider"). The client's own design for
+  // this section is what settles that, and left in file order the prescription
+  // would have illustrated "connect with a provider". The App set is already in
+  // step order.
+  //
+  // ── These are DERIVED files, not the delivered ones ──────────────────────
+  // The GIFs that arrived could not be drawn without a background: they declare a
+  // transparency index, but it points at pure green and nothing uses it — the
+  // field is opaque BLACK, flattened out of what looks like a chroma-key export.
+  // StepFlow draws these straight onto the section, so each one was a black
+  // rectangle, and no blend mode saves it (every mode that drops black on a light
+  // background drops the navy line work with it).
+  //
+  // So the `.webp` files these point at were built from the GIFs by ramping alpha
+  // in over the first 60 levels of luminance: the black field goes fully
+  // transparent, anti-aliased edges keep their softness rather than leaving a
+  // fringe, and nothing in the artwork is dark enough to be touched. They are
+  // ~450 x 340, which is 2x the size they are drawn at, and they all loop — two
+  // of the GIFs did not.
+  //
+  // The GIFs are still in `public/` beside them and nothing points at them. A
+  // re-export from the source with a real alpha channel is better than a derived
+  // file and should replace these; the only thing it has to be is TRANSPARENT.
+  //
+  // EXPECTS, for a replacement: a transparent-background animation in the brand
+  // navy, landscape, roughly 4:3. They are drawn `object-contain` at a fixed
+  // HEIGHT with the width left to the file, hanging from one baseline above the
+  // rail — so different proportions sit side by side happily; only a wildly
+  // different aspect would look out of place.
+  virtualCareSteps: [1, 2, 4, 3].map(
+    (n) => `${import.meta.env.BASE_URL}vc-step-${n}.webp`,
+  ),
+  appSteps: [1, 2, 3].map((n) => `${import.meta.env.BASE_URL}app-step-${n}.webp`),
+
+  // For Members → Virtual Care → the MyLiveDoc band. The partner's own logo,
+  // 429 x 245 with a transparent background, drawn `object-contain` at its own
+  // size on a white section. It is a third party's mark, so nothing tints,
+  // masks or recolours it — it is drawn exactly as delivered.
+  myLiveDocLogo: `${import.meta.env.BASE_URL}mylivedoc-logo.png`,
+
   // For Members → Member Portal → "Your portal". The six line icons inside the
   // carousel cards, IN CARD ORDER — which is not the order the files arrived in.
   //

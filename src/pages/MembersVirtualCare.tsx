@@ -19,6 +19,7 @@ import { useSplitReveal } from '../hooks/useSplitReveal'
  *
  *   H1                        → PageHero
  *   Virtual care made simple  → the photo band, copy held in its right half
+ *   MyLiveDoc                 → the short logo band under it
  *   MyLiveDoc + How It Works  → StepFlow
  *   Why virtual care? + stats → StatCircles, footnotes included
  *   Key benefits              → FeatureReveal, the scroll-in card band
@@ -31,15 +32,25 @@ import { useSplitReveal } from '../hooks/useSplitReveal'
  * reasons is a different claim from the one the client actually made.
  */
 const howItWorks: Step[] = [
-  { title: 'Sign in', body: 'Access MyLiveDoc through your Fortiva member portal.' },
-  { title: 'Choose your visit', body: 'Select the type of care you need.' },
+  {
+    title: 'Sign in',
+    body: 'Access MyLiveDoc through your Fortiva member portal.',
+    image: images.virtualCareSteps[0],
+  },
+  {
+    title: 'Choose your visit',
+    body: 'Select the type of care you need.',
+    image: images.virtualCareSteps[1],
+  },
   {
     title: 'Connect with a provider',
     body: 'Meet virtually via video call for personalized care.',
+    image: images.virtualCareSteps[2],
   },
   {
     title: 'Get care',
     body: 'Receive prescriptions, treatment advice and follow-up instructions directly through the platform.',
+    image: images.virtualCareSteps[3],
   },
 ]
 
@@ -105,6 +116,9 @@ const footnoteLink =
 export default function MembersVirtualCare() {
   const simpleHeadingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
   const simpleBodyRef = useScrollReveal<HTMLDivElement>({ y: 24, delay: 0.12 })
+  const liveDocHeadingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
+  const liveDocBodyRef = useScrollReveal<HTMLDivElement>({ y: 22, delay: 0.12 })
+  const liveDocLogoRef = useScrollReveal<HTMLDivElement>({ y: 26, delay: 0.18 })
 
   return (
     <>
@@ -193,12 +207,6 @@ export default function MembersVirtualCare() {
                 or need quick advice, virtual visits through MyLiveDoc make health care more
                 convenient and affordable.
               </p>
-              <p className="mt-5 text-[15.5px] leading-relaxed text-navy-800/65">
-                MyLiveDoc is a secure, HIPAA-compliant telehealth platform that connects you
-                with licensed health care providers. Through easy-to-use video visits, you can
-                get care for common conditions, request prescriptions and receive follow-up
-                guidance &mdash; all without leaving home.
-              </p>
               <div className="mt-9 flex flex-wrap gap-3">
                 <ActionButton variant="gold" icon="arrow" href={externalTargets.myLiveDoc}>
                   Start a visit
@@ -214,6 +222,58 @@ export default function MembersVirtualCare() {
                 room.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── MyLiveDoc ──────────────────────────────────────────────────────
+          A short band naming the platform, immediately before the four steps
+          that run inside it.
+
+          The paragraph is not new copy: it was the SECOND paragraph of the
+          photograph band above, where it sat under a heading about virtual care
+          in general and had the partner's name in its first four words with
+          nothing to attach it to. It is the whole of this section now and it has
+          been taken out of that one, because the same four sentences twice in
+          400px is worse than either place on its own.
+
+          Deliberately short — `py-16` against the `py-24`/`py-28` every other
+          band on this page runs. It is an introduction to the section under it,
+          not a section in its own right, and a full-height band here would
+          separate MyLiveDoc from the steps it belongs to.
+
+          The logo is a THIRD PARTY'S MARK: drawn at its own proportions, on
+          white, with nothing tinting or masking it. */}
+      <section className="bg-white px-6 py-16 sm:py-20">
+        <div className="mx-auto grid max-w-container items-center gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-20">
+          <div>
+            <h2
+              ref={liveDocHeadingRef}
+              className="text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
+            >
+              {/* One ink, no accent. Every other heading on this site splits
+                  its colour, and this one must not: "MyLiveDoc" is a third
+                  party's wordmark, and half of it in Fortiva's gold is their
+                  name restyled — with their own logo beside it showing what it
+                  should look like. */}
+              MyLiveDoc
+            </h2>
+            <div ref={liveDocBodyRef} className="opacity-0">
+              <p className="mt-5 max-w-2xl text-[16px] leading-[1.65] text-navy-800/75 sm:text-[17px]">
+                MyLiveDoc is a secure, HIPAA-compliant telehealth platform that connects you
+                with licensed health care providers. Through easy-to-use video visits, you can
+                get care for common conditions, request prescriptions and receive follow-up
+                guidance &mdash; all without leaving home.
+              </p>
+            </div>
+          </div>
+
+          <div ref={liveDocLogoRef} className="opacity-0 lg:justify-self-end">
+            <img
+              src={images.myLiveDocLogo}
+              alt="MyLiveDoc"
+              className="h-auto w-full max-w-[300px] select-none lg:max-w-[340px]"
+            />
           </div>
         </div>
       </section>
