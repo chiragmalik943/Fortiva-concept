@@ -253,6 +253,7 @@ export default function Plans() {
   return (
     <>
       <PageHero
+        eyebrow="Plans"
         tone="dark"
         titleTop="Plans built"
         titleBottom="for real life."

@@ -123,6 +123,15 @@ export const images = {
   // the picture wants a practice at work rather than a patient being reassured.
   featureProviderCommitment: `${import.meta.env.BASE_URL}img-23.png`,
 
+  // Partner with Us → By working with Fortiva, you gain. The client's delivered
+  // photograph, unlike the four FeatureReveal backdrops above it: a navy duotone
+  // over a group of clinicians, dark corner to corner rather than dissolving to
+  // a light field anywhere — including the bottom-left, where the heading, lead
+  // and button sit. That's why this is the one FeatureReveal instance on the
+  // site drawn with `tone="dark"` (see the note on the call site in
+  // ProvidersPartnerWithUs.tsx): white type is what stays legible on it.
+  featureProviderPartner: `${import.meta.env.BASE_URL}provider-partner-feature.png`,
+
   // About → Guided by principles. A FULL-SECTION composition, 1440 x 913, not a
   // photograph to be arranged: the consulting-room shot, the lotus lattice panel
   // down its right edge, and its own dissolve on the left and at the foot. It is

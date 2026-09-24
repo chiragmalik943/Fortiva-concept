@@ -38,6 +38,7 @@ export default function NotFound({ path }: { path: string }) {
   return (
     <>
       <PageHero
+        eyebrow="404"
         titleTop={<>We couldn&rsquo;t find</>}
         titleBottom="that page."
         lede={

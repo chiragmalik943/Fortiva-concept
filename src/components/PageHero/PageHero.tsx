@@ -7,6 +7,8 @@ import { HERO_TONES, type HeroTone, useDeclareHeroTone } from './heroTone'
 export type { HeroTone }
 
 interface PageHeroProps {
+  /** A small uppercase kicker label rendered above the headline, naming the page's own topic. */
+  eyebrow?: ReactNode
   /** Set in regular; the setup half of the headline. */
   titleTop: ReactNode
   /** Set in bold; the payoff half. Rendered on its own line. */
@@ -14,6 +16,8 @@ interface PageHeroProps {
   lede?: ReactNode
   /** Buttons or links, rendered under the lede. */
   actions?: ReactNode
+  /** Small print rendered after the actions — footnotes, disclaimers, "how to get started" copy. */
+  note?: ReactNode
   /**
    * Which surface the page opens on. Defaults to `mist`, the treatment this
    * section shipped with.
@@ -30,6 +34,14 @@ interface PageHeroProps {
    * instead of a Button.
    */
   tone?: HeroTone
+  /**
+   * Overrides the tone's own mark colour (`HERO_TONES[tone].mark`) for this
+   * hero only — a Tailwind background utility such as `'bg-gold'`, used the same
+   * way the mask in this file already uses the tone's own mark class. Lets a
+   * handful of pages repaint the mark without forking the whole tone, which
+   * would also touch the surface, nav ink and everything else the tone owns.
+   */
+  markClassName?: string
 }
 
 /* ── There is no backdrop mask any more, and that was the point ──────────────
@@ -62,13 +74,17 @@ const MARK_SIZE = 'h-16 w-[50px] sm:h-[84px] sm:w-[66px]'
  * to one file rather than to nineteen.
  */
 export default function PageHero({
+  eyebrow,
   titleTop,
   titleBottom,
   lede,
   actions,
+  note,
   tone = 'mist',
+  markClassName,
 }: PageHeroProps) {
   const t = HERO_TONES[tone]
+  const markClass = markClassName ?? t.mark
 
   // Tells the floating nav which ink it needs while it is still transparent.
   // See the note above HeroToneContext in heroTone.tsx.
@@ -77,6 +93,7 @@ export default function PageHero({
   const lineOneRef = useSplitReveal<HTMLSpanElement>({ type: 'words', immediate: true, delay: 0.2 })
   const lineTwoRef = useSplitReveal<HTMLSpanElement>({ type: 'words', immediate: true, delay: 0.36 })
   const markRef = useScrollReveal<HTMLDivElement>({ y: 16, duration: 0.7, delay: 0.05, start: 'top 95%' })
+  const eyebrowRef = useScrollReveal<HTMLParagraphElement>({ y: 12, duration: 0.6, delay: 0.16, start: 'top 95%' })
   const ledeRef = useScrollReveal<HTMLDivElement>({ y: 18, duration: 0.8, delay: 0.58, start: 'top 95%' })
 
   return (
@@ -114,10 +131,10 @@ export default function PageHero({
               the other three it is repainted, which means the SVG is used as a
               mask and the colour comes from a background utility — the artwork is
               single-colour, so nothing is lost. See `mark` in heroTone.tsx. */}
-          {t.mark ? (
+          {markClass ? (
             <span
               aria-hidden="true"
-              className={`block ${MARK_SIZE} ${t.mark}`}
+              className={`block ${MARK_SIZE} ${markClass}`}
               style={{
                 maskImage: `url(${images.icon})`,
                 WebkitMaskImage: `url(${images.icon})`,
@@ -139,10 +156,19 @@ export default function PageHero({
           )}
         </div>
 
+        {eyebrow && (
+          <p
+            ref={eyebrowRef}
+            className={`mt-6 text-xs font-semibold uppercase tracking-[0.2em] opacity-0 sm:mt-7 sm:text-[13px] ${t.lede}`}
+          >
+            {eyebrow}
+          </p>
+        )}
+
         {/* Two spans, two weights, ONE colour. `opacity-0` here is the reveal's
             starting state, not a tint — useSplitReveal animates it to 1 — so the
             headline has no alpha on it once the page has settled. */}
-        <h1 className={`mt-6 max-w-4xl sm:mt-7 ${t.title}`}>
+        <h1 className={`${eyebrow ? 'mt-3' : 'mt-6 sm:mt-7'} max-w-4xl ${t.title}`}>
           <span
             ref={lineOneRef}
             className="block text-[36px] font-normal leading-[1.4] tracking-tight opacity-0 sm:text-[48px] lg:text-[58px]"
@@ -157,7 +183,7 @@ export default function PageHero({
           </span>
         </h1>
 
-        {(lede || actions) && (
+        {(lede || actions || note) && (
           <div ref={ledeRef} className="opacity-0">
             {lede && (
               <p className={`mx-auto mt-7 max-w-3xl text-[15.5px] leading-relaxed sm:text-[17px] ${t.lede}`}>
@@ -166,6 +192,9 @@ export default function PageHero({
             )}
             {actions && (
               <div className="mt-9 flex flex-wrap items-center justify-center gap-3">{actions}</div>
+            )}
+            {note && (
+              <p className={`mx-auto mt-7 max-w-2xl text-[13.5px] leading-relaxed ${t.lede}`}>{note}</p>
             )}
           </div>
         )}

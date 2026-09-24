@@ -28,6 +28,12 @@ interface StepFlowProps {
   /** Controls the section fill AND the ring that punches the rail out behind
       each numbered dot — they have to be the same colour, so they're one knob. */
   surface?: 'white' | 'cream'
+  /** Force the pinned, held-in-place reveal even when no step carries an
+      illustration. Unset, pinning follows whether any step has an `image` —
+      see the docblock below. Pass `pin` for a section with nothing to
+      illustrate that should still hold still while its dots light in
+      sequence, the way an illustrated one does. */
+  pin?: boolean
 }
 
 /* `cream` is the page's one opt-in grey plate — the `cream` tokens are white
@@ -58,19 +64,25 @@ const SURFACES = {
  * makes React bail out of the re-render. A four-step flow therefore re-renders
  * four times across its whole scroll range instead of a few hundred.
  *
- * ── A section WITH illustrations pins itself; one without does not ──────────
+ * ── A section WITH illustrations pins itself; one without does not — unless
+ *    asked ─────────────────────────────────────────────────────────────────
  * Unillustrated, this is a rail that fills as it goes past — it wants no more
- * scroll than its own passage through the viewport, and `Plans` and `Providers →
- * Overview` still get exactly that.
+ * scroll than its own passage through the viewport, and `Plans` still gets
+ * exactly that. `pin` is the escape hatch: a caller with nothing to reveal can
+ * still ask for the held-in-place dwell (Providers → Overview does, so its
+ * numbered dots light in sequence while the section holds rather than
+ * scrolling past in one pass). Left unset, `pin` defaults to whether any step
+ * carries an image.
  *
  * Illustrated, that passage is far too short. The whole sequence ran across the
  * ~410px between `top 78%` and `top 32%`, so by the time the fourth picture
  * arrived the section was most of the way off the top of the screen and nobody
- * had seen it. So when any step carries an image the section PINS: it holds still
- * at the top of the viewport while `pinDistance` worth of scroll drives the fill,
- * and it releases once the rail is full. Every step gets `PX_PER_STEP` to itself
- * — including the last, which is the beat where all four pictures are up and
- * nothing is still arriving — and only then does the page carry on.
+ * had seen it. So when any step carries an image — or `pin` is passed — the
+ * section PINS: it holds still at the top of the viewport while `pinDistance`
+ * worth of scroll drives the fill, and it releases once the rail is full. Every
+ * step gets `PX_PER_STEP` to itself — including the last, which is the beat
+ * where every dot (and picture, if there is one) is already up and nothing is
+ * still arriving — and only then does the page carry on.
  *
  * The `pin:` variants throughout are what make that possible: pinning an element
  * taller than the viewport clips its bottom, so they trim the section to the
@@ -171,9 +183,11 @@ export default function StepFlow({
   steps,
   action,
   surface = 'white',
+  pin,
 }: StepFlowProps) {
   const s = SURFACES[surface]
   const hasImages = steps.some((step) => step.image)
+  const pinned = pin ?? hasImages
   const sectionRef = useRef<HTMLElement>(null)
   const railRef = useRef<HTMLDivElement>(null)
   const fillRef = useRef<HTMLDivElement>(null)
@@ -220,8 +234,8 @@ export default function StepFlow({
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia()
 
-      // ── PINNED: illustrated, and a window with room to hold the section ──
-      if (hasImages) {
+      // ── PINNED: illustrated (or asked for), and room to hold the section ─
+      if (pinned) {
         mm.add(PIN_QUERY, () => {
           ScrollTrigger.create({
             trigger: section,
@@ -241,7 +255,7 @@ export default function StepFlow({
       // The behaviour this section shipped with, and still the right one for a
       // caller with no pictures to wait for — or for a window too short to pin,
       // where pinning would clip the section's own foot.
-      mm.add(hasImages ? UNPINNED_QUERY : '(min-width: 1024px)', () => {
+      mm.add(pinned ? UNPINNED_QUERY : '(min-width: 1024px)', () => {
         /* No `scrub` any more, and nothing is lost by it. The fill used to be a
            tween that ScrollTrigger scrubbed, which smoothed it by 0.4s; it is
            written directly from `progress` now, and Lenis has already smoothed
@@ -265,13 +279,13 @@ export default function StepFlow({
     }, section)
 
     return () => ctx.revert()
-  }, [steps.length, hasImages])
+  }, [steps.length, pinned])
 
   return (
     <section
       ref={sectionRef}
       className={`px-6 py-24 sm:py-28 ${s.section} ${
-        hasImages ? 'pin:flex pin:h-screen pin:items-center pin:overflow-hidden pin:pb-10 pin:pt-24' : ''
+        pinned ? 'pin:flex pin:h-screen pin:items-center pin:overflow-hidden pin:pb-10 pin:pt-24' : ''
       }`}
     >
       <div className="mx-auto w-full max-w-container">
@@ -303,7 +317,7 @@ export default function StepFlow({
           </div>
         )}
 
-        <div ref={railRef} className={`relative ${hasImages ? 'mt-10 lg:mt-8 pin:mt-7' : 'mt-16'}`}>
+        <div ref={railRef} className={`relative ${pinned ? 'mt-10 lg:mt-8 pin:mt-7' : 'mt-16'}`}>
           {/* The rail and its fill sit behind the dots — `top` is half the dot's
               height, so the line meets each dot's centre. */}
           <div

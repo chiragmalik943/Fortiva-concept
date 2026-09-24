@@ -177,7 +177,9 @@ export default function BrokersResources() {
   return (
     <>
       <PageHero
+        eyebrow="Broker Resources"
         tone="dark"
+        markClassName="bg-gold"
         titleTop="Everything you need"
         titleBottom="to sell Fortiva."
         lede={
@@ -200,22 +202,14 @@ export default function BrokersResources() {
 
       <VideoLibrary
         id="videos"
-        heading={
-          <>
-            Get up to speed <span className="text-gold-dark">fast</span>
-          </>
-        }
-        intro="Six short walkthroughs covering appointment, quoting, the plan tiers, renewals, group business and support — the things brokers ask about in their first month."
+        heading={<>Videos</>}
+        intro="Get up to speed fast with our broker video library."
         videos={videoLibrary}
       />
 
       <DocumentShelf
-        heading={
-          <>
-            The latest paperwork, <span className="text-gold-dark">all in one place</span>
-          </>
-        }
-        intro="Access the latest plan details, compliance information and member resources — the current version of each, so there is never a question of which one you are holding."
+        heading={<>Plan Documents</>}
+        intro="Access the latest plan details, compliance information and member resources. All in one place."
         groups={documentGroups}
         action={
           <Button variant="gold" icon="arrow" href="/brokers/portal">
@@ -232,22 +226,12 @@ export default function BrokersResources() {
           ran out — and the page still closes on the gold CTA below, so this is a
           hand-off rather than the ask itself. */}
       <ImageBand
-        heading={
-          <>
-            Our broker support team <span className="text-gold-dark">is here for you</span>
-          </>
-        }
+        heading={<>Need help?</>}
         body={
           <p>
-            Enrollment questions, commission queries, a plan document you can&rsquo;t find
-            &mdash; there is a person on the other end of it, and they know your book.
+            Our broker support team is here for you.
           </p>
         }
-        points={[
-          'Help with enrollment, from a first quote to a submitted application.',
-          'Commission questions answered by the team that calculates them.',
-          'Plan and compliance documents sent straight through if the shelf is out of date.',
-        ]}
         image={images.brokerSupport}
         imageAlt="A Fortiva broker support specialist at work"
         imageSide="left"

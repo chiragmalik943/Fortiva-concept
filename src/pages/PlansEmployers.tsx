@@ -66,6 +66,7 @@ export default function PlansEmployers() {
   return (
     <>
       <PageHero
+        eyebrow="Employers"
         tone="teal"
         titleTop="Health coverage that works"
         titleBottom="for your business."

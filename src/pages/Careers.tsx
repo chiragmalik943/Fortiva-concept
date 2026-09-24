@@ -90,6 +90,7 @@ export default function Careers() {
   return (
     <>
       <PageHero
+        eyebrow="Careers"
         tone="teal"
         titleTop="Join the movement."
         titleBottom="Work for Fortiva."

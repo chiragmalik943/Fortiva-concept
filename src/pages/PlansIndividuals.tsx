@@ -66,6 +66,7 @@ export default function PlansIndividuals() {
   return (
     <>
       <PageHero
+        eyebrow="Individuals & Families"
         tone="teal"
         titleTop="Health coverage that works"
         titleBottom="for real life."

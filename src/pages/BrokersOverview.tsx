@@ -4,7 +4,6 @@ import ImageBand from '../components/ImageBand/ImageBand'
 import ForSequence, { type ForStage } from '../components/ForSequence/ForSequence'
 import ScrollSpyList, { type SpyItem } from '../components/ScrollSpyList/ScrollSpyList'
 import QuoteBand from '../components/QuoteBand/QuoteBand'
-import CtaBand from '../components/CtaBand/CtaBand'
 import Button from '../components/Button'
 import { images } from '../assets/images'
 
@@ -19,7 +18,7 @@ import { images } from '../assets/images'
  *   Why work with us?                         → ScrollSpyList, the three offers
  *   FOR the future of health insurance        → the second ImageBand
  *   Fortiva’s promise                         → QuoteBand
- *   Button: Partner with us                   → CtaBand
+ *   Button: Partner with us                   → the action on QuoteBand
  *
  * ── Two things the doc leaves to the layout ─────────────────────────────────
  * The doc gives the H2s but no lead-in for the hero, so the hero's lede is the
@@ -115,16 +114,11 @@ export default function BrokersOverview() {
   return (
     <>
       <PageHero
+        eyebrow="Broker Overview"
         tone="dark"
+        markClassName="bg-gold"
         titleTop="Your partner in"
         titleBottom="health insurance."
-        lede={
-          <>
-            <span className="text-gold-dark">FOR</span> you.{' '}
-            <span className="text-gold-dark">FOR</span> your clients.{' '}
-            <span className="text-gold-dark">FOR</span> change.
-          </>
-        }
         actions={
           <>
             <Button variant="gold" icon="arrow" size="lg" href="/contact">
@@ -206,23 +200,16 @@ export default function BrokersOverview() {
 
       {/* ── Fortiva’s promise ─────────────────────────────────────────────
           GOLD now, not the dark plate it shipped as, with the flourish above and
-          below the words and the page's own call inside the frame. Two things
-          follow from the colour and are worth knowing before it is changed back:
+          below the words and the page's own call inside the frame.
 
-          • The quotation marks are gone. A line set inside an ornamental frame is
-            already presented as a quotation; the marks on top of that were the
-            same idea said twice.
-          • The closing CtaBand below is CREAM. It is the gold band every other
-            page closes on, and two gold sections with a seam between them read as
-            one slab with a gap in it — so the page now runs gold, grey, then the
-            footer's navy. If this band ever goes back to navy, that CtaBand
-            should go back to gold with it.
+          The quotation marks are gone. A line set inside an ornamental frame is
+          already presented as a quotation; the marks on top of that were the
+          same idea said twice.
 
-          Worth flagging rather than fixing here: this band and the one under it
-          now both say "Partner with us" and both point at /contact, about 200px
-          apart. The doc gives the promise no button at all, so the one here is
-          the client's design decision — but the pair is a duplicate, and if one
-          of them goes it should be the CtaBand. */}
+          This is now the page's closing band — the cream CtaBand that used to
+          run below it ("Ready to write Fortiva? Partner with us.") has been
+          removed, since it duplicated this band's own "Partner with us" call to
+          /contact about 200px apart. */}
       <QuoteBand
         tone="gold"
         label="Fortiva’s promise"
@@ -236,30 +223,6 @@ export default function BrokersOverview() {
           <Button variant="white" icon="arrow" size="lg" href="/contact">
             Partner with us
           </Button>
-        }
-      />
-
-      <CtaBand
-        /* Cream, not gold — see the note on the promise band above. The accent
-           ink moves with the surface: `cream` paints the heading navy and leaves
-           the accent to the caller, so the second half takes the dark gold that
-           reads on a light plate rather than the navy it took on gold. */
-        tone="cream"
-        heading={
-          <>
-            Ready to write Fortiva? <span className="text-gold-dark">Partner with us.</span>
-          </>
-        }
-        body="Tell us about your book of business and our broker team will take it from there — appointment, onboarding and your first quote."
-        actions={
-          <>
-            <Button variant="gold" icon="arrow" size="lg" href="/contact">
-              Partner with us
-            </Button>
-            <Button variant="dark" size="lg" href="/brokers/resources">
-              Broker resources
-            </Button>
-          </>
         }
       />
     </>

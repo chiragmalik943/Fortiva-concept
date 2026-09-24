@@ -26,6 +26,7 @@ export default function MembersFaqs() {
   return (
     <>
       <PageHero
+        eyebrow="Member FAQs"
         tone="sky"
         titleTop="Answers, without"
         titleBottom="the fine print."

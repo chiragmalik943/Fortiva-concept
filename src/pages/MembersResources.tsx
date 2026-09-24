@@ -163,6 +163,7 @@ export default function MembersResources() {
   return (
     <>
       <PageHero
+        eyebrow="Member Resources"
         tone="sky"
         titleTop="Meeting you where you are"
         titleBottom="with quality resources."

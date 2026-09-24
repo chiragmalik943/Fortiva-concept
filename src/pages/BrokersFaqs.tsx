@@ -99,7 +99,9 @@ export default function BrokersFaqs() {
   return (
     <>
       <PageHero
+        eyebrow="Broker FAQs"
         tone="dark"
+        markClassName="bg-gold"
         titleTop="Six questions, before"
         titleBottom="you write a policy."
         lede={

@@ -20,6 +20,26 @@ interface QuoteBandProps {
    * docblock.
    */
   tone?: 'navy' | 'gold'
+  /**
+   * Which ornament sits above the quote (and, with `action`, below it too).
+   * 'auto' (default) keeps the tone's own pairing recorded below — `flourish`
+   * for gold, the plain Fortiva mark for navy. A caller can force `flourish` to
+   * get the same ornamental frame on a navy band (Partner with Us's closing
+   * line, styled off partner-with-us.png) without switching the whole tone.
+   */
+  ornament?: 'auto' | 'flourish' | 'mark'
+  /**
+   * An optional full-bleed backdrop photograph, drawn behind the section
+   * exactly the way PageHero draws its own tone backdrops — edge to edge,
+   * `object-cover`, top-biased. `tone`'s flat colour stays underneath it as
+   * the fallback field (before the image decodes, and for any sliver
+   * `object-cover` can't reach), so pass a tone that matches the image's own
+   * field. Partner with Us's closing line uses `heroBgDark` here — the same
+   * backdrop the `dark` PageHero tone opens the page on — so the band reads
+   * as the hero's own field returning, not a separate navy plate that
+   * happens to match its colour.
+   */
+  backdrop?: string
 }
 
 /**
@@ -59,6 +79,15 @@ interface QuoteBandProps {
  * They are part of the string the caller passes rather than pseudo-elements,
  * because a caller sometimes wants them and sometimes doesn't — and a band that
  * always drew them would need a prop to turn them off.
+ *
+ * ── `backdrop` is a photograph, not another flat tone ───────────────────────
+ * Nothing on this site had asked a QuoteBand for one until Partner with Us's
+ * closing line, whose reference draws the same arced backdrop the `dark`
+ * PageHero tone uses rather than a flat navy field. So `backdrop` borrows
+ * PageHero's own treatment (see the note at the top of PageHero.tsx) instead
+ * of inventing a second way to hang an image behind type: full-bleed,
+ * `object-cover`, top-biased, `tone`'s colour left in as the fallback under
+ * it.
  */
 
 const TONES = {
@@ -101,17 +130,35 @@ function Flourish({ tint, flip = false }: { tint: string; flip?: boolean }) {
   )
 }
 
-export default function QuoteBand({ quote, body, action, label, tone = 'navy' }: QuoteBandProps) {
+export default function QuoteBand({
+  quote,
+  body,
+  action,
+  label,
+  tone = 'navy',
+  ornament = 'auto',
+  backdrop,
+}: QuoteBandProps) {
   const t = TONES[tone]
   const gold = tone === 'gold'
+  const flourish = ornament === 'auto' ? gold : ornament === 'flourish'
 
   const markRef = useScrollReveal<HTMLDivElement>({ y: 14, duration: 0.7 })
   const quoteRef = useSplitReveal<HTMLParagraphElement>({ type: 'words' })
   const restRef = useScrollReveal<HTMLDivElement>({ y: 22, delay: 0.2 })
 
   return (
-    <section className={`px-6 py-24 text-center sm:py-32 ${t.section}`}>
-      <div className="mx-auto flex max-w-3xl flex-col items-center">
+    <section className={`relative overflow-hidden px-6 py-24 text-center sm:py-32 ${t.section}`}>
+      {backdrop && (
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 select-none">
+          <img
+            src={backdrop}
+            alt=""
+            className="h-full w-full object-cover object-[center_35%]"
+          />
+        </div>
+      )}
+      <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center">
         <div ref={markRef} className="flex flex-col items-center opacity-0">
           {label && (
             <p className={`text-[11px] font-bold uppercase tracking-[0.22em] ${t.label}`}>
@@ -119,7 +166,7 @@ export default function QuoteBand({ quote, body, action, label, tone = 'navy' }:
             </p>
           )}
 
-          {gold ? (
+          {flourish ? (
             <div className={label ? 'mt-6' : ''}>
               <Flourish tint={t.ornament} />
             </div>
@@ -150,17 +197,17 @@ export default function QuoteBand({ quote, body, action, label, tone = 'navy' }:
               </p>
             )}
 
-            {/* The closing half of the frame. Only `gold` draws it, and only when
-                there is something under it to close off — a lone ornament under
-                the last line is a rule, not a frame. */}
-            {gold && action && (
+            {/* The closing half of the frame. Only drawn with the flourish
+                ornament, and only when there is something under it to close off
+                — a lone ornament under the last line is a rule, not a frame. */}
+            {flourish && action && (
               <div className="mt-10">
                 <Flourish tint={t.ornament} flip />
               </div>
             )}
 
             {action && (
-              <div className={`flex flex-wrap items-center justify-center gap-3 ${gold ? 'mt-8' : 'mt-9'}`}>
+              <div className={`flex flex-wrap items-center justify-center gap-3 ${flourish ? 'mt-8' : 'mt-9'}`}>
                 {action}
               </div>
             )}

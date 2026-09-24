@@ -123,6 +123,7 @@ export default function MembersVirtualCare() {
   return (
     <>
       <PageHero
+        eyebrow="Virtual Care"
         tone="sky"
         titleTop="Care that comes"
         titleBottom="to you."
@@ -207,6 +208,12 @@ export default function MembersVirtualCare() {
                 or need quick advice, virtual visits through MyLiveDoc make health care more
                 convenient and affordable.
               </p>
+              <p className="mt-5 text-[16.5px] leading-[1.65] text-navy-800/80 sm:text-[17.5px]">
+                MyLiveDoc is a secure, HIPAA-compliant telehealth platform that connects you
+                with licensed health care providers. Through easy-to-use video visits, you can
+                get care for common conditions, request prescriptions and receive follow-up
+                guidance &ndash; all without leaving home.
+              </p>
               <div className="mt-9 flex flex-wrap gap-3">
                 <ActionButton variant="gold" icon="arrow" href={externalTargets.myLiveDoc}>
                   Start a visit
@@ -279,12 +286,7 @@ export default function MembersVirtualCare() {
       </section>
 
       <StepFlow
-        surface="cream"
-        heading={
-          <>
-            Four steps, <span className="text-gold-dark">start to prescription</span>
-          </>
-        }
+        heading={<>How it works</>}
         intro="MyLiveDoc runs inside your Fortiva member portal, so there is no separate account to create and nothing new to remember."
         steps={howItWorks}
         action={

@@ -1,9 +1,8 @@
 import { Lightbulb, TrendingUp, Users, Workflow } from 'lucide-react'
 import PageHero from '../components/PageHero/PageHero'
 import ImageBand from '../components/ImageBand/ImageBand'
-import ScrollSpyList, { type SpyItem } from '../components/ScrollSpyList/ScrollSpyList'
+import FeatureReveal, { type Feature } from '../components/FeatureReveal/FeatureReveal'
 import QuoteBand from '../components/QuoteBand/QuoteBand'
-import CtaBand from '../components/CtaBand/CtaBand'
 import Button from '../components/Button'
 import { images } from '../assets/images'
 
@@ -19,9 +18,9 @@ import { images } from '../assets/images'
  *
  *   H2: Why Partner with Fortiva? (para 1) → PageHero + ImageBand
  *   (para 2, the platform paragraph)       → the same ImageBand's body
- *   FOR providers (four items)             → ScrollSpyList
+ *   FOR providers (four items)             → FeatureReveal
  *   "Together, we can rewrite the rules…"  → QuoteBand
- *   Button: Partner with Us                → CtaBand
+ *   Button: Partner with Us                → the action on QuoteBand
  *
  * ── The doc gives this page no H1 ───────────────────────────────────────────
  * It opens straight on "H2: Why Partner with Fortiva?", so that question is the
@@ -29,20 +28,18 @@ import { images } from '../assets/images'
  * sentence becomes the hero's lede and the rest of the paragraph carries the band
  * below, the same split Provider Overview makes with its own single paragraph.
  *
- * ── Why ScrollSpyList here and FeatureReveal on Provider Overview ───────────
- * Both pages carry a four-item list of what a provider gets, and the two lists
- * are genuinely different in kind. Provider Overview's four are expectations at
- * the front desk — simultaneous, none of them ranked — so they arrive together.
- * These four are the case for signing, and a case is read one point at a time,
- * which is what the spy list's single lit panel does: it is the same treatment
- * Broker Overview gives the equivalent argument, so the two "why partner with us"
- * pages match each other across audiences rather than each matching its own
- * section's overview.
+ * ── FeatureReveal here, not ScrollSpyList ────────────────────────────────────
+ * This section shipped as ScrollSpyList — a single lit panel, one point at a
+ * time, the same treatment Broker Overview still gives its own "why partner"
+ * case. The client asked for FeatureReveal instead, so the four now arrive
+ * together: the same contract Provider Overview's own four expectations use.
+ * `featureProviderPartner` still needs its photograph — see the note on it in
+ * assets/images.ts.
  */
 
 // The doc's four H3s, verbatim: heading, then its line. Icons are ours; the doc
 // names none.
-const gains: SpyItem[] = [
+const gains: Feature[] = [
   {
     title: 'Frictionless administration',
     body: 'Streamlined claims and coverage verification.',
@@ -69,12 +66,14 @@ export default function ProvidersPartnerWithUs() {
   return (
     <>
       <PageHero
+        eyebrow="Partner with Us"
         titleTop="Why partner"
         titleBottom="with Fortiva?"
         lede={
           <>
             Fortiva is redefining health insurance with a member-first approach that
-            prioritizes outcomes over premiums.
+            prioritizes outcomes over premiums. As a provider, partnering with us means
+            joining a movement to make care accessible, transparent and technology-driven.
           </>
         }
         actions={
@@ -100,24 +99,18 @@ export default function ProvidersPartnerWithUs() {
           ImageBands to sit that way (the Provider Portal's is on the left), so
           the section reads as its own rather than as the same band again. */}
       <ImageBand
-        heading={
-          <>
-            A movement to make care{' '}
-            <span className="text-gold-dark">accessible and transparent</span>
-          </>
-        }
+        heading={<>Care Without <span className="text-gold-dark">Complexity</span></>}
         body={
           <>
             <p>
-              As a provider, partnering with us means joining a movement to make care
-              accessible, transparent and technology-driven.
-            </p>
-            <p className="mt-5">
               We offer affordable, multi-tiered plans designed for underserved markets,
               backed by value-based care principles that align with your commitment to
-              better health outcomes. Our platform delivers clear pricing,
-              compliance-backed processes and real-time tools for eligibility and claims
-              &mdash; so you spend less time on paperwork and more time on patients.
+              better health outcomes.
+            </p>
+            <p className="mt-5">
+              Our platform delivers clear pricing, compliance-backed processes and
+              real-time tools for eligibility and claims so you spend less time on
+              paperwork and more time on patients.
             </p>
           </>
         }
@@ -131,19 +124,30 @@ export default function ProvidersPartnerWithUs() {
       />
 
       {/* ── FOR providers ─────────────────────────────────────────────────
-          The doc's four, one lit at a time. No surface is passed, so it takes
-          ScrollSpyList's own default — WHITE now, where it used to be a tinted
-          plate between the white band above and the navy one below. The navy band
-          is still the break; if this needs to be a plate again, pass
-          `className="bg-[#CCD0D2]"` the way Find a Doctor does. */}
-      <ScrollSpyList
+          The doc's four, arriving together rather than one at a time — the same
+          FeatureReveal treatment Provider Overview gives its own four
+          expectations, rather than ScrollSpyList's single lit panel.
+
+          `tone="dark"` now that the client's photograph has landed: it is a
+          navy duotone over the clinicians, dark corner to corner including the
+          bottom-left where the heading and lead sit, so the default `light`
+          tone's navy type would have all but vanished into it. `dark` inverts
+          the heading and lead to white and leaves the five cards exactly as
+          they are — see the note on `tone` in FeatureReveal.tsx for why the
+          cards don't change. The heading's accent moves from `text-gold-dark`
+          to `text-gold` with it, the same swap the file's own TONES comment
+          documents: the dark gold reads 2.6:1 on navy and the brand gold is
+          the one built for it. */}
+      <FeatureReveal
+        tone="dark"
         heading={
           <>
-            By working with Fortiva, <span className="text-gold-dark">you gain</span>
+            By working with Fortiva, <span className="text-gold">you gain</span>
           </>
         }
         intro="Four things a Fortiva partnership puts behind your practice — on the administrative side and on the clinical one."
-        items={gains}
+        features={gains}
+        image={images.featureProviderPartner}
         action={
           <Button variant="gold" icon="arrow" href="/contact">
             Start the conversation
@@ -152,37 +156,36 @@ export default function ProvidersPartnerWithUs() {
       />
 
       {/* ── the closing line ──────────────────────────────────────────────
-          The doc's last sentence, split at its own dash: the ask is the display
-          line and the future it points at is the body. It earns a whole band for
-          the same reason the Broker Overview promise does — it is the shortest
-          thing on the page and the most important, and a short line inside a
-          normal section reads as a section that ran out of copy.
+          Rebuilt to the client's reference (partner-with-us.png): the flourish
+          ornament framing the words above and below, the whole display line in
+          gold rather than white, a white "Partner with us" button closing the
+          frame, and now `heroBgDark` behind all of it — the same backdrop the
+          `dark` PageHero tone opens the page on — instead of a flat navy field.
+          See QuoteBand.tsx's `ornament` and `backdrop` props for how a navy band
+          gets the flourish and the photograph without switching tones.
 
-          No quotation marks: this is the page speaking rather than a quote. Navy
-          is safe here because a gold CtaBand follows — see the rule in
-          CtaBand.tsx about never handing the navy footer a navy band. */}
+          Still NAVY, matching the reference exactly. Worth flagging rather than
+          silently changing: this is now the LAST band on the page, immediately
+          before the navy-800 footer, which is the one thing CtaBand.tsx's docblock
+          says a closing band must never be — two navy blocks with no seam between
+          them read as one slab and the page's own ask disappears into the site
+          chrome. The client's copy removed this page's closing CtaBand (see the
+          note above), which is what created the seam-less pairing; reintroducing a
+          light or gold band between this and the footer would restore the seam if
+          that turns out to matter more than matching the reference. */}
       <QuoteBand
-        quote={<>Together, we can rewrite the rules of health insurance.</>}
-        body="Creating a future where care is simple, fair and empowering for everyone."
-      />
-
-      <CtaBand
-        tone="gold"
-        heading={
-          <>
-            Ready to join the network? <span className="text-navy-800">Partner with us.</span>
-          </>
+        ornament="flourish"
+        backdrop={images.heroBgDark}
+        quote={
+          <span className="text-gold">
+            Together, we can rewrite the rules of health insurance
+          </span>
         }
-        body="Tell us about your practice and our provider team will take it from there — contracting, credentialing and portal access."
-        actions={
-          <>
-            <Button variant="light" icon="arrow" size="lg" href="/contact">
-              Partner with us
-            </Button>
-            <Button variant="dark" size="lg" href="/providers/portal">
-              Provider Portal
-            </Button>
-          </>
+        body="Creating a future where care is simple, fair and empowering for everyone."
+        action={
+          <Button variant="light" icon="arrow" size="lg" href="/contact">
+            Partner with us
+          </Button>
         }
       />
     </>

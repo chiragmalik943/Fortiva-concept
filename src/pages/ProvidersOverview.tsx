@@ -99,6 +99,7 @@ export default function ProvidersOverview() {
   return (
     <>
       <PageHero
+        eyebrow="Provider Overview"
         titleTop="Here for you"
         titleBottom="and your patients."
         lede={
@@ -125,26 +126,16 @@ export default function ProvidersOverview() {
           from this band is not to be sold the idea but to place the company: who
           is behind the card their patient just handed over. */}
       <ImageBand
-        heading={
-          <>
-            Value-based plans designed{' '}
-            <span className="text-gold-dark">for real lives</span>
-          </>
-        }
+        heading={<>Our mission is clear:</>}
+        subheading={<>Put people at the center of care, not premiums.</>}
         body={
           <p>
-            Our mission is clear: put people &mdash; not premiums &mdash; at the center of
-            care. We deliver affordable, value-based plans designed for real lives, powered
-            by technology and guided by humanity.
+            Three things change the moment a provider is inside the network &mdash; what you
+            pay, who you see, and how much of the admin lands on you.
           </p>
         }
         image={images.providerPatients}
         imageAlt="A Fortiva member being seen at their practice"
-        action={
-          <Button variant="gold" icon="arrow" href="/plans">
-            See the plans your patients carry
-          </Button>
-        }
       />
 
       {/* ── Our commitment to providers ───────────────────────────────────
@@ -158,21 +149,22 @@ export default function ProvidersOverview() {
           into whatever surface it lands on, and a cream plate here would have
           made this the ONE asset on the site that fades to cream while its three
           siblings fade to white — a contract nobody commissioning the photo would
-          expect and nobody reviewing it would catch. The tint moved to the
-          StepFlow below instead, which needs no photograph at all, and the
-          full-bleed picture is what separates this section from the band above
-          it. */}
+          expect and nobody reviewing it would catch. The full-bleed picture is
+          what separates this section from the band above it. The StepFlow below
+          used to be this page's one cream plate; it's white now too (the client
+          asked for it — see the note on it), so nothing on this page is tinted
+          any more. */}
       <FeatureReveal
         heading={
           <>
-            We know <br /><span className="text-gold-dark">your time matters</span>
+            Our commitment to <span className="text-gold-dark">providers</span>
           </>
         }
         intro={
           <>
-            That&rsquo;s why Fortiva is focused on creating frictionless experiences for
-            practices and patients alike. When you work with a Fortiva member, you can
-            expect:
+            We know your time matters. That&rsquo;s why Fortiva is focused on creating
+            frictionless experiences for practices and patients alike. When you work with a
+            Fortiva member, you can expect:
           </>
         }
         features={commitments}
@@ -186,8 +178,12 @@ export default function ProvidersOverview() {
 
       {/* ── What to know when a Fortiva member visits ─────────────────────
           The doc numbers these itself, so the rail draws the order it already
-          has. `surface="cream"` makes this the page's tinted plate — see the note
-          on the section above for why it is this one and not that one. */}
+          has. White now, matching the page's other sections. `pin` holds the
+          section at the top of the viewport while its dots light in sequence,
+          the way the pinned set-pieces elsewhere on the site do — these steps
+          have no illustrations to wait for, so StepFlow doesn't pin them on
+          its own; `pin` asks for the same held-in-place dwell anyway (see the
+          note in StepFlow.tsx). */}
       <StepFlow
         heading={
           <>
@@ -196,7 +192,7 @@ export default function ProvidersOverview() {
         }
         intro="If a Fortiva member comes to your practice:"
         steps={visitSteps}
-        surface="cream"
+        pin
         action={
           <Button variant="gold" icon="arrow" href="/providers/portal#submit-a-claim">
             Verify coverage or submit a claim
@@ -205,30 +201,52 @@ export default function ProvidersOverview() {
       />
 
       {/* ── Why Fortiva? ──────────────────────────────────────────────────
-          The doc's closing paragraph, and it is two sentences of argument
-          followed by one of substance — so the argument is the display line and
-          the substance is the body under it. The quotation marks are left off
-          deliberately: this is the page speaking, not a quote (see the note in
-          QuoteBand.tsx).
+          Rebuilt to the client's reference (why-fortiva.png): the gold tone,
+          with the flourish ornament framing the words above and below, "Why
+          Fortiva?" as the display line and the doc's argument as the body under
+          it, and a "Contact us" button closing the frame — see QuoteBand.tsx for
+          how the gold tone and the flourish mask work.
 
-          The page's one dark plate, and it is safe here because a gold CtaBand
-          follows it — a navy band must never be the last thing before the navy
-          footer. */}
+          GOLD here, not the dark plate this band used to be — it must not sit
+          directly against another gold band with no seam between them, or the
+          two merge into one slab. The closing CtaBand below moves to `cream`
+          for exactly that reason — see the note on it. */}
       <QuoteBand
+        tone="gold"
         quote={
           <>
-            Traditional carriers often prioritize profits over people. Fortiva is different.
+            Why <span className="text-white underline decoration-2 underline-offset-4">Fortiva</span
+            ><span className="text-white">?</span>
           </>
         }
-        body="The focus is on delivering health insurance that works for providers, members and patients — improving access to care and creating better outcomes for everyone."
+        body={
+          <>
+            Traditional carriers often prioritize profits over people. Fortiva is
+            different. The focus is on delivering health insurance that works for providers,
+            members and patients, improving access to care and creating better outcomes for
+            everyone.
+          </>
+        }
+        action={
+          <Button variant="light" icon="arrow" size="lg" href="/contact">
+            Contact us
+          </Button>
+        }
       />
 
+      {/* ── Cream, not gold ────────────────────────────────────────────────
+          The QuoteBand above closes on the brand gold now (see the note on it).
+          Two gold bands back to back with no seam between them would read as one
+          slab, so this one takes the mid-page `cream` tone instead — the same
+          fix Broker Overview makes for the same reason. The accent moves with
+          the surface: `cream` paints the heading navy, so the second clause
+          takes the dark gold that reads on a light plate. */}
       <CtaBand
-        tone="gold"
+        tone="cream"
         heading={
           <>
             Questions about a patient&rsquo;s plan?{' '}
-            <span className="text-navy-800">Contact us.</span>
+            <span className="text-gold-dark">Contact us.</span>
           </>
         }
         body="Our provider team handles eligibility, benefits and billing questions — and can get your practice set up in the portal."

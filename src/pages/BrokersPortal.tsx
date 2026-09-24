@@ -59,7 +59,9 @@ export default function BrokersPortal() {
           business" is the line under it. Running the H2 as the headline pushed it
           to three lines and buried the name of the thing. */}
       <PageHero
+        eyebrow="Broker Portal"
         tone="dark"
+        markClassName="bg-gold"
         titleTop="The Fortiva"
         titleBottom="Broker Portal."
         lede={

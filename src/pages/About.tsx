@@ -65,6 +65,7 @@ export default function About() {
   return (
     <>
       <PageHero
+        eyebrow="About"
         tone="gold"
         titleTop="We put people first."
         titleBottom="Not premiums."

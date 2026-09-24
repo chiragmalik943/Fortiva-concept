@@ -1,64 +1,62 @@
 import { FileUp, ShieldCheck } from 'lucide-react'
 import PageHero from '../components/PageHero/PageHero'
-import PortalShowcase, { type PortalItem } from '../components/PortalShowcase/PortalShowcase'
-import ImageBand from '../components/ImageBand/ImageBand'
-import CtaBand from '../components/CtaBand/CtaBand'
 import Button from '../components/Button'
 import ActionButton from '../components/ActionButton'
 import { externalTargets } from '../content/site'
-import { images } from '../assets/images'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 /**
  * For Providers → Provider Portal.
  *
  * Copy is FTVA_Web Copy.odt's "Provider Portal — Sub Navigation":
  *
- *   H1 + body                             → PageHero
- *   Submit a claim / Check insurance status → PortalShowcase, both sections
- *   both of the doc's buttons              → the showcase's own action row
- *   (the closing ask)                      → CtaBand
+ *   H1 + body                               → PageHero
+ *   Submit a claim / Check insurance status → the two-up card pair below
  *
- * The third instance of the same set-piece, deliberately: the member, broker and
- * provider portals are one product with three front doors, and someone who has
- * seen either of the others should recognise the frame. See PortalShowcase.tsx —
- * the section pins, each screenshot slides out to the left as the next arrives,
- * and the tab underneath lights up as it lands.
- *
- * ── Two sections, against the broker portal's three and the member portal's six ─
- * That is what the doc gives, and it is left at two. The component costs nothing
- * for a short list — two tabs sit at the left of the strip and the pin is one
- * slide long — and a third tab would have meant writing a portal feature the
- * client never approved and shipping it as though they had.
+ * ── Why this page no longer runs PortalShowcase ─────────────────────────────
+ * The member and broker portals still run the pinned screenshot carousel — see
+ * PortalShowcase.tsx — but this page asked for its own design, and the carousel
+ * had no real screenshot to show here anyway: `images.providerPortalScreens`
+ * pointed at `provider-portal-scr-1.png` / `-2.png`, and neither file has ever
+ * shipped in `public/`. Two static cards, one per job, replace it: each gets its
+ * own heading, its own paragraph and its own button, rather than one shared
+ * heading above a carousel and both buttons stacked in a row below it.
  *
  * ── The `#submit-a-claim` anchor is load-bearing ────────────────────────────
  * `contactAudiences` in content/site.ts gives the provider audience a "Submit a
  * Claim" button pointing at `/providers/portal#submit-a-claim`, and the footer
- * renders it on every page of the site. That href predates this page. The id
- * therefore sits on the showcase — the section that actually covers claim
- * submission — rather than anywhere convenient, and App.tsx's fragment handling
- * scrolls to it through Lenis on arrival (see the effect in Site()).
+ * renders it on every page of the site. That href predates this page, so the id
+ * stays on the section that actually covers claim submission, and App.tsx's
+ * fragment handling scrolls to it through Lenis on arrival (see the effect in
+ * Site()).
  */
 
-// The doc's two, verbatim: heading, then its paragraph.
-const portalItems: PortalItem[] = [
+// The doc's two jobs, each now carrying its own heading, paragraph and button
+// rather than sharing one heading and one action row.
+const portalJobs = [
   {
     title: 'Submit a claim',
     body: 'Submit claims quickly and accurately through our step-by-step portal, then track their progress in real time from submission to payment.',
     icon: FileUp,
-    screen: images.providerPortalScreens[0],
+    buttonLabel: 'Submit a Claim',
+    href: externalTargets.providerClaimSubmission,
   },
   {
     title: 'Check insurance status',
     body: 'Confirm member coverage in seconds with our secure portal. See deductibles, copays and coverage tiers upfront, plus any supplemental benefits.',
     icon: ShieldCheck,
-    screen: images.providerPortalScreens[1],
+    buttonLabel: 'Check Insurance Status',
+    href: externalTargets.providerEligibility,
   },
-]
+] as const
 
 export default function ProvidersPortal() {
+  const cardsRef = useScrollReveal<HTMLDivElement>({ y: 28, delay: 0.1 })
+
   return (
     <>
       <PageHero
+        eyebrow="Provider Portal"
         titleTop="Welcome to the"
         titleBottom="Fortiva Provider Portal."
         lede={
@@ -85,106 +83,46 @@ export default function ProvidersPortal() {
       />
 
       {/* ── the two things the portal is for ──────────────────────────────
-          The doc asks for a button under each of its two headings — "Submit a
-          Claim" and "Check Insurance Status" — and the showcase presents both
-          headings at once, so both buttons sit in its one action row rather than
-          being split across two sections that would have to repeat the copy to
-          justify themselves.
+          Two equal-weight cards rather than a shared heading over a carousel:
+          the doc gives each job its own heading, its own paragraph and its own
+          button, and a card each is what lets all three travel together without
+          one job's copy crowding the other's.
 
-          `externalTargets` keeps the two apart from the sign-in URL: on a real
-          portal these are authenticated routes behind a login page, and pointing
-          all three at one placeholder would hide two of the three gaps. Until the
-          URLs land, ActionButton renders each as visibly pending rather than as a
-          link that silently goes nowhere. */}
-      <div id="submit-a-claim">
-        <PortalShowcase
-          heading={
-            <>
-              Two jobs, <span className="text-gold-dark">done in one place</span>
-            </>
-          }
-          intro="Claims and eligibility are most of what a practice needs from a carrier, so they are what the portal opens on."
-          items={portalItems}
-          action={
-            <>
-              <ActionButton
-                variant="gold"
-                icon="arrow"
-                href={externalTargets.providerClaimSubmission}
-              >
-                Submit a claim
-              </ActionButton>
-              <ActionButton variant="ghost" href={externalTargets.providerEligibility}>
-                Check insurance status
-              </ActionButton>
-            </>
-          }
-        />
-      </div>
-
-      {/* ── less paperwork, more patients ─────────────────────────────────
-          The band that answers what the showcase raises — what this is like on a
-          Tuesday afternoon — with a photograph rather than another screen, which
-          is the same job the equivalent band does on the Broker Portal page.
-
-          The doc supplies no copy for a section here; the phrase it is built
-          around ("so you spend less time on paperwork and more time on patients")
-          is the client's own, from the Partner with Us page, and the three points
-          under it restate what the two showcase sections already promise rather
-          than adding a capability. Nothing here claims anything the portal
-          sections do not. */}
-      <ImageBand
-        heading={
-          <>
-            Less time on paperwork, <span className="text-gold-dark">more time on patients</span>
-          </>
-        }
-        body={
-          <p>
-            Check a patient&rsquo;s coverage while they are still at the desk, file the claim
-            the same afternoon and see where it is without calling anyone. One login, and
-            the two things a practice needs from a carrier are both behind it.
-          </p>
-        }
-        points={[
-          'Eligibility, deductibles, copays and coverage tiers, in seconds.',
-          'Step-by-step claim submission, tracked from submission to payment.',
-          'A provider team to call when a benefit or a bill needs a person.',
-        ]}
-        image={images.providerPortalPhoto}
-        imageAlt="A practice administrator working in the Fortiva provider portal"
-        imageSide="left"
-        action={
-          <Button variant="gold" icon="arrow" href="/providers">
-            What to expect from a Fortiva member
-          </Button>
-        }
-      />
-
-      <CtaBand
-        tone="gold"
-        heading={
-          <>
-            Not set up yet? <span className="text-navy-800">Request access.</span>
-          </>
-        }
-        body="Already registered? Sign in. If your practice is new to Fortiva, our provider team will get your access sorted."
-        actions={
-          <>
-            <ActionButton
-              variant="light"
-              icon="arrow"
-              size="lg"
-              href={externalTargets.providerPortal}
+          Alternating button weight, same as the doc's own pair: the first job
+          takes the primary gold button and the second a navy one — two golds
+          side by side would read as two identical calls rather than as two
+          distinct jobs. */}
+      <section id="submit-a-claim" className="bg-white px-6 py-24 sm:py-28">
+        <div
+          ref={cardsRef}
+          className="mx-auto grid max-w-container gap-6 opacity-0 sm:grid-cols-2 sm:gap-8"
+        >
+          {portalJobs.map(({ title, body, icon: Icon, buttonLabel, href }, i) => (
+            <div
+              key={title}
+              className="corner-smooth flex flex-col rounded-card border border-navy-800/[0.08] bg-mist/30 p-8 shadow-card-soft sm:p-10"
             >
-              Log in to the portal
-            </ActionButton>
-            <Button variant="dark" size="lg" href="/contact">
-              Request access
-            </Button>
-          </>
-        }
-      />
+              <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-navy-800">
+                <Icon size={24} strokeWidth={1.75} className="text-gold" />
+              </span>
+
+              <h2 className="mt-7 text-[26px] font-semibold leading-tight text-navy-800 sm:text-[30px]">
+                {title}
+              </h2>
+
+              <p className="mt-4 flex-1 text-[16px] leading-relaxed text-navy-800/70 sm:text-[16.5px]">
+                {body}
+              </p>
+
+              <div className="mt-8">
+                <ActionButton variant={i === 0 ? 'gold' : 'dark'} icon="arrow" href={href}>
+                  {buttonLabel}
+                </ActionButton>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </>
   )
 }

@@ -148,6 +148,7 @@ export default function MembersApp() {
   return (
     <>
       <PageHero
+        eyebrow="Download the App"
         tone="sky"
         /* One sentence across two lines, and the weight break is the accent —
            PageHero sets `titleTop` in regular and `titleBottom` in bold, so
@@ -163,6 +164,14 @@ export default function MembersApp() {
         actions={stores.map((store) => (
           <StoreButton key={store.label} {...store} size="lg" />
         ))}
+        note={
+          <>
+            Apple and Android users can go to the Apple App Store or Google Play Store, search
+            for &ldquo;Fortiva&rdquo; and download to get started. Once there, log in or create
+            an account using your member credentials to access your personalized health
+            insurance dashboard.
+          </>
+        }
       />
 
       <PhoneShowcase
@@ -182,7 +191,6 @@ export default function MembersApp() {
             Three steps and <span className="text-gold-dark">you&rsquo;re in</span>
           </>
         }
-        intro="Getting started is easy. If you already have a Fortiva member login, it's the same one."
         steps={gettingStarted}
         action={
           <div ref={storeRef} className="grid w-full gap-4 opacity-0 sm:max-w-lg sm:grid-cols-2">

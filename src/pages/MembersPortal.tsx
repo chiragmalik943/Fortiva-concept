@@ -1,4 +1,3 @@
-import { LifeBuoy, Lock, Smartphone } from 'lucide-react'
 import PageHero from '../components/PageHero/PageHero'
 import PortalCarousel, { type CarouselCard } from '../components/PortalCarousel/PortalCarousel'
 import CtaBand from '../components/CtaBand/CtaBand'
@@ -68,11 +67,11 @@ const portalCards: CarouselCard[] = [
 export default function MembersPortal() {
   const whyHeadingRef = useSplitReveal<HTMLHeadingElement>({ type: 'words' })
   const whyBodyRef = useScrollReveal<HTMLDivElement>({ y: 24, delay: 0.12 })
-  const asideRef = useScrollReveal<HTMLDivElement>({ y: 32, delay: 0.18 })
 
   return (
     <>
       <PageHero
+        eyebrow="Member Portal"
         tone="sky"
         titleTop="Welcome to the"
         titleBottom="Fortiva Member Portal."
@@ -110,58 +109,25 @@ export default function MembersPortal() {
       />
 
       {/* ── Why use the Member Portal? ─────────────────────────────────────
-          The doc's closing paragraph, with the app cross-link beside it. The two
-          belong together: they are the same account and the same credentials, and
-          a visitor who has just read six portal features is exactly the person
-          who wants to know it's also on their phone. */}
+          Rebuilt as a plain centred band — the doc's closing paragraph on its
+          own, replacing the two-up layout this section used to carry (an icon
+          list plus an "also in the app" aside card). Nothing else is asserted
+          here; the app cross-link still lives on this page in the hero
+          ("Get the app instead") and in the closing CtaBand below. */}
       <section className="bg-white px-6 py-24 sm:py-28">
-        <div className="mx-auto grid max-w-container items-center gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-20">
-          <div>
-            <h2
-              ref={whyHeadingRef}
-              className="max-w-xl text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
-            >
-              Managing your coverage{' '}
-              <span className="text-gold-dark">shouldn&rsquo;t be complicated</span>
-            </h2>
-            <div ref={whyBodyRef} className="opacity-0">
-              <p className="mt-7 max-w-xl text-[16.5px] leading-[1.65] text-navy-800/75 sm:text-[17.5px]">
-                With the Fortiva Member Portal, you have everything you need to make informed
-                decisions about your care &mdash; all in one place.
-              </p>
-              <ul className="mt-8 flex max-w-md flex-col">
-                {[
-                  { icon: Lock, text: 'Secure sign-in, and only you can see what is behind it.' },
-                  { icon: Smartphone, text: 'The same account as the Fortiva app, on any device.' },
-                  { icon: LifeBuoy, text: 'A real person to message, not just a help article.' },
-                ].map(({ icon: Icon, text }) => (
-                  <li key={text} className="flex items-center gap-4 border-t border-navy-800/10 py-4 last:border-b">
-                    <Icon size={17} strokeWidth={1.9} className="shrink-0 text-gold-dark" />
-                    <span className="text-[15px] leading-relaxed text-navy-800/70">{text}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div ref={asideRef} className="opacity-0">
-            <div className="corner-smooth rounded-card bg-navy-800 p-8 sm:p-10">
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold">
-                <Smartphone size={22} strokeWidth={1.7} className="text-navy-800" />
-              </span>
-              <h3 className="mt-7 text-[22px] font-semibold leading-snug text-white sm:text-[25px]">
-                Everything here is in the app too
-              </h3>
-              <p className="mt-4 text-[15px] leading-relaxed text-white/60">
-                Your plan, your claims and your digital ID card travel with you. Same login, no
-                second account to set up.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Button variant="gold" icon="arrow" href="/members/app">
-                  Download the app
-                </Button>
-              </div>
-            </div>
+        <div className="mx-auto max-w-2xl text-center">
+          <h2
+            ref={whyHeadingRef}
+            className="text-[30px] font-semibold leading-tight text-navy-800 opacity-0 sm:text-[38px]"
+          >
+            Why use the <span className="text-gold-dark">Member Portal?</span>
+          </h2>
+          <div ref={whyBodyRef} className="opacity-0">
+            <p className="mx-auto mt-6 max-w-xl text-[16.5px] leading-relaxed text-navy-800/75 sm:text-[17.5px]">
+              Managing your health coverage shouldn&rsquo;t be complicated. With the Fortiva
+              Member Portal, you have everything you need to make informed decisions about
+              your care &mdash; all in one place.
+            </p>
           </div>
         </div>
       </section>

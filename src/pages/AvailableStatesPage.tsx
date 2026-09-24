@@ -66,6 +66,7 @@ export default function AvailableStatesPage() {
   return (
     <>
       <PageHero
+        eyebrow="Available States"
         tone="sky"
         titleTop={<>Where we&rsquo;re</>}
         titleBottom="available."

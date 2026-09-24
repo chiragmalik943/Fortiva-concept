@@ -93,6 +93,7 @@ export default function MembersHub() {
   return (
     <>
       <PageHero
+        eyebrow="For Members"
         titleTop="Everything your plan does,"
         titleBottom="in one place."
         lede={

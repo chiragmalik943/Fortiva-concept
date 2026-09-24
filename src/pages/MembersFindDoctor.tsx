@@ -123,6 +123,7 @@ export default function MembersFindDoctor() {
   return (
     <>
       <PageHero
+        eyebrow="Find a Doctor"
         tone="sky"
         titleTop={<>It&rsquo;s now simpler than ever to</>}
         titleBottom="find a doctor."
@@ -273,6 +274,7 @@ export default function MembersFindDoctor() {
       <ScrollSpyList
         className="bg-gradient-to-b from-[#12284B] to-[#0074A6]"
         tone="dark"
+        counter={false}
         heading={
           <>
             Why choose an <span className="text-gold">in-network doctor?</span>
@@ -328,8 +330,20 @@ export default function MembersFindDoctor() {
 
           `lg` and up only, as before. Below that the picture is dropped rather
           than stacked above the copy — the questions are the one thing on this
-          page that has to stay legible, and nothing here competes with them. */}
-      <section className="bg-white">
+          page that has to stay legible, and nothing here competes with them.
+
+          ── The seam with the section above ──────────────────────────────────
+          Rebuilt to the client's reference (find-a-doctor.png): the tips section
+          no longer breaks to white at all. It carries the SAME gradient field as
+          the ScrollSpyList section above — opening at the exact #0074A6 that
+          section ends on and continuing down into the brand's darkest navy — so
+          the two sections read as one continuous plate rather than two abutting
+          ones. Every ink in the section inverted to match: white and gold in
+          place of navy-800, the same swap ScrollSpyList itself makes with its
+          `tone="dark"` above it. */}
+      <section
+        style={{ backgroundImage: 'linear-gradient(180deg, #0074A6 0%, #0B1B34 100%)' }}
+      >
         {/* 0.9 / 1.1, not two equal halves. The copy column carries the
               three-across "worth bringing" row at the bottom, and that row is
               drawn with its labels wrapping to TWO lines — see the note on
@@ -362,10 +376,14 @@ export default function MembersFindDoctor() {
                 was set in regular with the accent at the end, because the heading
                 used to sit over a photograph and the lighter weight kept it from
                 competing with the subject. It has its own column now, so there is
-                nothing to defer to: the weight is the section's own. */}
-            <h2 className="text-[30px] font-bold leading-[1.28] text-navy-800 sm:text-[44px]">
+                nothing to defer to: the weight is the section's own.
+
+                `text-gold`, not `text-gold-dark`: the dark gold was mixed for
+                light plates and loses too much contrast on this section's own
+                navy, same reasoning as ScrollSpyList's dark tone above it. */}
+            <h2 className="text-[30px] font-bold leading-[1.28] text-white sm:text-[44px]">
               <span ref={tipsHeadingRef} className="block opacity-0">
-                <span className="text-gold-dark">Tips</span> for talking
+                <span className="text-gold">Tips</span> for talking
               </span>
               <span ref={tipsHeadingTwoRef} className="block opacity-0">
                 to your doctor
@@ -373,8 +391,8 @@ export default function MembersFindDoctor() {
             </h2>
 
             <p className="mt-10 text-[11px] font-semibold uppercase tracking-[0.14em]">
-              <span className="text-navy-800/40">Worth </span>
-              <span className="text-gold-dark">asking</span>
+              <span className="text-white/50">Worth </span>
+              <span className="text-gold">asking</span>
             </p>
 
             {/* An `<ol>`, not a `<ul>`: the numbers are painted, so the order has
@@ -387,10 +405,10 @@ export default function MembersFindDoctor() {
                   key={prompt}
                   className="flex items-center gap-5 border-l-2 border-gold py-1 pl-5"
                 >
-                  <span className="text-[13px] font-semibold text-navy-800/75">
+                  <span className="text-[13px] font-semibold text-white/70">
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <p className="text-[15.5px] font-medium leading-relaxed text-navy-800">
+                  <p className="text-[15.5px] font-medium leading-relaxed text-white">
                     &ldquo;{prompt}&rdquo;
                   </p>
                 </li>
@@ -399,8 +417,8 @@ export default function MembersFindDoctor() {
 
             <div ref={bringRef} className="mt-12 opacity-0">
               <p className="text-[11px] font-semibold uppercase tracking-[0.14em]">
-                <span className="text-navy-800/40">Worth </span>
-                <span className="text-gold-dark">bringing</span>
+                <span className="text-white/50">Worth </span>
+                <span className="text-gold">bringing</span>
               </p>
 
               {/* A row from `sm` up, divided by hairlines rather than boxed. The
@@ -410,20 +428,21 @@ export default function MembersFindDoctor() {
                   This was briefly a plain column with teal icons on white tiles,
                   on the reasoning that three icon-and-label pairs across a
                   half-column would wrap each label to two lines. They do wrap to
-                  two lines — and that is the drawn layout, so the row and the
-                  `bg-mist/40` tiles are back exactly as they were. */}
+                  two lines — and that is the drawn layout, so the row is back
+                  exactly as it was, with the tiles and dividers now light-on-dark
+                  to match the rest of the section. */}
               <ul className="mt-5 flex flex-col gap-5 sm:mt-6 sm:flex-row sm:gap-0">
                 {bringWithYou.map(({ label, icon: Icon }, i) => (
                   <li
                     key={label}
                     className={`flex items-center gap-4 sm:flex-1 ${
-                      i > 0 ? 'sm:border-l sm:border-navy-800/10 sm:pl-6' : ''
+                      i > 0 ? 'sm:border-l sm:border-white/15 sm:pl-6' : ''
                     } ${i < bringWithYou.length - 1 ? 'sm:pr-6' : ''}`}
                   >
-                    <span className="corner-smooth flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-mist/40">
-                      <Icon size={19} strokeWidth={1.9} className="text-navy-800" />
+                    <span className="corner-smooth flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-white/10">
+                      <Icon size={19} strokeWidth={1.9} className="text-white" />
                     </span>
-                    <span className="text-[15px] font-medium leading-snug text-navy-800">
+                    <span className="text-[15px] font-medium leading-snug text-white">
                       {label}
                     </span>
                   </li>
